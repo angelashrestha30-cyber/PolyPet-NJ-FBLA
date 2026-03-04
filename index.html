@@ -19,8 +19,10 @@
     </div>
   </nav>
 
-  <!-- HERO SECTION -->
+  <!-- HERO -->
   <section id="home" class="hero">
+
+    <!-- ANIMATED BLOBS -->
     <div class="bg-blobs">
       <span></span>
       <span></span>
@@ -29,7 +31,7 @@
 
     <div class="hero-container">
 
-      <!-- LEFT: PET CARD -->
+      <!-- LEFT: PET PANEL -->
       <div class="pet-panel">
         <div class="pet-avatar">🦊</div>
         <h3>Pika</h3>
@@ -47,28 +49,32 @@
         <p>You're doing amazing. Keep learning! 🌟</p>
       </div>
 
-      <!-- RIGHT: LESSON CARDS -->
+      <!-- RIGHT: FLOATING LESSON CARDS -->
       <div class="lesson-cards">
+
         <div class="lesson-card float">
           <h4>Spanish Basics</h4>
-          <p>⭐ ⭐</p>
+          <p>⭐ ⭐ ⭐</p>
           <span class="lvl">Lv. 2</span>
         </div>
+
         <div class="lesson-card float delay1">
           <h4>Kanji Practice</h4>
-          <p>⭐ ⭐ ⭐</p>
+          <p>⭐ ⭐ ⭐ ⭐</p>
           <span class="lvl">Lv. 3</span>
         </div>
+
         <div class="lesson-card float delay2">
           <h4>Grammar Quiz</h4>
-          <p>⭐</p>
+          <p>⭐ ⭐</p>
           <span class="lvl">Lv. 1</span>
         </div>
+
       </div>
 
     </div>
 
-    <!-- LESSON MODULE POPUP -->
+    <!-- LESSON CONTENT MODULE -->
     <div id="lesson-content" class="lesson-content" style="display:none;">
       <button onclick="closeLesson()">⬅ Back</button>
       <div id="lesson-module"></div>
@@ -76,7 +82,7 @@
 
   </section>
 
-  <!-- SCHEDULE SECTION -->
+  <!-- SCHEDULE -->
   <section id="schedule" class="section">
     <h2>Today's Schedule</h2>
 
@@ -86,13 +92,14 @@
       <button onclick="filterSchedule('mandarin')">Mandarin</button>
     </div>
 
-    <!-- Scheduled lessons -->
-    <ul id="lesson-list">
-      <li class="event spanish" onclick="openLesson('spanish')">Spanish Basics - 3/5/2026</li>
-      <li class="event mandarin" onclick="openLesson('mandarin')">Mandarin Basics - 3/5/2026</li>
-    </ul>
+    <!-- Interactive Calendar -->
+    <div class="calendar-box">
+      <input type="date" id="lesson-date">
+      <button onclick="scheduleLesson()">Schedule Lesson</button>
+      <ul id="lesson-list"></ul>
+    </div>
 
-    <!-- Tutor scheduling -->
+    <!-- Tutor Scheduling -->
     <div class="calendar-box">
       <input type="date" id="tutor-date">
       <select id="tutor-time">
@@ -122,16 +129,16 @@
 
   </section>
 
-  <!-- RESOURCES SECTION -->
+  <!-- RESOURCES -->
   <section id="resources" class="section pink">
     <h2>Resources</h2>
 
     <div class="resources-grid">
-      <a class="resource-card" onclick="openLesson('spanish')">Video Lessons</a>
-      <a class="resource-card" onclick="openLesson('spanish')">Chatbox</a>
-      <a class="resource-card" onclick="openLesson('spanish')">Vocab Flashcards</a>
-      <a class="resource-card" onclick="openLesson('spanish')">Practice Mode</a>
-      <a class="resource-card" onclick="openLesson('spanish')">Unit Test</a>
+      <a class="resource-card">Video Lessons</a>
+      <a class="resource-card">Chatbox</a>
+      <a class="resource-card">Vocab Flashcards</a>
+      <a class="resource-card">Practice Mode</a>
+      <a class="resource-card">Unit Test</a>
     </div>
   </section>
 
@@ -139,7 +146,7 @@
     © 2026 PolyPet | NJ FBLA State Competition
   </footer>
 
-  <!-- Confetti Canvas -->
+  <!-- CONFETTI CANVAS -->
   <canvas id="confettiCanvas"></canvas>
 
   <script src="js/script.js"></script>
