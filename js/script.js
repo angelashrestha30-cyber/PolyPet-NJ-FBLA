@@ -155,43 +155,44 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  function addCustomClock() {
-    const countryInput = document.getElementById("new-country");
-    const tzInput = document.getElementById("new-tz");
+function addCustomClock() {
+  const countryInput = document.getElementById("new-country");
+  const countryName = countryInput.value.trim().toLowerCase();
 
-    const country = countryInput.value.trim();
-    const tz = tzInput.value.trim();
-
-    if (!country || !tz) {
-      alert("Please fill both fields.");
-      return;
-    }
-
-    try {
-      new Date().toLocaleString("en-US", { timeZone: tz });
-
-      timezones.push({
-        country: country,
-        code: tz,
-        flag: "🌍"
-      });
-
-      countryInput.value = "";
-      tzInput.value = "";
-
-      renderClocks();
-      updateWorldClocks();
-
-    } catch (error) {
-      alert("Invalid timezone format. Example: Europe/London");
-    }
+  if (!countryName) {
+    alert("Please enter a country.");
+    return;
   }
 
-  // Make function global so button works
-  window.addCustomClock = addCustomClock;
+  // Simple country → timezone map
+  const countryMap = {
+    japan: "Asia/Tokyo",
+    spain: "Europe/Madrid",
+    china: "Asia/Shanghai",
+    usa: "America/New_York",
+    india: "Asia/Kolkata",
+    uk: "Europe/London",
+    france: "Europe/Paris",
+    germany: "Europe/Berlin",
+    australia: "Australia/Sydney",
+    canada: "America/Toronto"
+  };
+
+  const timezone = countryMap[countryName];
+
+  if (!timezone) {
+    alert("Country not supported yet.");
+    return;
+  }
+
+  timezones.push({
+    country: countryName.charAt(0).toUpperCase() + countryName.slice(1),
+    code: timezone,
+    flag: "🌍"
+  });
+
+  countryInput.value = "";
 
   renderClocks();
   updateWorldClocks();
-  setInterval(updateWorldClocks, 1000);
-
-});
+}
