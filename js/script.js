@@ -47,6 +47,47 @@ document.addEventListener("mousemove",(e)=>{
     card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
   });
 });
+  const lessonModule = document.getElementById("lesson-module");
+const lessonContent = document.getElementById("lesson-content");
+
+function openLesson(name){
+  lessonContent.style.display = "block";
+  lessonModule.innerHTML = ""; // Clear previous
+
+  if(name === "spanish"){
+    lessonModule.innerHTML = `
+      <h2>Spanish Basics</h2>
+      <p>Welcome to Spanish! Start with basic greetings and phrases.</p>
+      <button onclick="startFlashcards('spanish')">📇 Vocab Flashcards</button>
+      <button onclick="startPractice('spanish')">📝 Practice Mode</button>
+      <button onclick="startTest('spanish')">📊 Unit Test</button>
+    `;
+  }
+
+  if(name === "kanji"){
+    lessonModule.innerHTML = `
+      <h2>Kanji Practice</h2>
+      <p>Time to practice Kanji! Learn 5 new characters today.</p>
+      <button onclick="startFlashcards('kanji')">📇 Vocab Flashcards</button>
+      <button onclick="startPractice('kanji')">📝 Practice Mode</button>
+      <button onclick="startTest('kanji')">📊 Unit Test</button>
+    `;
+  }
+
+  if(name === "grammar"){
+    lessonModule.innerHTML = `
+      <h2>Grammar Quiz</h2>
+      <p>Test your grammar knowledge!</p>
+      <button onclick="startFlashcards('grammar')">📇 Vocab Flashcards</button>
+      <button onclick="startPractice('grammar')">📝 Practice Mode</button>
+      <button onclick="startTest('grammar')">📊 Unit Test</button>
+    `;
+  }
+}
+
+function closeLesson(){
+  lessonContent.style.display = "none";
+}
   document.getElementById("dynamicGreeting").textContent = greeting;
 }
 
