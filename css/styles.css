@@ -29,12 +29,12 @@ body {
 }
 
 .hero {
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 0 10%;
+  position: relative;
+  overflow: hidden;
+}
+.hero-container {
+  position: relative;
+  z-index: 2;
 }
 
 .hero h1 {
