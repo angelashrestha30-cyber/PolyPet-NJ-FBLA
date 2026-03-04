@@ -28,3 +28,19 @@ function updateClocks(){
 
 setInterval(updateClocks,1000);
 updateClocks();
+function setGreeting(){
+  const hour = new Date().getHours();
+  let greeting;
+
+  if(hour < 12){
+    greeting = "Good Morning, Emma ☀️";
+  } else if(hour < 18){
+    greeting = "Good Afternoon, Emma 🌸";
+  } else {
+    greeting = "Good Evening, Emma 🌙";
+  }
+
+  document.getElementById("dynamicGreeting").textContent = greeting;
+}
+
+setGreeting();
