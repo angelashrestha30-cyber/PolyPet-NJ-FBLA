@@ -22,16 +22,14 @@
   <!-- HERO -->
   <section id="home" class="hero">
 
-    <!-- ANIMATED BLOBS -->
+    <!-- Animated blobs -->
     <div class="bg-blobs">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </div>
 
     <div class="hero-container">
 
-      <!-- LEFT: PET PANEL -->
+      <!-- LEFT: PET CARD -->
       <div class="pet-panel">
         <div class="pet-avatar">🦊</div>
         <h3>Pika</h3>
@@ -45,7 +43,7 @@
 
       <!-- CENTER: SPEECH BUBBLE -->
       <div class="speech-bubble">
-        <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
+        <h2 id="dynamicGreeting"></h2>
         <p>You're doing amazing. Keep learning! 🌟</p>
       </div>
 
@@ -89,26 +87,23 @@
     <div class="filter-buttons">
       <button onclick="filterSchedule('all')">All</button>
       <button onclick="filterSchedule('spanish')">Spanish</button>
-      <button onclick="filterSchedule('mandarin')">Mandarin</button>
+      <button onclick="filterSchedule('kanji')">Kanji</button>
+      <button onclick="filterSchedule('grammar')">Grammar</button>
     </div>
 
-    <!-- Interactive Calendar -->
-    <div class="calendar-box">
-      <input type="date" id="lesson-date">
-      <button onclick="scheduleLesson()">Schedule Lesson</button>
-      <ul id="lesson-list"></ul>
-    </div>
-
-    <!-- Tutor Scheduling -->
-    <div class="calendar-box">
-      <input type="date" id="tutor-date">
-      <select id="tutor-time">
-        <option>10:00 AM</option>
-        <option>2:00 PM</option>
-        <option>6:00 PM</option>
-      </select>
-      <button onclick="scheduleTutor()">Schedule with Tutor</button>
-      <ul id="tutor-list"></ul>
+    <div class="schedule-grid">
+      <div class="event spanish">
+        <h3>Spanish Lesson</h3>
+        <p>2:00 PM – 3:00 PM EST</p>
+      </div>
+      <div class="event kanji">
+        <h3>Kanji Lesson</h3>
+        <p>4:00 PM – 5:00 PM EST</p>
+      </div>
+      <div class="event grammar">
+        <h3>Grammar Lesson</h3>
+        <p>6:00 PM – 7:00 PM EST</p>
+      </div>
     </div>
 
     <!-- WORLD CLOCK -->
@@ -127,12 +122,23 @@
       </div>
     </div>
 
+    <!-- TUTOR SCHEDULING -->
+    <div class="calendar-box">
+      <input type="date" id="tutor-date">
+      <select id="tutor-time">
+        <option>10:00 AM</option>
+        <option>2:00 PM</option>
+        <option>6:00 PM</option>
+      </select>
+      <button onclick="scheduleTutor()">Schedule with Tutor</button>
+      <ul id="tutor-list"></ul>
+    </div>
+
   </section>
 
   <!-- RESOURCES -->
   <section id="resources" class="section pink">
     <h2>Resources</h2>
-
     <div class="resources-grid">
       <a class="resource-card">Video Lessons</a>
       <a class="resource-card">Chatbox</a>
@@ -146,7 +152,7 @@
     © 2026 PolyPet | NJ FBLA State Competition
   </footer>
 
-  <!-- CONFETTI CANVAS -->
+  <!-- Confetti Canvas -->
   <canvas id="confettiCanvas"></canvas>
 
   <script src="js/script.js"></script>
