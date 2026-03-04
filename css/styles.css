@@ -393,3 +393,21 @@ footer {
     transform: translateX(-50%);
   }
 }
+.lesson-content {
+  background: rgba(255,255,255,0.8);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 30px;
+  margin-top: 40px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.lesson-content button {
+  margin-bottom: 20px;
+  padding: 8px 14px;
+  border: none;
+  background: #ff7f7f;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
