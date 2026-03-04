@@ -1,10 +1,9 @@
-// ---------------- SCROLLING ----------------
+// SCROLLING
 function scrollToSection(id){
-  const el = document.getElementById(id);
-  if(el) el.scrollIntoView({behavior:"smooth"});
+  document.getElementById(id).scrollIntoView({behavior:"smooth"});
 }
 
-// ---------------- SCHEDULE FILTER ----------------
+// SCHEDULE FILTER
 function filterSchedule(day){
   const events = document.querySelectorAll('.event');
   events.forEach(event=>{
@@ -12,55 +11,43 @@ function filterSchedule(day){
   });
 }
 
-// ---------------- PET XP / LEVEL / STREAK ----------------
+// PET XP / LEVEL / STREAK
 let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
 let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
 let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
 
 function updatePetUI(){
-  const levelEl = document.getElementById("level");
-  const streakEl = document.getElementById("streak");
-  const xpFill = document.getElementById("xp-fill");
-
-  if(levelEl) levelEl.textContent = level;
-  if(streakEl) streakEl.textContent = streak;
-  if(xpFill) xpFill.style.width = (xp % 100) + "%";
+  document.getElementById("level").textContent = level;
+  document.getElementById("streak").textContent = streak;
+  document.getElementById("xp-fill").style.width = (xp % 100) + "%";
 }
 
 function completeLesson(){
   xp += 20;
   streak += 1;
-
   if(xp >= level*100){
     level++;
     launchConfetti();
   }
-
   localStorage.setItem("xp",xp);
   localStorage.setItem("level",level);
   localStorage.setItem("streak",streak);
   updatePetUI();
 }
-
 updatePetUI();
 
-// ---------------- INTERACTIVE CALENDAR ----------------
+// INTERACTIVE CALENDAR
 function scheduleLesson(){
-  const dateInput = document.getElementById("lesson-date");
-  const list = document.getElementById("lesson-list");
-  if(!dateInput || !list) return;
-
-  const date = dateInput.value;
+  const date = document.getElementById("lesson-date").value;
   if(!date) return;
-
   const li = document.createElement("li");
   li.textContent = "Lesson scheduled for " + date;
-  list.appendChild(li);
+  document.getElementById("lesson-list").appendChild(li);
 }
 
-// ---------------- FADE-IN SECTIONS ----------------
+// FADE-IN SECTIONS
+const sections = document.querySelectorAll(".section");
 window.addEventListener("scroll", ()=>{
-  const sections = document.querySelectorAll(".section");
   sections.forEach(section=>{
     const top = section.getBoundingClientRect().top;
     if(top < window.innerHeight - 100){
@@ -69,35 +56,21 @@ window.addEventListener("scroll", ()=>{
   });
 });
 
-// ---------------- TIME-BASED GREETING ----------------
+// TIME-BASED GREETING
 function setGreeting(){
-  const greetingEl = document.getElementById("dynamicGreeting");
-  if(!greetingEl) return;
-
   const hour = new Date().getHours();
-  let greeting =
-    (hour<12) ? "Good Morning ☀️" :
-    (hour<18) ? "Good Afternoon 🌸" :
-    "Good Evening 🌙";
-
-  greetingEl.textContent = greeting;
+  let greeting = (hour<12) ? "Good Morning, Emma ☀️" : (hour<18) ? "Good Afternoon, Emma 🌸" : "Good Evening, Emma 🌙";
+  document.getElementById("dynamicGreeting").textContent = greeting;
 }
-
 setGreeting();
 
-// ---------------- CONFETTI (SAFE VERSION) ----------------
+// CONFETTI
+const canvas = document.getElementById("confettiCanvas");
+const ctx = canvas.getContext("2d");
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 let confetti = [];
-let canvas = document.getElementById("confettiCanvas");
-let ctx = canvas ? canvas.getContext("2d") : null;
-
-if(canvas){
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-
 function launchConfetti(){
-  if(!canvas || !ctx) return;
-
   for(let i=0;i<100;i++){
     confetti.push({
       x: Math.random()*canvas.width,
@@ -108,23 +81,17 @@ function launchConfetti(){
   }
   animateConfetti();
 }
-
 function animateConfetti(){
-  if(!ctx) return;
-
   ctx.clearRect(0,0,canvas.width,canvas.height);
-
   confetti.forEach(p=>{
     p.y += p.speed;
     ctx.fillStyle = "#ff7f7f";
     ctx.fillRect(p.x,p.y,p.size,p.size);
   });
-
   requestAnimationFrame(animateConfetti);
 }
 
-// ---------------- DYNAMIC WORLD CLOCK ----------------
-
+// ---------------------- DYNAMIC WORLD CLOCK ----------------------
 let timezones = [
   { country: "Japan", code: "Asia/Tokyo", flag: "🇯🇵" },
   { country: "Spain", code: "Europe/Madrid", flag: "🇪🇸" },
@@ -176,14 +143,20 @@ document.addEventListener("DOMContentLoaded", function () {
   setInterval(updateWorldClocks, 1000);
 
   const button = document.getElementById("add-clock-btn");
-  const input = document.getElementById("new-country");
 
-  if(button && input){
+  if(button){
     button.addEventListener("click", function () {
 
-      const countryName = input.value.trim().toLowerCase();
-      if (!countryName) {
-        alert("Enter a country.");
+      const countryInput = document.getElementById("new-country");
+      const tzInput = document.getElementById("new-tz");
+
+      if(!countryInput || !tzInput) return;
+
+      const countryName = countryInput.value.trim();
+      const manualTZ = tzInput.value.trim();
+
+      if(!countryName){
+        alert("Enter a country name.");
         return;
       }
 
@@ -201,20 +174,28 @@ document.addEventListener("DOMContentLoaded", function () {
         nepal: "Asia/Kathmandu"
       };
 
-      const timezone = countryMap[countryName];
+      let timezone;
 
-      if (!timezone) {
-        alert("Country not supported.");
+      if(manualTZ){
+        timezone = manualTZ;
+      } else {
+        timezone = countryMap[countryName.toLowerCase()];
+      }
+
+      if(!timezone){
+        alert("Timezone not recognized. Enter manually like Europe/Berlin");
         return;
       }
 
       timezones.push({
-        country: countryName.charAt(0).toUpperCase() + countryName.slice(1),
+        country: countryName,
         code: timezone,
         flag: "🌍"
       });
 
-      input.value = "";
+      countryInput.value = "";
+      tzInput.value = "";
+
       renderClocks();
       updateWorldClocks();
     });
