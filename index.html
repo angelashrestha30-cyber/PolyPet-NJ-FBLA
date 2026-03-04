@@ -20,53 +20,54 @@
   </nav>
 
   <!-- HERO -->
-  <section id="home" class="hero">
-    <!-- Animated background blobs -->
-    <div class="bg-blobs">
-      <span></span>
-      <span></span>
-      <span></span>
+<section id="home" class="hero">
+  <!-- Animated background blobs -->
+  <div class="bg-blobs">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="hero-container">
+    <!-- LEFT: PET PANEL -->
+    <div class="pet-panel">
+      <div class="pet-avatar">🦊</div>
+      <h3>Pika</h3>
+      <p>Level <span id="level">1</span></p>
+      <div class="xp-bar">
+        <div id="xp-fill"></div>
+      </div>
+      <p>🔥 Streak: <span id="streak">0</span> days</p>
+      <button onclick="completeLesson()">Play</button>
     </div>
 
-    <div class="hero-container">
-      <!-- LEFT: PET CARD -->
-      <div class="pet-panel">
-        <div class="pet-avatar">🦊</div>
-        <h3>Pika</h3>
-        <p>Level <span id="level">1</span></p>
-        <div class="xp-bar">
-          <div id="xp-fill"></div>
-        </div>
-        <p>🔥 <span id="streak">0</span> Day Streak</p>
-        <button onclick="completeLesson()">Play</button>
-      </div>
+    <!-- CENTER: SPEECH BUBBLE -->
+    <div class="speech-bubble">
+      <div class="bubble-particles"></div> <!-- Tiny bubbles inside bubble -->
+      <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
+      <p>Clever like a fox, keep up the great work! 🌟</p>
+    </div>
 
-      <!-- CENTER: SPEECH BUBBLE -->
-      <div class="speech-bubble">
-        <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
-        <p>Clever like a fox, keep up the great work! 🌟</p>
+    <!-- RIGHT: FLOATING LESSON CARDS -->
+    <div class="lesson-cards">
+      <div class="lesson-card float">
+        <h4>Spanish Basics</h4>
+        <p>⭐ ⭐</p>
+        <span class="lvl">Lv. 2</span>
       </div>
-
-      <!-- RIGHT: FLOATING LESSON CARDS -->
-      <div class="lesson-cards">
-        <div class="lesson-card float">
-          <h4>Spanish Basics</h4>
-          <p>⭐ ⭐</p>
-          <span class="lvl">Lv. 2</span>
-        </div>
-        <div class="lesson-card float delay1">
-          <h4>Kanji Practice</h4>
-          <p>⭐ ⭐ ⭐</p>
-          <span class="lvl">Lv. 3</span>
-        </div>
-        <div class="lesson-card float delay2">
-          <h4>Grammar Quiz</h4>
-          <p>⭐</p>
-          <span class="lvl">Lv. 1</span>
-        </div>
+      <div class="lesson-card float delay1">
+        <h4>Kanji Practice</h4>
+        <p>⭐ ⭐ ⭐</p>
+        <span class="lvl">Lv. 3</span>
+      </div>
+      <div class="lesson-card float delay2">
+        <h4>Grammar Quiz</h4>
+        <p>⭐</p>
+        <span class="lvl">Lv. 1</span>
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
   <!-- SCHEDULE -->
   <section id="schedule" class="section">
