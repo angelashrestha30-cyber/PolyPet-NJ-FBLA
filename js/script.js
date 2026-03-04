@@ -99,3 +99,9 @@ function animateConfetti(){
     ctx.fillRect(p.x,p.y,p.size,p.size);
   });
   requestAnimationFrame(animate
+// SPEECH BUBBLE PARTICLES
+const bubbleContainer = document.querySelector(".bubble-particles");
+for(let i=0;i<5;i++){
+  const bubble = document.createElement("span");
+  bubbleContainer.appendChild(bubble);
+}
