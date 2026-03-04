@@ -199,5 +199,11 @@ document.addEventListener("DOMContentLoaded", function () {
     if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
     document.getElementById("testScore").textContent="Score: "+score+"/2";
   }
-
-});
+// ================= RESOURCE TAB SWITCHING =================
+// Show only the clicked resource section
+window.showResource = function(name){
+  const sections = document.querySelectorAll(".resource-content");
+  sections.forEach(sec => sec.style.display = "none"); // hide all
+  const target = document.getElementById(name);
+  if(target) target.style.display = "block"; // show clicked
+}
