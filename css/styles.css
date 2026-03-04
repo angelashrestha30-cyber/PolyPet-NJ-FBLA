@@ -289,3 +289,36 @@ button:hover {
   color: #888;
   font-size: 14px;
 }
+/* Resource Cards */
+.resource-cards {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.resource-card {
+  flex: 1 1 200px;
+  background: #f9f9f9;
+  padding: 30px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.resource-card:hover {
+  transform: translateY(-5px);
+  background: #ffe5e5;
+}
+
+/* Resource content box */
+.resource-content {
+  background: #fff8f8;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
