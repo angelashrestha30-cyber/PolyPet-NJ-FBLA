@@ -21,64 +21,66 @@
 
   <!-- HERO -->
   <section id="home" class="hero">
-<div class="bg-blobs">
-  <span></span>
-  <span></span>
-  <span></span>
-</div>
-  <div class="hero-container">
 
-    <!-- LEFT: PET CARD -->
-    <div class="pet-panel">
-      <div class="pet-avatar">🦊</div>
-      <h3>Pika</h3>
-      <p>Level <span id="level">1</span></p>
-
-      <div class="xp-bar">
-        <div id="xp-fill"></div>
-      </div>
-
-      <p>🔥 <span id="streak">0</span> Day Streak</p>
-      <button onclick="completeLesson()">Play</button>
+    <!-- ANIMATED BLOBS -->
+    <div class="bg-blobs">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
 
-    <!-- CENTER: SPEECH BUBBLE -->
-    <div class="speech-bubble">
-      <h2 id="dynamicGreeting"></h2>
-      <p>Clever like a fox, keep up the great progress! 🌟</p>
+    <div class="hero-container">
+
+      <!-- LEFT: PET PANEL -->
+      <div class="pet-panel">
+        <div class="pet-avatar">🦊</div>
+        <h3>Pika</h3>
+        <p>Level <span id="level">1</span></p>
+        <div class="xp-bar">
+          <div id="xp-fill"></div>
+        </div>
+        <p>🔥 <span id="streak">0</span> Day Streak</p>
+        <button onclick="completeLesson()">Play</button>
+      </div>
+
+      <!-- CENTER: SPEECH BUBBLE -->
+      <div class="speech-bubble">
+        <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
+        <p>You're doing amazing. Keep learning! 🌟</p>
+      </div>
+
+      <!-- RIGHT: FLOATING LESSON CARDS -->
+      <div class="lesson-cards">
+
+        <div class="lesson-card float">
+          <h4>Spanish Basics</h4>
+          <p>⭐ ⭐</p>
+          <span class="lvl">Lv. 2</span>
+        </div>
+
+        <div class="lesson-card float delay1">
+          <h4>Kanji Practice</h4>
+          <p>⭐ ⭐ ⭐</p>
+          <span class="lvl">Lv. 3</span>
+        </div>
+
+        <div class="lesson-card float delay2">
+          <h4>Grammar Quiz</h4>
+          <p>⭐</p>
+          <span class="lvl">Lv. 1</span>
+        </div>
+
+      </div>
+
     </div>
 
-    <!-- RIGHT: FLOATING LESSON CARDS -->
-    <div class="lesson-cards">
-
-      <div class="lesson-card float">
-        <h4>Spanish Basics</h4>
-        <p>⭐ ⭐</p>
-        <span class="lvl">Lv. 2</span>
-      </div>
-
-      <div class="lesson-card float delay1">
-        <h4>Kanji Practice</h4>
-        <p>⭐ ⭐ ⭐</p>
-        <span class="lvl">Lv. 3</span>
-      </div>
-
-      <div class="lesson-card float delay2">
-        <h4>Grammar Quiz</h4>
-        <p>⭐</p>
-        <span class="lvl">Lv. 1</span>
-      </div>
-
+    <!-- LESSON CONTENT MODULE -->
+    <div id="lesson-content" class="lesson-content" style="display:none;">
+      <button onclick="closeLesson()">⬅ Back</button>
+      <div id="lesson-module"></div>
     </div>
 
-  </div>
-    <!-- LESSON CONTENT AREA -->
-<div id="lesson-content" class="lesson-content" style="display:none;">
-  <button onclick="closeLesson()">⬅ Back</button>
-  <div id="lesson-module"></div>
-</div>
-
-</section>
+  </section>
 
   <!-- SCHEDULE -->
   <section id="schedule" class="section">
@@ -90,16 +92,23 @@
       <button onclick="filterSchedule('mandarin')">Mandarin</button>
     </div>
 
-    <div class="schedule-grid">
-      <div class="event spanish">
-        <h3>Spanish Lesson</h3>
-        <p>2:00 PM – 3:00 PM EST</p>
-      </div>
+    <!-- Interactive Calendar -->
+    <div class="calendar-box">
+      <input type="date" id="lesson-date">
+      <button onclick="scheduleLesson()">Schedule Lesson</button>
+      <ul id="lesson-list"></ul>
+    </div>
 
-      <div class="event mandarin">
-        <h3>Mandarin Lesson</h3>
-        <p>6:00 PM – 7:00 PM EST</p>
-      </div>
+    <!-- Tutor Scheduling -->
+    <div class="calendar-box">
+      <input type="date" id="tutor-date">
+      <select id="tutor-time">
+        <option>10:00 AM</option>
+        <option>2:00 PM</option>
+        <option>6:00 PM</option>
+      </select>
+      <button onclick="scheduleTutor()">Schedule with Tutor</button>
+      <ul id="tutor-list"></ul>
     </div>
 
     <!-- WORLD CLOCK -->
@@ -117,16 +126,7 @@
         <p id="uk-time"></p>
       </div>
     </div>
-<div class="calendar-box">
-  <input type="date" id="tutor-date">
-  <select id="tutor-time">
-    <option>10:00 AM</option>
-    <option>2:00 PM</option>
-    <option>6:00 PM</option>
-  </select>
-  <button onclick="scheduleTutor()">Schedule with Tutor</button>
-  <ul id="tutor-list"></ul>
-</div>
+
   </section>
 
   <!-- RESOURCES -->
@@ -145,6 +145,9 @@
   <footer>
     © 2026 PolyPet | NJ FBLA State Competition
   </footer>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="confettiCanvas"></canvas>
 
   <script src="js/script.js"></script>
 </body>
