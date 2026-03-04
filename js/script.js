@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.fillStyle = "#ff7f7f";
       ctx.fillRect(p.x,p.y,p.size,p.size);
     });
-    confetti = confetti.filter(p=>p.y < canvas.height); // remove offscreen
+    confetti = confetti.filter(p=>p.y < canvas.height);
     if(confetti.length>0) requestAnimationFrame(animateConfetti);
   }
 
@@ -199,11 +199,16 @@ document.addEventListener("DOMContentLoaded", function () {
     if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
     document.getElementById("testScore").textContent="Score: "+score+"/2";
   }
-// ================= RESOURCE TAB SWITCHING =================
-// Show only the clicked resource section
-window.showResource = function(name){
-  const sections = document.querySelectorAll(".resource-content");
-  sections.forEach(sec => sec.style.display = "none"); // hide all
-  const target = document.getElementById(name);
-  if(target) target.style.display = "block"; // show clicked
-}
+
+  // ================= RESOURCE TAB SWITCHING =================
+  window.showResource = function(name){
+    const sections = document.querySelectorAll(".resource-content");
+    sections.forEach(sec => sec.style.display = "none");
+    const target = document.getElementById(name);
+    if(target) target.style.display = "block";
+  }
+
+  // show Video by default
+  showResource("video");
+
+});
