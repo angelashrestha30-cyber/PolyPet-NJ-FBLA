@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PolyPet</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -81,11 +81,11 @@
     <div class="schedule-grid">
       <div class="event spanish">
         <h3>Spanish Lesson</h3>
-        <p>2:00 PM – 3:00 PM</p>
+        <p>2:00 PM – 3:00 PM EST</p>
       </div>
       <div class="event mandarin">
         <h3>Mandarin Lesson</h3>
-        <p>6:00 PM – 7:00 PM</p>
+        <p>6:00 PM – 7:00 PM EST</p>
       </div>
     </div>
 
@@ -96,21 +96,19 @@
       <ul id="lesson-list"></ul>
     </div>
 
-    <!-- WORLD CLOCKS -->
-    <div class="clock-container">
-      <div class="clock-box">
-        <h4>Japan</h4>
-        <p id="japan-time"></p>
-      </div>
-      <div class="clock-box">
-        <h4>Spain</h4>
-        <p id="spain-time"></p>
-      </div>
-      <div class="clock-box">
-        <h4>China</h4>
-        <p id="china-time"></p>
+    <!-- DYNAMIC WORLD CLOCK -->
+    <div class="world-clock">
+      <h3 class="world-clock-title">🌍 World Clock</h3>
+      <div id="clock-container" class="clock-container"></div>
+
+      <!-- Optional: Add custom timezone -->
+      <div class="add-clock-box">
+        <input type="text" id="new-country" placeholder="Country Name">
+        <input type="text" id="new-tz" placeholder="Timezone (e.g. Europe/Berlin)">
+        <button onclick="addCustomClock()">Add Clock</button>
       </div>
     </div>
+
   </section>
 
   <!-- RESOURCES -->
