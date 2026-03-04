@@ -39,7 +39,14 @@ function setGreeting(){
   } else {
     greeting = "Good Evening, Emma 🌙";
   }
-
+document.addEventListener("mousemove",(e)=>{
+  const cards = document.querySelectorAll(".lesson-card");
+  cards.forEach(card=>{
+    const x = (window.innerWidth/2 - e.pageX)/40;
+    const y = (window.innerHeight/2 - e.pageY)/40;
+    card.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`;
+  });
+});
   document.getElementById("dynamicGreeting").textContent = greeting;
 }
 
