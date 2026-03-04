@@ -102,50 +102,89 @@ setInterval(updateWorldClocks,1000);
 updateWorldClocks();
 // ---------------------- DYNAMIC WORLD CLOCK ----------------------
 
-// Default timezones
 let timezones = [
   { country: "Japan", code: "Asia/Tokyo", flag: "🇯🇵" },
   { country: "Spain", code: "Europe/Madrid", flag: "🇪🇸" },
   { country: "China", code: "Asia/Shanghai", flag: "🇨🇳" }
 ];
 
-// Container
 const clockContainer = document.getElementById("clock-container");
 
-// Function to render clocks
+// Safe ID generator
+function createSafeId(str) {
+  return str.replace(/\//g, "-").replace(/\s/g, "").toLowerCase();
+}
+
+// Render clocks
 function renderClocks() {
   clockContainer.innerHTML = "";
+
   timezones.forEach(tz => {
+    const safeId = createSafeId(tz.code);
+
     const box = document.createElement("div");
     box.classList.add("clock-box");
-    box.innerHTML = `<h4>${tz.flag} ${tz.country}</h4><p id="${tz.code.replace("/", "-")}">--:--:--</p>`;
+    box.innerHTML = `
+      <h4>${tz.flag} ${tz.country}</h4>
+      <p id="${safeId}">--:--:--</p>
+    `;
     clockContainer.appendChild(box);
   });
 }
+
 renderClocks();
 
-// Update all clocks every second
+// Update clocks
 function updateWorldClocks() {
+  const now = new Date();
+
   timezones.forEach(tz => {
-    const timeElem = document.getElementById(tz.code.replace("/", "-"));
-    const now = new Date();
-    timeElem.textContent = now.toLocaleTimeString("en-US", { timeZone: tz.code });
+    const safeId = createSafeId(tz.code);
+    const timeElem = document.getElementById(safeId);
+
+    try {
+      timeElem.textContent = now.toLocaleTimeString("en-US", {
+        timeZone: tz.code
+      });
+    } catch (error) {
+      timeElem.textContent = "Invalid Timezone";
+    }
   });
 }
+
 setInterval(updateWorldClocks, 1000);
 updateWorldClocks();
 
-// Function to add a new custom clock
+// Add custom clock
 function addCustomClock() {
-  const country = document.getElementById("new-country").value.trim();
-  const tz = document.getElementById("new-tz").value.trim();
-  if(!country || !tz) return alert("Please fill both fields.");
-  // Add to array
-  timezones.push({ country, code: tz, flag: "🌏" });
-  // Clear inputs
-  document.getElementById("new-country").value = "";
-  document.getElementById("new-tz").value = "";
-  // Re-render clocks
-  renderClocks();
-  updateWorldClocks();
+  const countryInput = document.getElementById("new-country");
+  const tzInput = document.getElementById("new-tz");
+
+  const country = countryInput.value.trim();
+  const tz = tzInput.value.trim();
+
+  if (!country || !tz) {
+    alert("Please fill both fields.");
+    return;
+  }
+
+  try {
+    // Test timezone validity
+    new Date().toLocaleString("en-US", { timeZone: tz });
+
+    timezones.push({
+      country: country,
+      code: tz,
+      flag: "🌍"
+    });
+
+    countryInput.value = "";
+    tzInput.value = "";
+
+    renderClocks();
+    updateWorldClocks();
+
+  } catch (error) {
+    alert("Invalid timezone format. Example: Europe/London or America/New_York");
+  }
 }
