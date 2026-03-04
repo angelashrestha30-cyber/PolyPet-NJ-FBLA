@@ -195,3 +195,99 @@ function submitTest(){
   if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
   document.getElementById("testScore").textContent="Score: "+score+"/2";
 }
+// Flashcards
+const flashcards = [
+  { word: "Aunque", definition: "Although / Even though" },
+  { word: "Desarrollar", definition: "To develop" },
+  { word: "Lograr", definition: "To achieve" },
+  { word: "Aumentar", definition: "To increase" },
+  { word: "Reducir", definition: "To reduce" }
+];
+
+let currentIndex = 0;
+let mastered = 0;
+
+function startFlashcards() {
+  currentIndex = 0;
+  mastered = 0;
+  showCard();
+  updateProgress();
+}
+
+function showCard() {
+  document.getElementById("word").innerText = flashcards[currentIndex].word;
+  document.getElementById("definition").innerText = "";
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+  const card = document.getElementById("flashcard");
+  if (card) {
+    card.addEventListener("click", function () {
+      document.getElementById("definition").innerText =
+        flashcards[currentIndex].definition;
+    });
+  }
+});
+
+function nextCard() {
+  if (currentIndex < flashcards.length - 1) {
+    currentIndex++;
+    showCard();
+  }
+}
+
+function markMastered() {
+  if (mastered < flashcards.length) mastered++;
+  updateProgress();
+
+  if (mastered === flashcards.length) {
+    document.getElementById("completionMessage").innerText =
+      "Module Completed — 100% Mastery Achieved";
+  }
+}
+
+function updateProgress() {
+  const percent = Math.round((mastered / flashcards.length) * 100);
+  const fill = document.getElementById("progressFill");
+  const text = document.getElementById("progressText");
+
+  if (fill) fill.style.width = percent + "%";
+  if (text) text.innerText = "Progress: " + percent + "%";
+}
+
+// Practice Mode
+const practiceData = [
+  { question: "Translate: To develop", answer: "desarrollar" }
+];
+
+let practiceIndex = 0;
+
+document.addEventListener("DOMContentLoaded", function () {
+  const question = document.getElementById("practiceQuestion");
+  if (question) {
+    question.innerText = practiceData[practiceIndex].question;
+  }
+});
+
+function checkAnswer() {
+  const input = document.getElementById("practiceInput").value.toLowerCase();
+  const feedback = document.getElementById("practiceFeedback");
+
+  if (input === practiceData[practiceIndex].answer) {
+    feedback.innerText = "Correct!";
+  } else {
+    feedback.innerText = "Try again.";
+  }
+}
+
+// Test Mode
+function gradeTest() {
+  let score = 0;
+
+  if (document.getElementById("q1").value.toLowerCase() === "desarrollar") score++;
+  if (document.getElementById("q2").value.toLowerCase() === "aunque") score++;
+  if (document.getElementById("q3").value.toLowerCase() === "reducir") score++;
+
+  document.getElementById("testResult").innerText =
+    "Your Score: " + score + "/3";
+}
