@@ -115,7 +115,15 @@ function startFlashcards(lang){
                       ["Subject-Verb", "Tense", "Agreement"];
   window.cardIndex = 0;
 }
+function scheduleTutor(){
+  const date = document.getElementById("tutor-date").value;
+  const time = document.getElementById("tutor-time").value;
+  if(!date || !time) return;
 
+  const li = document.createElement("li");
+  li.textContent = `Lesson scheduled on ${date} at ${time}`;
+  document.getElementById("tutor-list").appendChild(li);
+}
 function nextCard(){
   cardIndex = (cardIndex + 1) % flashcards.length;
   document.getElementById("flashcard").textContent = flashcards[cardIndex];
