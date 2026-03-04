@@ -291,3 +291,10 @@ function gradeTest() {
   document.getElementById("testResult").innerText =
     "Your Score: " + score + "/3";
 }
+// Fade in sections on page load if already in view
+sections.forEach(section=>{
+  const top = section.getBoundingClientRect().top;
+  if(top < window.innerHeight - 100){
+    section.classList.add("visible");
+  }
+});
