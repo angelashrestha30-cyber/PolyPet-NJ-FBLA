@@ -1,1 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PolyPet | Assessment Center</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+  <div class="module-container">
+
+    <div class="module-header">
+      <h1>Spanish Level 3</h1>
+      <h2>Unit Assessment</h2>
+      <p>Complete all questions to receive your score.</p>
+    </div>
+
+    <div class="test-box">
+      <p>1. Translate "To develop"</p>
+      <input type="text" id="q1">
+
+      <p>2. Translate "Although"</p>
+      <input type="text" id="q2">
+
+      <p>3. Translate "To reduce"</p>
+      <input type="text" id="q3">
+
+      <button onclick="gradeTest()">Submit Test</button>
+
+      <p id="testResult"></p>
+    </div>
+
+    <div class="nav-back">
+      <a href="index.html">← Back to Module</a>
+    </div>
+
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
