@@ -1,15 +1,23 @@
-// ================= SCROLLING =================
+// ================= SCROLLING WITH OFFSET =================
 function scrollToSection(id){
-  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+  const element = document.getElementById(id);
+  const yOffset = -100; // height of navbar
+  const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+  window.scrollTo({top: y, behavior: "smooth"});
 }
 
-// ================= SCHEDULE FILTER =================
-function filterSchedule(day){
-  const events = document.querySelectorAll('.event');
-  events.forEach(event=>{
-    event.style.display = (day==="all" || event.classList.contains(day)) ? "block" : "none";
+// ================= FADE-IN SECTIONS =================
+const sections = document.querySelectorAll(".section");
+function checkSectionsVisibility(){
+  sections.forEach(section=>{
+    const top = section.getBoundingClientRect().top;
+    if(top < window.innerHeight - 100){
+      section.classList.add("visible");
+    }
   });
 }
+window.addEventListener("scroll", checkSectionsVisibility);
+window.addEventListener("load", checkSectionsVisibility);
 
 // ================= PET XP / LEVEL / STREAK =================
 let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
@@ -29,12 +37,20 @@ function completeLesson(){
     level++;
     launchConfetti();
   }
-  localStorage.setItem("xp",xp);
-  localStorage.setItem("level",level);
-  localStorage.setItem("streak",streak);
+  localStorage.setItem("xp", xp);
+  localStorage.setItem("level", level);
+  localStorage.setItem("streak", streak);
   updatePetUI();
 }
 updatePetUI();
+
+// ================= SCHEDULE FILTER =================
+function filterSchedule(day){
+  const events = document.querySelectorAll(".event");
+  events.forEach(event=>{
+    event.style.display = (day==="all" || event.classList.contains(day)) ? "block" : "none";
+  });
+}
 
 // ================= INTERACTIVE CALENDAR =================
 function scheduleLesson(){
@@ -45,23 +61,12 @@ function scheduleLesson(){
   document.getElementById("lesson-list").appendChild(li);
 }
 
-// ================= FADE-IN SECTIONS =================
-const sections = document.querySelectorAll(".section");
-window.addEventListener("scroll", ()=>{
-  sections.forEach(section=>{
-    const top = section.getBoundingClientRect().top;
-    if(top < window.innerHeight - 100){
-      section.classList.add("visible");
-    }
-  });
-});
-
 // ================= TIME GREETING =================
 function setGreeting(){
   const hour = new Date().getHours();
-  let greeting = (hour<12) ? "Good Morning, Emma ☀️" :
-                 (hour<18) ? "Good Afternoon, Emma 🌸" :
-                 "Good Evening, Emma 🌙";
+  let greeting = (hour < 12) ? "Good Morning, Emma ☀️" :
+                 (hour < 18) ? "Good Afternoon, Emma 🌸" :
+                               "Good Evening, Emma 🌙";
   document.getElementById("dynamicGreeting").textContent = greeting;
 }
 setGreeting();
@@ -113,10 +118,7 @@ function renderClocks(){
     const id = createSafeId(tz.code);
     const box = document.createElement("div");
     box.classList.add("clock-box");
-    box.innerHTML = `
-      <h4>${tz.flag} ${tz.country}</h4>
-      <p id="${id}">--:--:--</p>
-    `;
+    box.innerHTML = `<h4>${tz.flag} ${tz.country}</h4><p id="${id}">--:--:--</p>`;
     container.appendChild(box);
   });
 }
@@ -126,41 +128,32 @@ function updateWorldClocks(){
   timezones.forEach(tz=>{
     const id = createSafeId(tz.code);
     const el = document.getElementById(id);
-    if(el){
-      el.textContent = now.toLocaleTimeString("en-US",{timeZone:tz.code});
-    }
+    if(el) el.textContent = now.toLocaleTimeString("en-US",{timeZone:tz.code});
   });
 }
 
-document.getElementById("add-clock-btn").addEventListener("click",()=>{
+document.getElementById("add-clock-btn").addEventListener("click", ()=>{
   const countryInput = document.getElementById("new-country").value.trim();
   const tzInput = document.getElementById("new-tz").value.trim();
   if(!countryInput || !tzInput) return alert("Enter country and timezone");
-  timezones.push({country:countryInput, code:tzInput, flag:"🌍"});
+  timezones.push({country: countryInput, code: tzInput, flag: "🌍"});
   renderClocks();
 });
 
 renderClocks();
 updateWorldClocks();
-setInterval(updateWorldClocks,1000);
+setInterval(updateWorldClocks, 1000);
 
-// ================= LANGUAGE SYSTEM =================
-let flashcards = [];
+// ================= FLASHCARDS =================
+let flashcards = [
+  {front:"Aunque", back:"Although"},
+  {front:"Sin embargo", back:"However"},
+  {front:"A pesar de", back:"Despite"},
+  {front:"Lograr", back:"To achieve"},
+  {front:"Desarrollar", back:"To develop"}
+];
 let currentCard = 0;
 let flipped = false;
-
-function loadSpanishLevel3(){
-  flashcards = [
-    {front:"Aunque", back:"Although"},
-    {front:"Sin embargo", back:"However"},
-    {front:"A pesar de", back:"Despite"},
-    {front:"Lograr", back:"To achieve"},
-    {front:"Desarrollar", back:"To develop"}
-  ];
-  currentCard = 0;
-  flipped = false;
-  showCard();
-}
 
 function showCard(){
   if(!flashcards.length) return;
@@ -174,127 +167,32 @@ function flipCard(){
 }
 
 function nextCard(){
-  currentCard = (currentCard+1) % flashcards.length;
+  currentCard = (currentCard + 1) % flashcards.length;
   flipped = false;
   showCard();
 }
 
+function loadSpanishLevel3(){
+  currentCard = 0;
+  flipped = false;
+  showCard();
+}
+
+// ================= PRACTICE MODE =================
 function checkPractice(){
   const input = document.getElementById("practiceInput").value.toLowerCase();
   const result = document.getElementById("practiceResult");
-  if(input==="aunque"){
-    result.textContent="✅ Correct!";
+  if(input === "aunque"){
+    result.textContent = "✅ Correct!";
   } else {
-    result.textContent="❌ Try again.";
+    result.textContent = "❌ Try again.";
   }
 }
 
+// ================= UNIT TEST =================
 function submitTest(){
-  let score=0;
-  if(document.querySelector('input[name="q1"]:checked')?.value==="however") score++;
-  if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
-  document.getElementById("testScore").textContent="Score: "+score+"/2";
-}
-// Flashcards
-const flashcards = [
-  { word: "Aunque", definition: "Although / Even though" },
-  { word: "Desarrollar", definition: "To develop" },
-  { word: "Lograr", definition: "To achieve" },
-  { word: "Aumentar", definition: "To increase" },
-  { word: "Reducir", definition: "To reduce" }
-];
-
-let currentIndex = 0;
-let mastered = 0;
-
-function startFlashcards() {
-  currentIndex = 0;
-  mastered = 0;
-  showCard();
-  updateProgress();
-}
-
-function showCard() {
-  document.getElementById("word").innerText = flashcards[currentIndex].word;
-  document.getElementById("definition").innerText = "";
-}
-
-document.addEventListener("DOMContentLoaded", function () {
-  const card = document.getElementById("flashcard");
-  if (card) {
-    card.addEventListener("click", function () {
-      document.getElementById("definition").innerText =
-        flashcards[currentIndex].definition;
-    });
-  }
-});
-
-function nextCard() {
-  if (currentIndex < flashcards.length - 1) {
-    currentIndex++;
-    showCard();
-  }
-}
-
-function markMastered() {
-  if (mastered < flashcards.length) mastered++;
-  updateProgress();
-
-  if (mastered === flashcards.length) {
-    document.getElementById("completionMessage").innerText =
-      "Module Completed — 100% Mastery Achieved";
-  }
-}
-
-function updateProgress() {
-  const percent = Math.round((mastered / flashcards.length) * 100);
-  const fill = document.getElementById("progressFill");
-  const text = document.getElementById("progressText");
-
-  if (fill) fill.style.width = percent + "%";
-  if (text) text.innerText = "Progress: " + percent + "%";
-}
-
-// Practice Mode
-const practiceData = [
-  { question: "Translate: To develop", answer: "desarrollar" }
-];
-
-let practiceIndex = 0;
-
-document.addEventListener("DOMContentLoaded", function () {
-  const question = document.getElementById("practiceQuestion");
-  if (question) {
-    question.innerText = practiceData[practiceIndex].question;
-  }
-});
-
-function checkAnswer() {
-  const input = document.getElementById("practiceInput").value.toLowerCase();
-  const feedback = document.getElementById("practiceFeedback");
-
-  if (input === practiceData[practiceIndex].answer) {
-    feedback.innerText = "Correct!";
-  } else {
-    feedback.innerText = "Try again.";
-  }
-}
-
-// Test Mode
-function gradeTest() {
   let score = 0;
-
-  if (document.getElementById("q1").value.toLowerCase() === "desarrollar") score++;
-  if (document.getElementById("q2").value.toLowerCase() === "aunque") score++;
-  if (document.getElementById("q3").value.toLowerCase() === "reducir") score++;
-
-  document.getElementById("testResult").innerText =
-    "Your Score: " + score + "/3";
+  if(document.querySelector('input[name="q1"]:checked')?.value === "however") score++;
+  if(document.querySelector('input[name="q2"]:checked')?.value === "achieve") score++;
+  document.getElementById("testScore").textContent = "Score: " + score + "/2";
 }
-// Fade in sections on page load if already in view
-sections.forEach(section=>{
-  const top = section.getBoundingClientRect().top;
-  if(top < window.innerHeight - 100){
-    section.classList.add("visible");
-  }
-});
