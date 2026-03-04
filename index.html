@@ -1,137 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PolyPet</title>
-  <link rel="stylesheet" href="css/styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PolyPet</title>
+
+<style>
+
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+/* BODY */
+body {
+  background: linear-gradient(135deg, #fdfbfb, #ebedee);
+  color: #333;
+  overflow-x: hidden;
+}
+
+/* HERO SECTION */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  text-align: center;
+}
+
+/* BLOBS BACKGROUND */
+.blobs {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.blobs span {
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: rgba(255, 120, 150, 0.25);
+  border-radius: 50%;
+  filter: blur(80px);
+  animation: float 14s infinite ease-in-out;
+}
+
+.blobs span:nth-child(1) {
+  top: 10%;
+  left: 10%;
+}
+
+.blobs span:nth-child(2) {
+  bottom: 15%;
+  right: 10%;
+  animation-delay: 3s;
+}
+
+.blobs span:nth-child(3) {
+  top: 50%;
+  left: 50%;
+  animation-delay: 6s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-50px); }
+  100% { transform: translateY(0px); }
+}
+
+/* HERO CONTENT ABOVE BLOBS */
+.hero-content,
+.pet-panel {
+  position: relative;
+  z-index: 2;
+}
+
+/* PET PANEL (GLASSMORPHISM) */
+.pet-panel {
+  margin-top: 30px;
+  padding: 20px 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.fox {
+  font-size: 60px;
+}
+
+.speech-bubble {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+/* GENERAL SECTIONS */
+.section {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.section h2 {
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+/* SCHEDULING BOX */
+.schedule-box {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.schedule-box input,
+.schedule-box button {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.schedule-box button {
+  cursor: pointer;
+}
+
+</style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar">
-    <div class="logo">🐾 PolyPet</div>
-    <div class="nav-links">
-      <a onclick="scrollToSection('home')">Home</a>
-      <a onclick="scrollToSection('schedule')">Schedule</a>
-      <a onclick="scrollToSection('resources')">Resources</a>
-    </div>
-  </nav>
+<!-- HERO -->
+<section class="hero">
 
-  <!-- HERO -->
-<section id="home" class="hero">
-  <!-- Animated background blobs -->
-  <div class="bg-blobs">
+  <div class="blobs">
     <span></span>
     <span></span>
     <span></span>
   </div>
 
-  <div class="hero-container">
-    <!-- LEFT: PET PANEL -->
-    <div class="pet-panel">
-      <div class="pet-avatar">🦊</div>
-      <h3>Pika</h3>
-      <p>Level <span id="level">1</span></p>
-      <div class="xp-bar">
-        <div id="xp-fill"></div>
-      </div>
-      <p>🔥 Streak: <span id="streak">0</span> days</p>
-      <button onclick="completeLesson()">Play</button>
-    </div>
+  <div class="hero-content">
+    <h1>Welcome to PolyPet</h1>
+    <p>Your productivity companion 🦊</p>
+  </div>
 
-    <!-- CENTER: SPEECH BUBBLE -->
+  <div class="pet-panel">
+    <div class="fox">🦊</div>
     <div class="speech-bubble">
-      <div class="bubble-particles"></div> <!-- Tiny bubbles inside bubble -->
-      <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
-      <p>Clever like a fox, keep up the great work! 🌟</p>
+      Let's plan your day!
     </div>
+  </div>
 
-    <!-- RIGHT: FLOATING LESSON CARDS -->
-    <div class="lesson-cards">
-      <div class="lesson-card float">
-        <h4>Spanish Basics</h4>
-        <p>⭐ ⭐</p>
-        <span class="lvl">Lv. 2</span>
-      </div>
-      <div class="lesson-card float delay1">
-        <h4>Kanji Practice</h4>
-        <p>⭐ ⭐ ⭐</p>
-        <span class="lvl">Lv. 3</span>
-      </div>
-      <div class="lesson-card float delay2">
-        <h4>Grammar Quiz</h4>
-        <p>⭐</p>
-        <span class="lvl">Lv. 1</span>
-      </div>
-    </div>
+</section>
+
+<!-- SCHEDULE SECTION -->
+<section id="schedule" class="section">
+  <h2>Schedule</h2>
+
+  <div class="schedule-box">
+    <input type="text" id="taskInput" placeholder="Enter a task">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
   </div>
 </section>
-<!-- SCHEDULE -->
-  <section id="schedule" class="section">
-    <h2>Today's Schedule</h2>
 
-    <div class="filter-buttons">
-      <button onclick="filterSchedule('all')">All</button>
-      <button onclick="filterSchedule('spanish')">Spanish</button>
-      <button onclick="filterSchedule('mandarin')">Mandarin</button>
-    </div>
+<!-- RESOURCES SECTION -->
+<section id="resources" class="section">
+  <h2>Resources</h2>
+  <p>Study tools, productivity tips, and helpful links coming soon.</p>
+</section>
 
-    <div class="schedule-grid">
-      <div class="event spanish">
-        <h3>Spanish Lesson</h3>
-        <p>2:00 PM – 3:00 PM EST</p>
-      </div>
-      <div class="event mandarin">
-        <h3>Mandarin Lesson</h3>
-        <p>6:00 PM – 7:00 PM EST</p>
-      </div>
-    </div>
+<script>
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const list = document.getElementById("taskList");
 
-    <!-- INTERACTIVE CALENDAR -->
-    <div class="calendar-box">
-      <input type="date" id="lesson-date">
-      <button onclick="scheduleLesson()">Schedule Lesson</button>
-      <ul id="lesson-list"></ul>
-    </div>
+  if (input.value.trim() !== "") {
+    const li = document.createElement("li");
+    li.textContent = input.value;
+    list.appendChild(li);
+    input.value = "";
+  }
+}
+</script>
 
-    <!-- WORLD CLOCK -->
-    <div class="clock-container">
-      <div class="clock-box">
-        <h4>New Jersey</h4>
-        <p id="nj-time"></p>
-      </div>
-      <div class="clock-box">
-        <h4>California</h4>
-        <p id="ca-time"></p>
-      </div>
-      <div class="clock-box">
-        <h4>London</h4>
-        <p id="uk-time"></p>
-      </div>
-    </div>
-  </section>
-
-  <!-- RESOURCES -->
-  <section id="resources" class="section">
-    <h2>Resources</h2>
-    <div class="resources-grid">
-      <a class="resource-card">Video Lessons</a>
-      <a class="resource-card">Chatbox</a>
-      <a class="resource-card">Vocab Flashcards</a>
-      <a class="resource-card">Practice Mode</a>
-      <a class="resource-card">Unit Test</a>
-    </div>
-  </section>
-
-  <!-- CONFETTI CANVAS -->
-  <canvas id="confettiCanvas"></canvas>
-
-  <footer>
-    © 2026 PolyPet | NJ FBLA State Competition
-  </footer>
-
-  <script src="js/script.js"></script>
 </body>
 </html>
