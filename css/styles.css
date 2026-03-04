@@ -197,3 +197,95 @@ footer { padding:40px; text-align:center; background:white; margin-top:60px; }
   cursor:pointer;
   text-align:center;
 }
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: #fffafc;
+  margin: 0;
+  padding: 0;
+}
+
+.module-container {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 40px;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.module-header h1 {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+.module-header h2 {
+  font-size: 20px;
+  color: #ff4f81;
+  margin-bottom: 10px;
+}
+
+.module-header p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.menu-buttons button {
+  margin: 10px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 12px;
+  background: #ff4f81;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #e43b6f;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 10px;
+  background: #eee;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+#progressFill {
+  height: 100%;
+  width: 0%;
+  background: #ff4f81;
+  transition: width 0.3s ease;
+}
+
+.flashcard {
+  background: #fff5f8;
+  padding: 40px;
+  border-radius: 20px;
+  margin: 30px 0;
+  min-height: 120px;
+  cursor: pointer;
+}
+
+.practice-box input,
+.test-box input {
+  padding: 8px;
+  width: 80%;
+  margin: 5px 0 15px 0;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.nav-back {
+  margin-top: 30px;
+}
+
+.nav-back a {
+  text-decoration: none;
+  color: #888;
+  font-size: 14px;
+}
