@@ -98,7 +98,9 @@ function animateConfetti(){
     ctx.fillStyle = "#ff7f7f";
     ctx.fillRect(p.x,p.y,p.size,p.size);
   });
-  requestAnimationFrame(animate
+  requestAnimationFrame(animateConfetti);
+  }
+}
 // SPEECH BUBBLE PARTICLES
 const bubbleContainer = document.querySelector(".bubble-particles");
 for(let i=0;i<5;i++){
