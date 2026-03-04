@@ -58,4 +58,138 @@ body {
 }
 
 .blobs span:nth-child(2) {
-  bott
+  bottom: 15%;
+  right: 10%;
+  animation-delay: 3s;
+}
+
+.blobs span:nth-child(3) {
+  top: 50%;
+  left: 50%;
+  animation-delay: 6s;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-50px); }
+  100% { transform: translateY(0px); }
+}
+
+/* HERO CONTENT ABOVE BLOBS */
+.hero-content,
+.pet-panel {
+  position: relative;
+  z-index: 2;
+}
+
+/* PET PANEL (GLASSMORPHISM) */
+.pet-panel {
+  margin-top: 30px;
+  padding: 20px 30px;
+  border-radius: 20px;
+  backdrop-filter: blur(15px);
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+}
+
+.fox {
+  font-size: 60px;
+}
+
+.speech-bubble {
+  margin-top: 10px;
+  font-size: 18px;
+}
+
+/* GENERAL SECTIONS */
+.section {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.section h2 {
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+/* SCHEDULING BOX */
+.schedule-box {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 15px;
+  background: white;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+}
+
+.schedule-box input,
+.schedule-box button {
+  padding: 10px;
+  margin: 10px 0;
+  width: 100%;
+}
+
+.schedule-box button {
+  cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+
+  <div class="blobs">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="hero-content">
+    <h1>Welcome to PolyPet</h1>
+    <p>Your productivity companion 🦊</p>
+  </div>
+
+  <div class="pet-panel">
+    <div class="fox">🦊</div>
+    <div class="speech-bubble">
+      Let's plan your day!
+    </div>
+  </div>
+
+</section>
+
+<!-- SCHEDULE SECTION -->
+<section id="schedule" class="section">
+  <h2>Schedule</h2>
+
+  <div class="schedule-box">
+    <input type="text" id="taskInput" placeholder="Enter a task">
+    <button onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+</section>
+
+<!-- RESOURCES SECTION -->
+<section id="resources" class="section">
+  <h2>Resources</h2>
+  <p>Study tools, productivity tips, and helpful links coming soon.</p>
+</section>
+
+<script>
+function addTask() {
+  const input = document.getElementById("taskInput");
+  const list = document.getElementById("taskList");
+
+  if (input.value.trim() !== "") {
+    const li = document.createElement("li");
+    li.textContent = input.value;
+    list.appendChild(li);
+    input.value = "";
+  }
+}
+</script>
+
+</body>
+</html>
