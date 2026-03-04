@@ -1,9 +1,10 @@
-// SCROLLING
+// ---------------- SCROLLING ----------------
 function scrollToSection(id){
-  document.getElementById(id).scrollIntoView({behavior:"smooth"});
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:"smooth"});
 }
 
-// SCHEDULE FILTER
+// ---------------- SCHEDULE FILTER ----------------
 function filterSchedule(day){
   const events = document.querySelectorAll('.event');
   events.forEach(event=>{
@@ -11,43 +12,55 @@ function filterSchedule(day){
   });
 }
 
-// PET XP / LEVEL / STREAK
+// ---------------- PET XP / LEVEL / STREAK ----------------
 let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
 let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
 let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
 
 function updatePetUI(){
-  document.getElementById("level").textContent = level;
-  document.getElementById("streak").textContent = streak;
-  document.getElementById("xp-fill").style.width = (xp % 100) + "%";
+  const levelEl = document.getElementById("level");
+  const streakEl = document.getElementById("streak");
+  const xpFill = document.getElementById("xp-fill");
+
+  if(levelEl) levelEl.textContent = level;
+  if(streakEl) streakEl.textContent = streak;
+  if(xpFill) xpFill.style.width = (xp % 100) + "%";
 }
 
 function completeLesson(){
   xp += 20;
   streak += 1;
+
   if(xp >= level*100){
     level++;
     launchConfetti();
   }
+
   localStorage.setItem("xp",xp);
   localStorage.setItem("level",level);
   localStorage.setItem("streak",streak);
   updatePetUI();
 }
+
 updatePetUI();
 
-// INTERACTIVE CALENDAR
+// ---------------- INTERACTIVE CALENDAR ----------------
 function scheduleLesson(){
-  const date = document.getElementById("lesson-date").value;
+  const dateInput = document.getElementById("lesson-date");
+  const list = document.getElementById("lesson-list");
+  if(!dateInput || !list) return;
+
+  const date = dateInput.value;
   if(!date) return;
+
   const li = document.createElement("li");
   li.textContent = "Lesson scheduled for " + date;
-  document.getElementById("lesson-list").appendChild(li);
+  list.appendChild(li);
 }
 
-// FADE-IN SECTIONS
-const sections = document.querySelectorAll(".section");
+// ---------------- FADE-IN SECTIONS ----------------
 window.addEventListener("scroll", ()=>{
+  const sections = document.querySelectorAll(".section");
   sections.forEach(section=>{
     const top = section.getBoundingClientRect().top;
     if(top < window.innerHeight - 100){
@@ -56,21 +69,35 @@ window.addEventListener("scroll", ()=>{
   });
 });
 
-// TIME-BASED GREETING
+// ---------------- TIME-BASED GREETING ----------------
 function setGreeting(){
+  const greetingEl = document.getElementById("dynamicGreeting");
+  if(!greetingEl) return;
+
   const hour = new Date().getHours();
-  let greeting = (hour<12) ? "Good Morning, Emma ☀️" : (hour<18) ? "Good Afternoon, Emma 🌸" : "Good Evening, Emma 🌙";
-  document.getElementById("dynamicGreeting").textContent = greeting;
+  let greeting =
+    (hour<12) ? "Good Morning ☀️" :
+    (hour<18) ? "Good Afternoon 🌸" :
+    "Good Evening 🌙";
+
+  greetingEl.textContent = greeting;
 }
+
 setGreeting();
 
-// CONFETTI
-const canvas = document.getElementById("confettiCanvas");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// ---------------- CONFETTI (SAFE VERSION) ----------------
 let confetti = [];
+let canvas = document.getElementById("confettiCanvas");
+let ctx = canvas ? canvas.getContext("2d") : null;
+
+if(canvas){
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+
 function launchConfetti(){
+  if(!canvas || !ctx) return;
+
   for(let i=0;i<100;i++){
     confetti.push({
       x: Math.random()*canvas.width,
@@ -81,17 +108,22 @@ function launchConfetti(){
   }
   animateConfetti();
 }
+
 function animateConfetti(){
+  if(!ctx) return;
+
   ctx.clearRect(0,0,canvas.width,canvas.height);
+
   confetti.forEach(p=>{
     p.y += p.speed;
     ctx.fillStyle = "#ff7f7f";
     ctx.fillRect(p.x,p.y,p.size,p.size);
   });
+
   requestAnimationFrame(animateConfetti);
 }
 
-// ---------------------- DYNAMIC WORLD CLOCK ----------------------
+// ---------------- DYNAMIC WORLD CLOCK ----------------
 
 let timezones = [
   { country: "Japan", code: "Asia/Tokyo", flag: "🇯🇵" },
@@ -144,48 +176,48 @@ document.addEventListener("DOMContentLoaded", function () {
   setInterval(updateWorldClocks, 1000);
 
   const button = document.getElementById("add-clock-btn");
+  const input = document.getElementById("new-country");
 
-  button.addEventListener("click", function () {
+  if(button && input){
+    button.addEventListener("click", function () {
 
-    const input = document.getElementById("new-country");
-    const countryName = input.value.trim().toLowerCase();
+      const countryName = input.value.trim().toLowerCase();
+      if (!countryName) {
+        alert("Enter a country.");
+        return;
+      }
 
-    if (!countryName) {
-      alert("Enter a country.");
-      return;
-    }
+      const countryMap = {
+        india: "Asia/Kolkata",
+        japan: "Asia/Tokyo",
+        spain: "Europe/Madrid",
+        china: "Asia/Shanghai",
+        usa: "America/New_York",
+        uk: "Europe/London",
+        france: "Europe/Paris",
+        germany: "Europe/Berlin",
+        australia: "Australia/Sydney",
+        canada: "America/Toronto",
+        nepal: "Asia/Kathmandu"
+      };
 
-    const countryMap = {
-      india: "Asia/Kolkata",
-      japan: "Asia/Tokyo",
-      spain: "Europe/Madrid",
-      china: "Asia/Shanghai",
-      usa: "America/New_York",
-      uk: "Europe/London",
-      france: "Europe/Paris",
-      germany: "Europe/Berlin",
-      australia: "Australia/Sydney",
-      canada: "America/Toronto"
-    };
+      const timezone = countryMap[countryName];
 
-    const timezone = countryMap[countryName];
+      if (!timezone) {
+        alert("Country not supported.");
+        return;
+      }
 
-    if (!timezone) {
-      alert("Country not supported.");
-      return;
-    }
+      timezones.push({
+        country: countryName.charAt(0).toUpperCase() + countryName.slice(1),
+        code: timezone,
+        flag: "🌍"
+      });
 
-    timezones.push({
-      country: countryName.charAt(0).toUpperCase() + countryName.slice(1),
-      code: timezone,
-      flag: "🌍"
+      input.value = "";
+      renderClocks();
+      updateWorldClocks();
     });
-
-    input.value = "";
-
-    renderClocks();
-    updateWorldClocks();
-
-  });
+  }
 
 });
