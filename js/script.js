@@ -1,9 +1,9 @@
-// SCROLLING
+// ================= SCROLLING =================
 function scrollToSection(id){
   document.getElementById(id).scrollIntoView({behavior:"smooth"});
 }
 
-// SCHEDULE FILTER
+// ================= SCHEDULE FILTER =================
 function filterSchedule(day){
   const events = document.querySelectorAll('.event');
   events.forEach(event=>{
@@ -11,7 +11,7 @@ function filterSchedule(day){
   });
 }
 
-// PET XP / LEVEL / STREAK
+// ================= PET XP / LEVEL / STREAK =================
 let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
 let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
 let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
@@ -36,7 +36,7 @@ function completeLesson(){
 }
 updatePetUI();
 
-// INTERACTIVE CALENDAR
+// ================= INTERACTIVE CALENDAR =================
 function scheduleLesson(){
   const date = document.getElementById("lesson-date").value;
   if(!date) return;
@@ -45,7 +45,7 @@ function scheduleLesson(){
   document.getElementById("lesson-list").appendChild(li);
 }
 
-// FADE-IN SECTIONS
+// ================= FADE-IN SECTIONS =================
 const sections = document.querySelectorAll(".section");
 window.addEventListener("scroll", ()=>{
   sections.forEach(section=>{
@@ -56,20 +56,23 @@ window.addEventListener("scroll", ()=>{
   });
 });
 
-// TIME-BASED GREETING
+// ================= TIME GREETING =================
 function setGreeting(){
   const hour = new Date().getHours();
-  let greeting = (hour<12) ? "Good Morning, Emma ☀️" : (hour<18) ? "Good Afternoon, Emma 🌸" : "Good Evening, Emma 🌙";
+  let greeting = (hour<12) ? "Good Morning, Emma ☀️" :
+                 (hour<18) ? "Good Afternoon, Emma 🌸" :
+                 "Good Evening, Emma 🌙";
   document.getElementById("dynamicGreeting").textContent = greeting;
 }
 setGreeting();
 
-// CONFETTI
+// ================= CONFETTI =================
 const canvas = document.getElementById("confettiCanvas");
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 let confetti = [];
+
 function launchConfetti(){
   for(let i=0;i<100;i++){
     confetti.push({
@@ -81,6 +84,7 @@ function launchConfetti(){
   }
   animateConfetti();
 }
+
 function animateConfetti(){
   ctx.clearRect(0,0,canvas.width,canvas.height);
   confetti.forEach(p=>{
@@ -91,114 +95,103 @@ function animateConfetti(){
   requestAnimationFrame(animateConfetti);
 }
 
-// ---------------------- DYNAMIC WORLD CLOCK ----------------------
+// ================= WORLD CLOCK =================
 let timezones = [
   { country: "Japan", code: "Asia/Tokyo", flag: "🇯🇵" },
   { country: "Spain", code: "Europe/Madrid", flag: "🇪🇸" },
   { country: "China", code: "Asia/Shanghai", flag: "🇨🇳" }
 ];
 
-function createSafeId(str) {
-  return str.replace(/\//g, "-").replace(/\s/g, "").toLowerCase();
+function createSafeId(str){
+  return str.replace(/\//g,"-").replace(/\s/g,"").toLowerCase();
 }
 
-function renderClocks() {
-  const clockContainer = document.getElementById("clock-container");
-  if (!clockContainer) return;
-
-  clockContainer.innerHTML = "";
-
-  timezones.forEach(tz => {
-    const safeId = createSafeId(tz.code);
-
+function renderClocks(){
+  const container = document.getElementById("clock-container");
+  container.innerHTML = "";
+  timezones.forEach(tz=>{
+    const id = createSafeId(tz.code);
     const box = document.createElement("div");
     box.classList.add("clock-box");
     box.innerHTML = `
       <h4>${tz.flag} ${tz.country}</h4>
-      <p id="${safeId}">--:--:--</p>
+      <p id="${id}">--:--:--</p>
     `;
-
-    clockContainer.appendChild(box);
+    container.appendChild(box);
   });
 }
 
-function updateWorldClocks() {
+function updateWorldClocks(){
   const now = new Date();
-
-  timezones.forEach(tz => {
-    const safeId = createSafeId(tz.code);
-    const timeElem = document.getElementById(safeId);
-    if (!timeElem) return;
-
-    timeElem.textContent = now.toLocaleTimeString("en-US", {
-      timeZone: tz.code
-    });
+  timezones.forEach(tz=>{
+    const id = createSafeId(tz.code);
+    const el = document.getElementById(id);
+    if(el){
+      el.textContent = now.toLocaleTimeString("en-US",{timeZone:tz.code});
+    }
   });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-
+document.getElementById("add-clock-btn").addEventListener("click",()=>{
+  const countryInput = document.getElementById("new-country").value.trim();
+  const tzInput = document.getElementById("new-tz").value.trim();
+  if(!countryInput || !tzInput) return alert("Enter country and timezone");
+  timezones.push({country:countryInput, code:tzInput, flag:"🌍"});
   renderClocks();
-  updateWorldClocks();
-  setInterval(updateWorldClocks, 1000);
-
-  const button = document.getElementById("add-clock-btn");
-
-  if(button){
-    button.addEventListener("click", function () {
-
-      const countryInput = document.getElementById("new-country");
-      const tzInput = document.getElementById("new-tz");
-
-      if(!countryInput || !tzInput) return;
-
-      const countryName = countryInput.value.trim();
-      const manualTZ = tzInput.value.trim();
-
-      if(!countryName){
-        alert("Enter a country name.");
-        return;
-      }
-
-      const countryMap = {
-        india: "Asia/Kolkata",
-        japan: "Asia/Tokyo",
-        spain: "Europe/Madrid",
-        china: "Asia/Shanghai",
-        usa: "America/New_York",
-        uk: "Europe/London",
-        france: "Europe/Paris",
-        germany: "Europe/Berlin",
-        australia: "Australia/Sydney",
-        canada: "America/Toronto",
-        nepal: "Asia/Kathmandu"
-      };
-
-      let timezone;
-
-      if(manualTZ){
-        timezone = manualTZ;
-      } else {
-        timezone = countryMap[countryName.toLowerCase()];
-      }
-
-      if(!timezone){
-        alert("Timezone not recognized. Enter manually like Europe/Berlin");
-        return;
-      }
-
-      timezones.push({
-        country: countryName,
-        code: timezone,
-        flag: "🌍"
-      });
-
-      countryInput.value = "";
-      tzInput.value = "";
-
-      renderClocks();
-      updateWorldClocks();
-    });
-  }
-
 });
+
+renderClocks();
+updateWorldClocks();
+setInterval(updateWorldClocks,1000);
+
+// ================= LANGUAGE SYSTEM =================
+let flashcards = [];
+let currentCard = 0;
+let flipped = false;
+
+function loadSpanishLevel3(){
+  flashcards = [
+    {front:"Aunque", back:"Although"},
+    {front:"Sin embargo", back:"However"},
+    {front:"A pesar de", back:"Despite"},
+    {front:"Lograr", back:"To achieve"},
+    {front:"Desarrollar", back:"To develop"}
+  ];
+  currentCard = 0;
+  flipped = false;
+  showCard();
+}
+
+function showCard(){
+  if(!flashcards.length) return;
+  document.getElementById("flashcard").textContent =
+    flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
+}
+
+function flipCard(){
+  flipped = !flipped;
+  showCard();
+}
+
+function nextCard(){
+  currentCard = (currentCard+1) % flashcards.length;
+  flipped = false;
+  showCard();
+}
+
+function checkPractice(){
+  const input = document.getElementById("practiceInput").value.toLowerCase();
+  const result = document.getElementById("practiceResult");
+  if(input==="aunque"){
+    result.textContent="✅ Correct!";
+  } else {
+    result.textContent="❌ Try again.";
+  }
+}
+
+function submitTest(){
+  let score=0;
+  if(document.querySelector('input[name="q1"]:checked')?.value==="however") score++;
+  if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
+  document.getElementById("testScore").textContent="Score: "+score+"/2";
+}
