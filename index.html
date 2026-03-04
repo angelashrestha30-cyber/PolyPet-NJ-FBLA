@@ -21,11 +21,55 @@
 
   <!-- HERO -->
   <section id="home" class="hero">
-    <div class="hero-content">
-      <h1>Learn a new language with your furry friend!</h1>
-      <button onclick="scrollToSection('schedule')">Start Learning</button>
+
+  <div class="hero-container">
+
+    <!-- LEFT: PET CARD -->
+    <div class="pet-panel">
+      <div class="pet-avatar">🦊</div>
+      <h3>Pika</h3>
+      <p>Level <span id="level">1</span></p>
+
+      <div class="xp-bar">
+        <div id="xp-fill"></div>
+      </div>
+
+      <p>🔥 <span id="streak">0</span> Day Streak</p>
+      <button onclick="completeLesson()">Play</button>
     </div>
-  </section>
+
+    <!-- CENTER: SPEECH BUBBLE -->
+    <div class="speech-bubble">
+      <h2>Welcome Back, Emma!</h2>
+      <p>Clever like a fox, keep up the great progress! 🌟</p>
+    </div>
+
+    <!-- RIGHT: FLOATING LESSON CARDS -->
+    <div class="lesson-cards">
+
+      <div class="lesson-card float">
+        <h4>Spanish Basics</h4>
+        <p>⭐ ⭐ ⭐</p>
+        <span class="lvl">Lv. 2</span>
+      </div>
+
+      <div class="lesson-card float delay1">
+        <h4>Kanji Practice</h4>
+        <p>⭐ ⭐ ⭐ ⭐</p>
+        <span class="lvl">Lv. 3</span>
+      </div>
+
+      <div class="lesson-card float delay2">
+        <h4>Grammar Quiz</h4>
+        <p>⭐ ⭐</p>
+        <span class="lvl">Lv. 1</span>
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
 
   <!-- SCHEDULE -->
   <section id="schedule" class="section">
