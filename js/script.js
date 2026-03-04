@@ -90,3 +90,13 @@ function animateConfetti(){
   });
   requestAnimationFrame(animateConfetti);
 }
+
+// WORLD CLOCKS
+function updateWorldClocks(){
+  const now = new Date();
+  document.getElementById("japan-time").textContent = now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"});
+  document.getElementById("spain-time").textContent = now.toLocaleTimeString("en-GB",{timeZone:"Europe/Madrid"});
+  document.getElementById("china-time").textContent = now.toLocaleTimeString("en-US",{timeZone:"Asia/Shanghai"});
+}
+setInterval(updateWorldClocks,1000);
+updateWorldClocks();
