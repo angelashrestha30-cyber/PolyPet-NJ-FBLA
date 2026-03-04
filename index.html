@@ -117,7 +117,16 @@
         <p id="uk-time"></p>
       </div>
     </div>
-
+<div class="calendar-box">
+  <input type="date" id="tutor-date">
+  <select id="tutor-time">
+    <option>10:00 AM</option>
+    <option>2:00 PM</option>
+    <option>6:00 PM</option>
+  </select>
+  <button onclick="scheduleTutor()">Schedule with Tutor</button>
+  <ul id="tutor-list"></ul>
+</div>
   </section>
 
   <!-- RESOURCES -->
@@ -140,13 +149,3 @@
   <script src="js/script.js"></script>
 </body>
 </html>
-<div class="calendar-box">
-  <input type="date" id="tutor-date">
-  <select id="tutor-time">
-    <option>10:00 AM</option>
-    <option>2:00 PM</option>
-    <option>6:00 PM</option>
-  </select>
-  <button onclick="scheduleTutor()">Schedule with Tutor</button>
-  <ul id="tutor-list"></ul>
-</div>
