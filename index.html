@@ -21,8 +21,7 @@
 
   <!-- HERO -->
   <section id="home" class="hero">
-
-    <!-- ANIMATED BACKGROUND BLOBS -->
+    <!-- Animated background blobs -->
     <div class="bg-blobs">
       <span></span>
       <span></span>
@@ -30,7 +29,6 @@
     </div>
 
     <div class="hero-container">
-
       <!-- LEFT: PET CARD -->
       <div class="pet-panel">
         <div class="pet-avatar">🦊</div>
@@ -46,28 +44,27 @@
       <!-- CENTER: SPEECH BUBBLE -->
       <div class="speech-bubble">
         <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
-        <p>You're doing amazing. Keep learning! 🌟</p>
+        <p>Clever like a fox, keep up the great work! 🌟</p>
       </div>
 
       <!-- RIGHT: FLOATING LESSON CARDS -->
       <div class="lesson-cards">
         <div class="lesson-card float">
           <h4>Spanish Basics</h4>
-          <p>⭐ ⭐ ⭐</p>
+          <p>⭐ ⭐</p>
           <span class="lvl">Lv. 2</span>
         </div>
         <div class="lesson-card float delay1">
           <h4>Kanji Practice</h4>
-          <p>⭐ ⭐ ⭐ ⭐</p>
+          <p>⭐ ⭐ ⭐</p>
           <span class="lvl">Lv. 3</span>
         </div>
         <div class="lesson-card float delay2">
           <h4>Grammar Quiz</h4>
-          <p>⭐ ⭐</p>
+          <p>⭐</p>
           <span class="lvl">Lv. 1</span>
         </div>
       </div>
-
     </div>
   </section>
 
@@ -81,12 +78,6 @@
       <button onclick="filterSchedule('mandarin')">Mandarin</button>
     </div>
 
-    <div class="calendar-box">
-      <input type="date" id="lesson-date">
-      <button onclick="scheduleLesson()">Schedule Lesson</button>
-      <ul id="lesson-list"></ul>
-    </div>
-
     <div class="schedule-grid">
       <div class="event spanish">
         <h3>Spanish Lesson</h3>
@@ -96,6 +87,13 @@
         <h3>Mandarin Lesson</h3>
         <p>6:00 PM – 7:00 PM EST</p>
       </div>
+    </div>
+
+    <!-- INTERACTIVE CALENDAR -->
+    <div class="calendar-box">
+      <input type="date" id="lesson-date">
+      <button onclick="scheduleLesson()">Schedule Lesson</button>
+      <ul id="lesson-list"></ul>
     </div>
 
     <!-- WORLD CLOCK -->
@@ -113,7 +111,6 @@
         <p id="uk-time"></p>
       </div>
     </div>
-
   </section>
 
   <!-- RESOURCES -->
@@ -128,12 +125,12 @@
     </div>
   </section>
 
+  <!-- CONFETTI CANVAS -->
+  <canvas id="confettiCanvas"></canvas>
+
   <footer>
     © 2026 PolyPet | NJ FBLA State Competition
   </footer>
-
-  <!-- CONFETTI CANVAS -->
-  <canvas id="confettiCanvas"></canvas>
 
   <script src="js/script.js"></script>
 </body>
