@@ -21,12 +21,11 @@
 
   <!-- HERO -->
   <section id="home" class="hero">
-
-    <!-- Animated blobs -->
     <div class="bg-blobs">
-      <span></span><span></span><span></span>
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
-
     <div class="hero-container">
 
       <!-- LEFT: PET CARD -->
@@ -43,8 +42,8 @@
 
       <!-- CENTER: SPEECH BUBBLE -->
       <div class="speech-bubble">
-        <h2 id="dynamicGreeting"></h2>
-        <p>You're doing amazing. Keep learning! 🌟</p>
+        <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
+        <p>Keep learning with your furry friend! 🌟</p>
       </div>
 
       <!-- RIGHT: FLOATING LESSON CARDS -->
@@ -72,7 +71,7 @@
 
     </div>
 
-    <!-- LESSON CONTENT MODULE -->
+    <!-- LESSON MODULE OVERLAY -->
     <div id="lesson-content" class="lesson-content" style="display:none;">
       <button onclick="closeLesson()">⬅ Back</button>
       <div id="lesson-module"></div>
@@ -87,8 +86,7 @@
     <div class="filter-buttons">
       <button onclick="filterSchedule('all')">All</button>
       <button onclick="filterSchedule('spanish')">Spanish</button>
-      <button onclick="filterSchedule('kanji')">Kanji</button>
-      <button onclick="filterSchedule('grammar')">Grammar</button>
+      <button onclick="filterSchedule('mandarin')">Mandarin</button>
     </div>
 
     <div class="schedule-grid">
@@ -96,12 +94,9 @@
         <h3>Spanish Lesson</h3>
         <p>2:00 PM – 3:00 PM EST</p>
       </div>
-      <div class="event kanji">
-        <h3>Kanji Lesson</h3>
-        <p>4:00 PM – 5:00 PM EST</p>
-      </div>
-      <div class="event grammar">
-        <h3>Grammar Lesson</h3>
+
+      <div class="event mandarin">
+        <h3>Mandarin Lesson</h3>
         <p>6:00 PM – 7:00 PM EST</p>
       </div>
     </div>
@@ -139,10 +134,12 @@
   <!-- RESOURCES -->
   <section id="resources" class="section pink">
     <h2>Resources</h2>
+
     <div class="resources-grid">
+      <a class="resource-card" onclick="openLesson('spanish')">Spanish Flashcards</a>
+      <a class="resource-card" onclick="openLesson('kanji')">Kanji Flashcards</a>
+      <a class="resource-card" onclick="openLesson('grammar')">Grammar Test</a>
       <a class="resource-card">Video Lessons</a>
-      <a class="resource-card">Chatbox</a>
-      <a class="resource-card">Vocab Flashcards</a>
       <a class="resource-card">Practice Mode</a>
       <a class="resource-card">Unit Test</a>
     </div>
@@ -152,7 +149,7 @@
     © 2026 PolyPet | NJ FBLA State Competition
   </footer>
 
-  <!-- Confetti Canvas -->
+  <!-- CONFETTI CANVAS -->
   <canvas id="confettiCanvas"></canvas>
 
   <script src="js/script.js"></script>
