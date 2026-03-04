@@ -91,15 +91,6 @@ function animateConfetti(){
   requestAnimationFrame(animateConfetti);
 }
 
-// WORLD CLOCKS
-function updateWorldClocks(){
-  const now = new Date();
-  document.getElementById("japan-time").textContent = now.toLocaleTimeString("en-US",{timeZone:"Asia/Tokyo"});
-  document.getElementById("spain-time").textContent = now.toLocaleTimeString("en-GB",{timeZone:"Europe/Madrid"});
-  document.getElementById("china-time").textContent = now.toLocaleTimeString("en-US",{timeZone:"Asia/Shanghai"});
-}
-setInterval(updateWorldClocks,1000);
-updateWorldClocks();
 // ---------------------- DYNAMIC WORLD CLOCK ----------------------
 
 let timezones = [
@@ -140,60 +131,61 @@ function updateWorldClocks() {
     const timeElem = document.getElementById(safeId);
     if (!timeElem) return;
 
-    try {
-      timeElem.textContent = now.toLocaleTimeString("en-US", {
-        timeZone: tz.code
-      });
-    } catch {
-      timeElem.textContent = "Invalid";
-    }
+    timeElem.textContent = now.toLocaleTimeString("en-US", {
+      timeZone: tz.code
+    });
   });
 }
 
-function addCustomClock() {
-  const input = document.getElementById("new-country");
-  const countryName = input.value.trim().toLowerCase();
-
-  if (!countryName) {
-    alert("Enter a country.");
-    return;
-  }
-
-  const countryMap = {
-    japan: "Asia/Tokyo",
-    spain: "Europe/Madrid",
-    china: "Asia/Shanghai",
-    usa: "America/New_York",
-    india: "Asia/Kolkata",
-    uk: "Europe/London",
-    france: "Europe/Paris",
-    germany: "Europe/Berlin",
-    australia: "Australia/Sydney",
-    canada: "America/Toronto"
-  };
-
-  const timezone = countryMap[countryName];
-
-  if (!timezone) {
-    alert("Country not supported.");
-    return;
-  }
-
-  timezones.push({
-    country: countryName.charAt(0).toUpperCase() + countryName.slice(1),
-    code: timezone,
-    flag: "🌍"
-  });
-
-  input.value = "";
-
-  renderClocks();
-  updateWorldClocks();
-}
-
-// Wait until page loads before rendering
 document.addEventListener("DOMContentLoaded", function () {
+
   renderClocks();
   updateWorldClocks();
   setInterval(updateWorldClocks, 1000);
+
+  const button = document.getElementById("add-clock-btn");
+
+  button.addEventListener("click", function () {
+
+    const input = document.getElementById("new-country");
+    const countryName = input.value.trim().toLowerCase();
+
+    if (!countryName) {
+      alert("Enter a country.");
+      return;
+    }
+
+    const countryMap = {
+      india: "Asia/Kolkata",
+      japan: "Asia/Tokyo",
+      spain: "Europe/Madrid",
+      china: "Asia/Shanghai",
+      usa: "America/New_York",
+      uk: "Europe/London",
+      france: "Europe/Paris",
+      germany: "Europe/Berlin",
+      australia: "Australia/Sydney",
+      canada: "America/Toronto"
+    };
+
+    const timezone = countryMap[countryName];
+
+    if (!timezone) {
+      alert("Country not supported.");
+      return;
+    }
+
+    timezones.push({
+      country: countryName.charAt(0).toUpperCase() + countryName.slice(1),
+      code: timezone,
+      flag: "🌍"
+    });
+
+    input.value = "";
+
+    renderClocks();
+    updateWorldClocks();
+
+  });
+
 });
