@@ -177,3 +177,23 @@ footer { padding:40px; text-align:center; background:white; margin-top:60px; }
     align-items: center;
   }
 }
+/* LEARNING SECTION */
+.language-panel { margin-bottom:20px; text-align:center; }
+
+.learning-box {
+  background:white;
+  padding:20px;
+  border-radius:16px;
+  margin-top:20px;
+  box-shadow:0 6px 18px rgba(0,0,0,0.08);
+}
+
+#flashcard {
+  background:#fff1f1;
+  padding:40px;
+  margin:15px 0;
+  border-radius:14px;
+  font-weight:600;
+  cursor:pointer;
+  text-align:center;
+}
