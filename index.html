@@ -22,53 +22,83 @@
   <!-- HERO -->
   <section id="home" class="hero">
 
-    <!-- LEFT: PET PANEL -->
-    <div class="pet-panel">
-      <div class="pet-avatar">🦊</div>
-      <h3>Pika</h3>
-      <p>Level <span id="level">1</span></p>
-      <p>🔥 <span id="streak">0</span> Day Streak</p>
-      <button onclick="completeLesson()">Play</button>
+    <!-- ANIMATED BACKGROUND BLOBS -->
+    <div class="bg-blobs">
+      <span></span>
+      <span></span>
+      <span></span>
     </div>
 
-    <!-- CENTER: SPEECH BUBBLE -->
-    <div class="speech-bubble">
-      <h2 id="dynamicGreeting">Good Evening, Emma 🌙</h2>
-      <p>You're doing amazing. Keep learning! 🌟</p>
-    </div>
+    <div class="hero-container">
 
-    <!-- RIGHT: LESSON CARDS -->
-    <div class="lesson-cards">
-      <div class="lesson-card" onclick="openLesson('spanish')">
-        <h4>Spanish Basics</h4>
-        <p>⭐ ⭐</p>
-        <span class="lvl">Lv. 2</span>
+      <!-- LEFT: PET CARD -->
+      <div class="pet-panel">
+        <div class="pet-avatar">🦊</div>
+        <h3>Pika</h3>
+        <p>Level <span id="level">1</span></p>
+        <div class="xp-bar">
+          <div id="xp-fill"></div>
+        </div>
+        <p>🔥 <span id="streak">0</span> Day Streak</p>
+        <button onclick="completeLesson()">Play</button>
       </div>
-      <div class="lesson-card" onclick="openLesson('kanji')">
-        <h4>Kanji Practice</h4>
-        <p>⭐ ⭐ ⭐</p>
-        <span class="lvl">Lv. 3</span>
-      </div>
-      <div class="lesson-card" onclick="openLesson('grammar')">
-        <h4>Grammar Quiz</h4>
-        <p>⭐</p>
-        <span class="lvl">Lv. 1</span>
-      </div>
-    </div>
 
+      <!-- CENTER: SPEECH BUBBLE -->
+      <div class="speech-bubble">
+        <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
+        <p>You're doing amazing. Keep learning! 🌟</p>
+      </div>
+
+      <!-- RIGHT: FLOATING LESSON CARDS -->
+      <div class="lesson-cards">
+        <div class="lesson-card float">
+          <h4>Spanish Basics</h4>
+          <p>⭐ ⭐ ⭐</p>
+          <span class="lvl">Lv. 2</span>
+        </div>
+        <div class="lesson-card float delay1">
+          <h4>Kanji Practice</h4>
+          <p>⭐ ⭐ ⭐ ⭐</p>
+          <span class="lvl">Lv. 3</span>
+        </div>
+        <div class="lesson-card float delay2">
+          <h4>Grammar Quiz</h4>
+          <p>⭐ ⭐</p>
+          <span class="lvl">Lv. 1</span>
+        </div>
+      </div>
+
+    </div>
   </section>
 
-  <!-- LESSON POPUP -->
-  <div id="lesson-content" class="lesson-content" style="display:none;">
-    <button onclick="closeLesson()">⬅ Back</button>
-    <div id="lesson-module"></div>
-  </div>
-
-  <!-- SCHEDULE SECTION -->
+  <!-- SCHEDULE -->
   <section id="schedule" class="section">
     <h2>Today's Schedule</h2>
 
-    <!-- WORLD CLOCKS -->
+    <div class="filter-buttons">
+      <button onclick="filterSchedule('all')">All</button>
+      <button onclick="filterSchedule('spanish')">Spanish</button>
+      <button onclick="filterSchedule('mandarin')">Mandarin</button>
+    </div>
+
+    <div class="calendar-box">
+      <input type="date" id="lesson-date">
+      <button onclick="scheduleLesson()">Schedule Lesson</button>
+      <ul id="lesson-list"></ul>
+    </div>
+
+    <div class="schedule-grid">
+      <div class="event spanish">
+        <h3>Spanish Lesson</h3>
+        <p>2:00 PM – 3:00 PM EST</p>
+      </div>
+      <div class="event mandarin">
+        <h3>Mandarin Lesson</h3>
+        <p>6:00 PM – 7:00 PM EST</p>
+      </div>
+    </div>
+
+    <!-- WORLD CLOCK -->
     <div class="clock-container">
       <div class="clock-box">
         <h4>New Jersey</h4>
@@ -84,21 +114,10 @@
       </div>
     </div>
 
-    <!-- TUTOR SCHEDULING -->
-    <div class="calendar-box">
-      <input type="date" id="tutor-date">
-      <select id="tutor-time">
-        <option>10:00 AM</option>
-        <option>2:00 PM</option>
-        <option>6:00 PM</option>
-      </select>
-      <button onclick="scheduleTutor()">Schedule with Tutor</button>
-      <ul id="tutor-list"></ul>
-    </div>
   </section>
 
-  <!-- RESOURCES SECTION -->
-  <section id="resources" class="section pink">
+  <!-- RESOURCES -->
+  <section id="resources" class="section">
     <h2>Resources</h2>
     <div class="resources-grid">
       <a class="resource-card">Video Lessons</a>
@@ -112,6 +131,9 @@
   <footer>
     © 2026 PolyPet | NJ FBLA State Competition
   </footer>
+
+  <!-- CONFETTI CANVAS -->
+  <canvas id="confettiCanvas"></canvas>
 
   <script src="js/script.js"></script>
 </body>
