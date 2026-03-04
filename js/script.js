@@ -92,3 +92,31 @@ function closeLesson(){
 }
 
 setGreeting();
+document.querySelectorAll(".lesson-card").forEach(card=>{
+  card.addEventListener("click",()=>{
+    if(card.querySelector("h4").textContent.includes("Spanish")){
+      openLesson("spanish");
+    }
+    if(card.querySelector("h4").textContent.includes("Kanji")){
+      openLesson("kanji");
+    }
+    if(card.querySelector("h4").textContent.includes("Grammar")){
+      openLesson("grammar");
+    }
+  });
+});
+function startFlashcards(lang){
+  lessonModule.innerHTML = `<h3>${lang} Flashcards</h3>
+    <div id="flashcard">Hola</div>
+    <button onclick="nextCard()">Next Card</button>`;
+  
+  window.flashcards = lang === 'spanish' ? ["Hola", "Adiós", "Gracias"] :
+                      lang === 'kanji' ? ["日","月","水"] :
+                      ["Subject-Verb", "Tense", "Agreement"];
+  window.cardIndex = 0;
+}
+
+function nextCard(){
+  cardIndex = (cardIndex + 1) % flashcards.length;
+  document.getElementById("flashcard").textContent = flashcards[cardIndex];
+}
