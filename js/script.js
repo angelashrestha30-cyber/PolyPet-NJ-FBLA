@@ -1,254 +1,149 @@
-// ================= DOM READY =================
-document.addEventListener("DOMContentLoaded", function () {
+// ================= RESOURCES / FLASHCARDS / PRACTICE / TEST =================
+let flashcards = [
+  {front:"Aunque", back:"Although"},
+  {front:"Sin embargo", back:"However"},
+  {front:"A pesar de", back:"Despite"},
+  {front:"Lograr", back:"To achieve"},
+  {front:"Desarrollar", back:"To develop"},
+  {front:"Rápidamente", back:"Quickly"},
+  {front:"Importante", back:"Important"},
+  {front:"Fácil", back:"Easy"},
+  {front:"Difícil", back:"Difficult"},
+  {front:"Gracias", back:"Thank you"}
+];
 
-  // ================= SCROLLING =================
-  window.scrollToSection = function(id){
-    const el = document.getElementById(id);
-    if(el) el.scrollIntoView({behavior:"smooth"});
-  }
+let currentCard = 0;
+let flipped = false;
 
-  // ================= PET XP / LEVEL / STREAK =================
-  let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
-  let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
-  let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
-
-  function updatePetUI(){
-    document.getElementById("level").textContent = level;
-    document.getElementById("streak").textContent = streak;
-    document.getElementById("xp-fill").style.width = (xp % 100) + "%";
-  }
-
-  window.completeLesson = function(){
-    xp += 20;
-    streak += 1;
-    if(xp >= level*100){
-      level++;
-      launchConfetti();
-    }
-    localStorage.setItem("xp",xp);
-    localStorage.setItem("level",level);
-    localStorage.setItem("streak",streak);
-    updatePetUI();
-  }
-  updatePetUI();
-
-  // ================= SCHEDULE FILTER =================
-  window.filterSchedule = function(day){
-    const events = document.querySelectorAll('.event');
-    events.forEach(event=>{
-      event.style.display = (day==="all" || event.classList.contains(day)) ? "block" : "none";
-    });
-  }
-
-  // ================= INTERACTIVE CALENDAR =================
-  window.scheduleLesson = function(){
-    const date = document.getElementById("lesson-date").value;
-    if(!date) return;
-    const li = document.createElement("li");
-    li.textContent = "Lesson scheduled for " + date;
-    document.getElementById("lesson-list").appendChild(li);
-  }
-
-  // ================= FADE-IN SECTIONS =================
-  const sections = document.querySelectorAll(".section");
-  function fadeInSections(){
-    sections.forEach(section=>{
-      const top = section.getBoundingClientRect().top;
-      if(top < window.innerHeight - 100){
-        section.classList.add("visible");
-      }
-    });
-  }
-  fadeInSections();
-  window.addEventListener("scroll", fadeInSections);
-
-  // ================= TIME GREETING =================
-  function setGreeting(){
-    const hour = new Date().getHours();
-    let greeting = (hour<12) ? "Good Morning, Emma ☀️" :
-                   (hour<18) ? "Good Afternoon, Emma 🌸" :
-                   "Good Evening, Emma 🌙";
-    document.getElementById("dynamicGreeting").textContent = greeting;
-  }
-  setGreeting();
-
-  // ================= CONFETTI =================
-  const canvas = document.getElementById("confettiCanvas");
-  const ctx = canvas.getContext("2d");
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-  let confetti = [];
-
-  function launchConfetti(){
-    for(let i=0;i<100;i++){
-      confetti.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height - canvas.height,
-        size: Math.random()*6+4,
-        speed: Math.random()*3+2
-      });
-    }
-    animateConfetti();
-  }
-
-  function animateConfetti(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    confetti.forEach(p=>{
-      p.y += p.speed;
-      ctx.fillStyle = "#ff7f7f";
-      ctx.fillRect(p.x,p.y,p.size,p.size);
-    });
-    confetti = confetti.filter(p=>p.y < canvas.height);
-    if(confetti.length>0) requestAnimationFrame(animateConfetti);
-  }
-
-  // ================= WORLD CLOCK =================
-  let timezones = [
-    { country: "Japan", code: "Asia/Tokyo", flag: "🇯🇵" },
-    { country: "Spain", code: "Europe/Madrid", flag: "🇪🇸" },
-    { country: "China", code: "Asia/Shanghai", flag: "🇨🇳" }
-  ];
-
-  function createSafeId(str){ return str.replace(/\//g,"-").replace(/\s/g,"").toLowerCase(); }
-
-  function renderClocks(){
-    const container = document.getElementById("clock-container");
-    if(!container) return;
-    container.innerHTML = "";
-    timezones.forEach(tz=>{
-      const id = createSafeId(tz.code);
-      const box = document.createElement("div");
-      box.classList.add("clock-box");
-      box.innerHTML = `<h4>${tz.flag} ${tz.country}</h4><p id="${id}">--:--:--</p>`;
-      container.appendChild(box);
-    });
-  }
-
-  function updateWorldClocks(){
-    const now = new Date();
-    timezones.forEach(tz=>{
-      const id = createSafeId(tz.code);
-      const el = document.getElementById(id);
-      if(el) el.textContent = now.toLocaleTimeString("en-US",{timeZone:tz.code});
-    });
-  }
-
-  const addClockBtn = document.getElementById("add-clock-btn");
-  if(addClockBtn){
-    addClockBtn.addEventListener("click", ()=>{
-      const countryInput = document.getElementById("new-country").value.trim();
-      const tzInput = document.getElementById("new-tz").value.trim();
-      if(!countryInput || !tzInput) return alert("Enter country and timezone");
-      timezones.push({country:countryInput, code:tzInput, flag:"🌍"});
-      document.getElementById("new-country").value="";
-      document.getElementById("new-tz").value="";
-      renderClocks();
-    });
-  }
-
-  renderClocks();
-  updateWorldClocks();
-  setInterval(updateWorldClocks,1000);
-
-  // ================= RESOURCE TAB SWITCHING =================
-  window.showResource = function(name){
-    const sections = document.querySelectorAll(".resource-content");
-    sections.forEach(sec => sec.style.display = "none");
-    const target = document.getElementById(name);
-    if(target) target.style.display = "block";
-  }
-  showResource("video");
-
-  // ================= FLASHCARDS =================
-  let flashcards = [
-    {front:"Aunque", back:"Although"},
-    {front:"Sin embargo", back:"However"},
-    {front:"A pesar de", back:"Despite"},
-    {front:"Lograr", back:"To achieve"},
-    {front:"Desarrollar", back:"To develop"},
-    {front:"Aprender", back:"To learn"},
-    {front:"Estudiar", back:"To study"},
-    {front:"Hablar", back:"To speak"},
-    {front:"Escuchar", back:"To listen"},
-    {front:"Leer", back:"To read"},
-    {front:"Escribir", back:"To write"},
-    {front:"Comer", back:"To eat"},
-    {front:"Beber", back:"To drink"},
-    {front:"Vivir", back:"To live"},
-    {front:"Trabajar", back:"To work"},
-    {front:"Jugar", back:"To play"},
-    {front:"Dormir", back:"To sleep"},
-    {front:"Comprar", back:"To buy"},
-    {front:"Ir", back:"To go"},
-    {front:"Venir", back:"To come"}
-  ];
-
-  let currentCard = 0;
-  let flipped = false;
-
-  function showCard(){
-    const card = document.getElementById("flashcard");
-    if(!card) return;
-    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
-  }
-
-  window.flipCard = function(){
-    flipped = !flipped;
-    showCard();
-  }
-
-  window.nextCard = function(){
-    currentCard = (currentCard+1) % flashcards.length;
-    flipped = false;
-    showCard();
-  }
-
+function loadFlashcards() {
+  currentCard = 0;
+  flipped = false;
   showCard();
+}
 
-  // ================= PRACTICE MODE =================
-  let practiceSentences = [
-    {sentence:"___ es difícil, lo intentaré.", answer:"aunque"},
-    {sentence:"No me gusta el café, ___ lo tomo por la mañana.", answer:"pero"},
-    {sentence:"Quiero ir al cine, ___ tengo tarea.", answer:"pero"},
-    {sentence:"Ella estudia mucho, ___ no aprueba el examen.", answer:"aunque"},
-    {sentence:"___ llueva, saldré a correr.", answer:"aunque"}
-  ];
+function showCard() {
+  const card = document.getElementById("flashcard");
+  if(!card) return;
+  card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
+}
 
-  window.checkPractice = function(){
-    const input = document.getElementById("practiceInput").value.toLowerCase().trim();
-    const result = document.getElementById("practiceResult");
-    const correct = practiceSentences[0].answer; // Example using first sentence
-    if(input === correct){
-      result.textContent = "✅ Correct!";
-    } else {
-      result.textContent = `❌ Incorrect. Correct: "${correct}"`;
-    }
+function flipCard() {
+  flipped = !flipped;
+  showCard();
+}
+
+function nextCard() {
+  currentCard = (currentCard + 1) % flashcards.length;
+  flipped = false;
+  showCard();
+}
+
+// ================= PRACTICE MODE =================
+let practiceQuestions = [
+  {question:"Translate 'Aunque' to English", answer:"although"},
+  {question:"Translate 'Sin embargo' to English", answer:"however"},
+  {question:"Translate 'Lograr' to English", answer:"to achieve"},
+  {question:"Translate 'Desarrollar' to English", answer:"to develop"},
+  {question:"Translate 'Difícil' to English", answer:"difficult"}
+];
+
+let practiceIndex = 0;
+
+function startPractice() {
+  practiceIndex = 0;
+  document.getElementById("nextPracticeBtn").style.display = "none";
+  showPractice();
+}
+
+function showPractice() {
+  const q = practiceQuestions[practiceIndex];
+  document.getElementById("practiceQuestion").textContent = q.question;
+  document.getElementById("practiceInput").value = "";
+  document.getElementById("practiceResult").textContent = "";
+  document.getElementById("nextPracticeBtn").style.display = "none";
+}
+
+function checkPractice() {
+  const input = document.getElementById("practiceInput").value.trim().toLowerCase();
+  const result = document.getElementById("practiceResult");
+  const correct = practiceQuestions[practiceIndex].answer.toLowerCase();
+
+  if(input === correct) {
+    result.textContent = "✅ Correct!";
+  } else {
+    result.textContent = `❌ Incorrect. Correct answer: ${practiceQuestions[practiceIndex].answer}`;
   }
 
-  // ================= UNIT TEST =================
-  let testQuestions = [
-    {q:"Sin embargo means:", options:["However","Despite","Although"], answer:"However", explanation:"Sin embargo translates to 'However' in English."},
-    {q:"Lograr means:", options:["To achieve","To develop","To learn"], answer:"To achieve", explanation:"Lograr translates to 'To achieve'."},
-    {q:"Aunque means:", options:["Although","Because","But"], answer:"Although", explanation:"Aunque translates to 'Although'."},
-    {q:"Aprender means:", options:["To learn","To play","To eat"], answer:"To learn", explanation:"Aprender translates to 'To learn'."},
-    {q:"Estudiar means:", options:["To study","To sleep","To speak"], answer:"To study", explanation:"Estudiar translates to 'To study'."},
-    // Add up to 25 questions similarly
-  ];
+  document.getElementById("nextPracticeBtn").style.display = "inline-block";
+}
 
-  window.submitTest = function(){
-    let score = 0;
-    let explanations = [];
-    testQuestions.forEach((t,i)=>{
-      const selected = document.querySelector(`input[name="q${i+1}"]:checked`);
-      if(selected){
-        if(selected.value === t.answer) score++;
-        else explanations.push(`Q${i+1}: ${t.explanation}`);
-      } else {
-        explanations.push(`Q${i+1}: No answer selected. Correct: ${t.answer}`);
-      }
-    });
-    document.getElementById("testScore").textContent = `Score: ${score}/${testQuestions.length}`;
-    document.getElementById("testExplanations").innerHTML = explanations.join("<br>");
+function nextPractice() {
+  practiceIndex++;
+  if(practiceIndex >= practiceQuestions.length) {
+    document.getElementById("practiceQuestion").textContent = "🎉 Practice complete!";
+    document.getElementById("practiceInput").style.display = "none";
+    document.getElementById("nextPracticeBtn").style.display = "none";
+    document.getElementById("practiceResult").textContent = "";
+  } else {
+    showPractice();
   }
+}
 
+// ================= UNIT TEST =================
+let unitTestQuestions = [
+  {q:"'Aunque' means:", options:["Although","Because"], correct:"Although", explanation:"Aunque = Although"},
+  {q:"'Sin embargo' means:", options:["However","Therefore"], correct:"However", explanation:"Sin embargo = However"},
+  {q:"'A pesar de' means:", options:["Despite","Until"], correct:"Despite", explanation:"A pesar de = Despite"},
+  {q:"'Lograr' means:", options:["To achieve","To fail"], correct:"To achieve", explanation:"Lograr = To achieve"},
+  {q:"'Desarrollar' means:", options:["To develop","To destroy"], correct:"To develop", explanation:"Desarrollar = To develop"},
+  {q:"'Rápidamente' means:", options:["Quickly","Slowly"], correct:"Quickly", explanation:"Rápidamente = Quickly"},
+  {q:"'Importante' means:", options:["Important","Unimportant"], correct:"Important", explanation:"Importante = Important"},
+  {q:"'Fácil' means:", options:["Easy","Hard"], correct:"Easy", explanation:"Fácil = Easy"},
+  {q:"'Difícil' means:", options:["Difficult","Simple"], correct:"Difficult", explanation:"Difícil = Difficult"},
+  {q:"'Gracias' means:", options:["Thank you","Please"], correct:"Thank you", explanation:"Gracias = Thank you"},
+  // Add 15 more questions here to reach 25
+  {q:"'Hola' means:", options:["Hello","Goodbye"], correct:"Hello", explanation:"Hola = Hello"},
+  {q:"'Adiós' means:", options:["Goodbye","Hi"], correct:"Goodbye", explanation:"Adiós = Goodbye"},
+  {q:"'Amigo' means:", options:["Friend","Enemy"], correct:"Friend", explanation:"Amigo = Friend"},
+  {q:"'Perro' means:", options:["Dog","Cat"], correct:"Dog", explanation:"Perro = Dog"},
+  {q:"'Gato' means:", options:["Cat","Dog"], correct:"Cat", explanation:"Gato = Cat"},
+  {q:"'Casa' means:", options:["House","Car"], correct:"House", explanation:"Casa = House"},
+  {q:"'Escuela' means:", options:["School","Hospital"], correct:"School", explanation:"Escuela = School"},
+  {q:"'Libro' means:", options:["Book","Pen"], correct:"Book", explanation:"Libro = Book"},
+  {q:"'Agua' means:", options:["Water","Juice"], correct:"Water", explanation:"Agua = Water"},
+  {q:"'Comida' means:", options:["Food","Drink"], correct:"Food", explanation:"Comida = Food"},
+  {q:"'Familia' means:", options:["Family","Friend"], correct:"Family", explanation:"Familia = Family"},
+  {q:"'Tiempo' means:", options:["Time","Weather"], correct:"Time", explanation:"Tiempo = Time"},
+  {q:"'Feliz' means:", options:["Happy","Sad"], correct:"Happy", explanation:"Feliz = Happy"},
+  {q:"'Triste' means:", options:["Sad","Happy"], correct:"Sad", explanation:"Triste = Sad"}
+];
+
+function renderUnitTest() {
+  const form = document.getElementById("unitTestForm");
+  form.innerHTML = "";
+  unitTestQuestions.forEach((item, i)=>{
+    const div = document.createElement("div");
+    div.classList.add("test-box");
+    div.innerHTML = `<p>${i+1}. ${item.q}</p>` + item.options.map(opt=>
+      `<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label><br>`).join('');
+    form.appendChild(div);
+  });
+}
+
+// ================= TEST SUBMISSION =================
+function submitTest() {
+  let score = 0;
+  let explanations = "";
+  unitTestQuestions.forEach((item,i)=>{
+    const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value;
+    if(selected === item.correct) score++;
+    else explanations += `<p>Q${i+1}: ${item.explanation}</p>`;
+  });
+  document.getElementById("testScore").innerHTML = `Score: ${score}/${unitTestQuestions.length}`;
+  document.getElementById("testExplanations").innerHTML = explanations;
+}
+
+// ================= INITIALIZE =================
+document.addEventListener("DOMContentLoaded",()=>{
+  renderUnitTest();
 });
