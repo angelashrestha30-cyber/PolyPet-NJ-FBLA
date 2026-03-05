@@ -106,56 +106,42 @@
         <button id="add-clock-btn" type="button">Add Clock</button>
       </div>
     </div>
+
   </section>
 
   <!-- RESOURCES -->
   <section id="resources" class="section">
     <h2>Resources</h2>
 
-    <!-- RESOURCE NAV -->
-    <div class="resource-nav">
-      <button onclick="showResource('video')">Video Lesson</button>
+    <!-- MENU BUTTONS -->
+    <div class="menu-buttons">
       <button onclick="showResource('flashcards')">Flashcards</button>
       <button onclick="showResource('practice')">Practice Mode</button>
       <button onclick="showResource('test')">Unit Test</button>
     </div>
 
-    <!-- VIDEO PLACEHOLDER -->
-    <div id="video" class="resource-content">
-      <h3>Video Lesson</h3>
-      <p>Embed any YouTube video here for your lesson!</p>
-    </div>
-
     <!-- FLASHCARDS -->
-    <div id="flashcards" class="resource-content">
-      <h3>Flashcards</h3>
-      <div id="flashcard-container">
-        <div id="flashcard" onclick="flipCard()">Click to Flip</div>
-        <div class="flashcard-controls">
-          <button onclick="prevCard()">Prev</button>
-          <span id="flashcard-progress">1 / 20</span>
-          <button onclick="nextCard()">Next</button>
-        </div>
-      </div>
+    <div id="flashcards" class="resource-content" style="display:none;">
+      <div id="flashcard" class="flashcard">Click to Start</div>
+      <button onclick="flipCard()">Flip</button>
+      <button onclick="nextCard()">Next</button>
     </div>
 
     <!-- PRACTICE MODE -->
-    <div id="practice" class="resource-content">
+    <div id="practice" class="resource-content" style="display:none;">
       <h3>Practice Mode</h3>
-      <div id="practice-box">
-        <p id="practice-question">Loading...</p>
-        <input type="text" id="practice-answer" placeholder="Type your answer...">
-        <button onclick="submitPractice()">Submit</button>
-        <p id="practice-feedback"></p>
-      </div>
+      <div id="practice-box"></div>
+      <p id="practiceResult"></p>
+      <button onclick="nextPractice()">Next Exercise</button>
     </div>
 
     <!-- UNIT TEST -->
-    <div id="test" class="resource-content">
-      <h3>Unit Test (25 Questions)</h3>
-      <div id="test-box"></div>
+    <div id="test" class="resource-content" style="display:none;">
+      <h3>Unit Test</h3>
+      <form id="testForm"></form>
       <button onclick="submitTest()">Submit Test</button>
-      <div id="test-result"></div>
+      <div id="testScore"></div>
+      <div id="testFeedback"></div>
     </div>
   </section>
 
