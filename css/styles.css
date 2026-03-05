@@ -631,3 +631,117 @@ footer {
 button:hover {
   background: #ff5757;
 }
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #fff0f6;
+  color: #333;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: #ffb6c1;
+  color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-links a {
+  margin-left: 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+}
+
+.hero {
+  position: relative;
+  padding: 4rem 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-blobs span {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.3;
+}
+
+.hero-container {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.pet-panel, .speech-bubble, .lesson-cards {
+  background: rgba(255,255,255,0.9);
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.resource-buttons {
+  display: flex;
+  gap: 1rem;
+  margin: 1rem 0;
+}
+
+.resource-box {
+  padding: 1rem 2rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  cursor: pointer;
+  font-weight: 600;
+  text-align: center;
+  transition: all 0.2s;
+}
+
+.resource-box:hover {
+  transform: translateY(-2px);
+  background: #ffe0eb;
+}
+
+.resource-content {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+#flashcardBox, #practiceBox {
+  font-size: 1.5rem;
+  padding: 2rem;
+  background: #fefefe;
+  border-radius: 0.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+input[type="text"] {
+  padding: 0.5rem;
+  width: 80%;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.3rem;
+  border: 1px solid #ccc;
+}
+
+button {
+  padding: 0.5rem 1rem;
+  background: #ffb6c1;
+  border: none;
+  border-radius: 0.3rem;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #ff85a2;
+}
