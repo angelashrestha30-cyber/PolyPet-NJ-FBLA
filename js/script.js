@@ -1,4 +1,3 @@
-// ================= DOM READY =================
 document.addEventListener("DOMContentLoaded", function () {
 
   // ================= SCROLLING =================
@@ -7,18 +6,28 @@ document.addEventListener("DOMContentLoaded", function () {
     if(el) el.scrollIntoView({behavior:"smooth"});
   }
 
-  // ================= PET XP / LEVEL / STREAK =================
-  let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
-  let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
-  let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
-  let petName = localStorage.getItem("petName") || "Pika";
+  // ================= PET / XP / LEVEL =================
+  let xp = parseInt(localStorage.getItem("xp")) || 0;
+  let level = parseInt(localStorage.getItem("level")) || 1;
+  let streak = parseInt(localStorage.getItem("streak")) || 0;
+
+  let petCollection = [
+    {name:"Wolf", emoji:"🐺", language:"German"},
+    {name:"Lion", emoji:"🦁", language:"Swahili (Kenya)"}
+  ];
+
+  let currentPet = petCollection[0]; // first collected as default
 
   function updatePetUI(){
+    const emojiEl = document.getElementById("current-pet-emoji");
+    const nameInput = document.getElementById("current-pet-name");
+    emojiEl.textContent = currentPet.emoji;
+    nameInput.value = currentPet.name;
     document.getElementById("level").textContent = level;
     document.getElementById("streak").textContent = streak;
     document.getElementById("xp-fill").style.width = (xp % 100) + "%";
-    document.getElementById("pet-name-display").textContent = petName;
   }
+  updatePetUI();
 
   window.completeLesson = function(){
     xp += 20;
@@ -27,38 +36,17 @@ document.addEventListener("DOMContentLoaded", function () {
       level++;
       launchConfetti();
     }
-    localStorage.setItem("xp",xp);
-    localStorage.setItem("level",level);
-    localStorage.setItem("streak",streak);
+    localStorage.setItem("xp", xp);
+    localStorage.setItem("level", level);
+    localStorage.setItem("streak", streak);
     updatePetUI();
-  }
-  updatePetUI();
-
-  // ================= PET NAMING =================
-  const nameInput = document.getElementById("pet-name-input");
-  const nameBtn = document.getElementById("pet-name-btn");
-  if(nameBtn && nameInput){
-    nameBtn.addEventListener("click", ()=>{
-      const val = nameInput.value.trim();
-      if(val){
-        petName = val;
-        localStorage.setItem("petName", petName);
-        updatePetUI();
-      }
-    });
   }
 
   // ================= PET COLLECTION =================
-  let collectedPets = [
-    {name:"Wolf", emoji:"🐺", language:"German"},
-    {name:"Lion", emoji:"🦁", language:"Swahili (Kenya)"}
-  ];
-
   function renderPetCollection(){
     const container = document.getElementById("pet-collection");
-    if(!container) return;
     container.innerHTML = "";
-    collectedPets.forEach(pet=>{
+    petCollection.forEach(pet=>{
       const card = document.createElement("div");
       card.classList.add("pet-card");
       card.innerHTML = `
@@ -71,21 +59,30 @@ document.addEventListener("DOMContentLoaded", function () {
   }
   renderPetCollection();
 
-  // ================= COLLECT NEW PET FUNCTION =================
-  function collectPet(language){
+  // ================= COLLECT NEW PET =================
+  window.collectPet = function(lang){
     let newPet = null;
-    switch(language){
+    switch(lang){
       case "Spanish": newPet = {name:"Fox", emoji:"🦊", language:"Spanish"}; break;
       case "Mandarin": newPet = {name:"Panda", emoji:"🐼", language:"Mandarin"}; break;
       case "Japanese": newPet = {name:"Cat", emoji:"🐱", language:"Japanese"}; break;
     }
-    if(newPet && !collectedPets.find(p=>p.name===newPet.name)){
-      collectedPets.push(newPet);
+    if(newPet && !petCollection.find(p=>p.name===newPet.name)){
+      petCollection.push(newPet);
       renderPetCollection();
       launchConfetti();
       alert(`🎉 You collected a new pet: ${newPet.emoji} ${newPet.name} (${newPet.language})!`);
+    } else {
+      alert(`${newPet.name} already collected!`);
     }
   }
+
+  // ================= PET RENAME =================
+  const nameInput = document.getElementById("current-pet-name");
+  nameInput.addEventListener("change", ()=>{
+    currentPet.name = nameInput.value;
+    renderPetCollection();
+  });
 
   // ================= SCHEDULE FILTER =================
   window.filterSchedule = function(day){
