@@ -77,12 +77,21 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  // ================= PET RENAME =================
-  const nameInput = document.getElementById("current-pet-name");
-  nameInput.addEventListener("change", ()=>{
-    currentPet.name = nameInput.value;
-    renderPetCollection();
+ // ================= PET NAMING =================
+const nameInput = document.getElementById("pet-name-input");
+const nameBtn = document.getElementById("pet-name-btn");
+
+if(nameBtn && nameInput){
+  nameBtn.addEventListener("click", ()=>{
+    const val = nameInput.value.trim();
+    if(val){
+      petName = val;
+      localStorage.setItem("petName", petName);
+      updatePetUI();
+      nameInput.value = ""; // clear input after renaming
+    }
   });
+}
 
   // ================= SCHEDULE FILTER =================
   window.filterSchedule = function(day){
