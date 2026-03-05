@@ -11,14 +11,36 @@ document.addEventListener("DOMContentLoaded", function () {
   let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
   let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
   let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
+  let petName = localStorage.getItem("petName") || "Fluffy";
+
+  const petsPerLanguage = {
+    "Spanish": {emoji:"🦊", collected:false, badge:"🌟"},
+    "Chinese": {emoji:"🐼", collected:false, badge:"🌟"},
+    "Japanese": {emoji:"🐱", collected:false, badge:"🌟"},
+    "German": {emoji:"🐺", collected:false, badge:"🌟"},
+    "Swahili": {emoji:"🦁", collected:false, badge:"🌟"}
+  };
+
+  // restore pets from localStorage
+  const storedPets = localStorage.getItem("pets");
+  if(storedPets) Object.assign(petsPerLanguage, JSON.parse(storedPets));
 
   function updatePetUI(){
     document.getElementById("level").textContent = level;
     document.getElementById("streak").textContent = streak;
     document.getElementById("xp-fill").style.width = (xp % 100) + "%";
+    const nameEl = document.getElementById("petName");
+    if(nameEl) nameEl.textContent = petName;
   }
 
-  window.completeLesson = function(){
+  window.setPetName = function(name){
+    if(!name) return;
+    petName = name;
+    localStorage.setItem("petName",petName);
+    updatePetUI();
+  }
+
+  window.completeLesson = function(language){
     xp += 20;
     streak += 1;
     if(xp >= level*100){
@@ -29,8 +51,85 @@ document.addEventListener("DOMContentLoaded", function () {
     localStorage.setItem("level",level);
     localStorage.setItem("streak",streak);
     updatePetUI();
+
+    if(language && petsPerLanguage[language] && !petsPerLanguage[language].collected){
+      petsPerLanguage[language].collected = true;
+      localStorage.setItem("pets", JSON.stringify(petsPerLanguage));
+      animatePetCollection(petsPerLanguage[language]);
+    }
   }
   updatePetUI();
+
+  // ================= PET COLLECTION =================
+  function renderCollection(){
+    const container = document.getElementById("pet-collection");
+    if(!container) return;
+    container.innerHTML = "";
+    for(let lang in petsPerLanguage){
+      const p = petsPerLanguage[lang];
+      if(p.collected){
+        const div = document.createElement("div");
+        div.classList.add("pet-item");
+        div.innerHTML = `${p.emoji} ${petName} <span class="badge">${p.badge}</span> (${lang})`;
+        container.appendChild(div);
+      }
+    }
+  }
+
+  // ================= SPARKLE TRAIL ANIMATION =================
+  function animatePetCollection(pet){
+    const collectionContainer = document.getElementById("pet-collection");
+    if(!collectionContainer) return;
+
+    const flyingPet = document.createElement("div");
+    flyingPet.classList.add("flying-pet");
+    flyingPet.textContent = pet.emoji;
+    document.body.appendChild(flyingPet);
+
+    flyingPet.style.position = "fixed";
+    flyingPet.style.left = window.innerWidth/2 + "px";
+    flyingPet.style.top = window.innerHeight/2 + "px";
+    flyingPet.style.fontSize = "2rem";
+    flyingPet.style.zIndex = "1000";
+    flyingPet.style.transition = "all 1s ease-in-out";
+
+    const rect = collectionContainer.getBoundingClientRect();
+    const targetX = rect.left + 30;
+    const targetY = rect.top + 30;
+
+    const sparkleInterval = setInterval(()=>{
+      const sparkle = document.createElement("div");
+      sparkle.classList.add("sparkle");
+      document.body.appendChild(sparkle);
+      const offsetX = (Math.random()-0.5)*30;
+      const offsetY = (Math.random()-0.5)*30;
+      sparkle.style.left = parseFloat(flyingPet.style.left) + offsetX + "px";
+      sparkle.style.top = parseFloat(flyingPet.style.top) + offsetY + "px";
+
+      sparkle.animate([
+        { transform: "translate(0,0)", opacity:1 },
+        { transform: `translate(${offsetX*2}px, ${-offsetY*2}px)`, opacity:0 }
+      ], { duration: 800, easing:"ease-out" });
+
+      setTimeout(()=> sparkle.remove(), 800);
+    }, 50);
+
+    setTimeout(()=>{
+      flyingPet.style.left = targetX + "px";
+      flyingPet.style.top = targetY + "px";
+      flyingPet.style.fontSize = "1rem";
+      flyingPet.style.opacity = "0.5";
+    },50);
+
+    setTimeout(()=>{
+      clearInterval(sparkleInterval);
+      flyingPet.remove();
+      renderCollection();
+      launchConfetti();
+    },1100);
+  }
+
+  renderCollection();
 
   // ================= SCHEDULE FILTER =================
   window.filterSchedule = function(day){
