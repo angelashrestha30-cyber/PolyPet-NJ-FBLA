@@ -266,3 +266,118 @@ window.submitTest = function(){
 loadFlashcards();
 loadPractice();
 loadTest();
+document.addEventListener("DOMContentLoaded", function () {
+
+  // ---------------- PET XP/STREAK ----------------
+  let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+  let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+  let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
+
+  function updatePetUI() {
+    document.getElementById("level").textContent = level;
+    document.getElementById("streak").textContent = streak;
+    document.getElementById("xp-fill").style.width = (xp % 100) + "%";
+  }
+
+  window.completeLesson = function () {
+    xp += 20; streak++;
+    if(xp >= level*100){ level++; launchConfetti(); }
+    localStorage.setItem("xp",xp);
+    localStorage.setItem("level",level);
+    localStorage.setItem("streak",streak);
+    updatePetUI();
+  }
+
+  updatePetUI();
+
+  // ---------------- CONFETTI ----------------
+  const canvas = document.getElementById("confettiCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let confetti = [];
+  function launchConfetti(){
+    for(let i=0;i<100;i++){ confetti.push({ x:Math.random()*canvas.width, y:Math.random()*canvas.height - canvas.height, size:Math.random()*6+4, speed:Math.random()*3+2 }); }
+    animateConfetti();
+  }
+  function animateConfetti(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    confetti.forEach(p=>{ p.y += p.speed; ctx.fillStyle="#ff7f7f"; ctx.fillRect(p.x,p.y,p.size,p.size); });
+    confetti = confetti.filter(p=>p.y<canvas.height);
+    if(confetti.length>0) requestAnimationFrame(animateConfetti);
+  }
+
+  // ---------------- RESOURCE SECTION ----------------
+  let flashcards = [
+    {front:"Aunque", back:"Although", explanation:"Means 'although' in English."},
+    {front:"Sin embargo", back:"However", explanation:"Used to show contrast."},
+    {front:"A pesar de", back:"Despite", explanation:"Used like 'despite'."},
+    {front:"Lograr", back:"To achieve", explanation:"Verb meaning 'to achieve'."},
+    {front:"Desarrollar", back:"To develop", explanation:"Verb meaning 'to develop'."}
+  ];
+  let currentCard = 0;
+  let flipped = false;
+
+  function showCard(){
+    const card = document.getElementById("flashcard");
+    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
+  }
+
+  window.loadFlashcards = function(){ currentCard=0; flipped=false; showCard(); }
+  window.flipCard = function(){ flipped=!flipped; showCard(); }
+  window.nextCard = function(){ currentCard=(currentCard+1)%flashcards.length; flipped=false; showCard(); }
+
+  // ---------------- PRACTICE MODE ----------------
+  let practiceIndex=0;
+  function showPractice(){ 
+    const box=document.getElementById("practice-box"); 
+    const exercise = flashcards[practiceIndex]; 
+    box.innerHTML=`Translate: <b>${exercise.front}</b> <input type="text" id="practiceInput">`; 
+  }
+
+  window.nextPractice = function(){
+    const input = document.getElementById("practiceInput")?.value.trim().toLowerCase();
+    const result = document.getElementById("practiceResult");
+    const exercise = flashcards[practiceIndex];
+    if(input === exercise.back.toLowerCase()){ result.textContent="✅ Correct!"; } 
+    else{ result.textContent=`❌ Incorrect. ${exercise.back} → ${exercise.explanation}`; }
+    practiceIndex=(practiceIndex+1)%flashcards.length; showPractice();
+  }
+
+  // ---------------- TEST ----------------
+  let testQuestions = [
+    {q:"Translate 'Aunque'", options:["Although","However","Despite"], answer:"Although", explanation:"'Aunque' means 'Although'."},
+    {q:"Translate 'Lograr'", options:["To achieve","To develop","To run"], answer:"To achieve", explanation:"'Lograr' means 'To achieve'."},
+    // ... add up to 25 questions mixing vocab, grammar, etc.
+  ];
+
+  function renderTest(){
+    const form=document.getElementById("testForm"); form.innerHTML="";
+    testQuestions.forEach((t,i)=>{
+      let html=`<div><label>${i+1}. ${t.q}</label>`;
+      t.options.forEach(opt=>{ html+=`<div><input type="radio" name="q${i}" value="${opt}"> ${opt}</div>`; });
+      html+="</div>"; form.innerHTML+=html;
+    });
+  }
+
+  window.submitTest=function(){
+    let score=0; let feedback="";
+    testQuestions.forEach((t,i)=>{
+      const ans=document.querySelector(`input[name="q${i}"]:checked`)?.value;
+      if(ans===t.answer){ score++; }
+      else{ feedback+=`Q${i+1}: ${t.explanation}\n`; }
+    });
+    document.getElementById("testScore").textContent=`Score: ${score}/${testQuestions.length}`;
+    document.getElementById("testFeedback").textContent=feedback;
+  }
+
+  // ---------------- RESOURCE TAB SWITCH ----------------
+  window.showResource=function(name){
+    document.querySelectorAll(".resource-content").forEach(r=>r.style.display="none");
+    document.getElementById(name).style.display="block";
+    if(name==="flashcards") loadFlashcards();
+    if(name==="practice") showPractice();
+    if(name==="test") renderTest();
+  }
+
+});
