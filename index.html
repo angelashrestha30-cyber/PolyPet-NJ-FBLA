@@ -110,53 +110,54 @@
 
   <!-- RESOURCES -->
   <section id="resources" class="section">
-  <h2>Resources</h2>
+    <h2>Resources</h2>
 
-  <!-- RESOURCE MENU -->
-  <div class="resource-cards">
-    <div class="resource-card" onclick="showResource('video')">🎥 Video Lesson</div>
-    <div class="resource-card" onclick="showResource('flashcards')">🃏 Flashcards</div>
-    <div class="resource-card" onclick="showResource('practice')">✏️ Practice Mode</div>
-    <div class="resource-card" onclick="showResource('test')">📝 Unit Test</div>
-  </div>
-
-  <!-- VIDEO LESSON -->
-  <div id="video" class="resource-content" style="display:none;">
-    <h3>Video Lesson</h3>
-    <iframe width="100%" height="315" src="https://www.youtube.com/embed/videoseries?list=PL6oJ9WqQj2hN6rHxYnHF7xXbU9W38ZfZv" 
-    title="Butterfly Spanish Playlist" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-  </div>
-
-  <!-- FLASHCARDS -->
-  <div id="flashcards" class="resource-content" style="display:none;">
-    <h3>Flashcards</h3>
-    <div id="flashcard" class="flashcard" onclick="flipCard()">Click to Start</div>
-    <div class="flashcard-nav">
-      <button onclick="prevCard()">Previous</button>
-      <button onclick="nextCard()">Next</button>
-      <p id="cardProgress"></p>
+    <!-- RESOURCE NAV -->
+    <div class="resource-nav">
+      <button onclick="showResource('video')">Video Lesson</button>
+      <button onclick="showResource('flashcards')">Flashcards</button>
+      <button onclick="showResource('practice')">Practice Mode</button>
+      <button onclick="showResource('test')">Unit Test</button>
     </div>
-  </div>
 
-  <!-- PRACTICE MODE -->
-  <div id="practice" class="resource-content" style="display:none;">
-    <h3>Practice Mode</h3>
-    <div id="practiceQuestion"></div>
-    <input id="practiceInput" type="text" placeholder="Type your answer here">
-    <button onclick="checkPractice()">Check Answer</button>
-    <p id="practiceFeedback"></p>
-    <button onclick="nextPractice()">Next Question</button>
-  </div>
+    <!-- VIDEO PLACEHOLDER -->
+    <div id="video" class="resource-content">
+      <h3>Video Lesson</h3>
+      <p>Embed any YouTube video here for your lesson!</p>
+    </div>
 
-  <!-- UNIT TEST -->
-  <div id="test" class="resource-content" style="display:none;">
-    <h3>Unit Test</h3>
-    <div id="testContainer"></div>
-    <button onclick="submitTest()">Submit Test</button>
-    <div id="testScore"></div>
-    <div id="testExplanations"></div>
-  </div>
-</section>
+    <!-- FLASHCARDS -->
+    <div id="flashcards" class="resource-content">
+      <h3>Flashcards</h3>
+      <div id="flashcard-container">
+        <div id="flashcard" onclick="flipCard()">Click to Flip</div>
+        <div class="flashcard-controls">
+          <button onclick="prevCard()">Prev</button>
+          <span id="flashcard-progress">1 / 20</span>
+          <button onclick="nextCard()">Next</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRACTICE MODE -->
+    <div id="practice" class="resource-content">
+      <h3>Practice Mode</h3>
+      <div id="practice-box">
+        <p id="practice-question">Loading...</p>
+        <input type="text" id="practice-answer" placeholder="Type your answer...">
+        <button onclick="submitPractice()">Submit</button>
+        <p id="practice-feedback"></p>
+      </div>
+    </div>
+
+    <!-- UNIT TEST -->
+    <div id="test" class="resource-content">
+      <h3>Unit Test (25 Questions)</h3>
+      <div id="test-box"></div>
+      <button onclick="submitTest()">Submit Test</button>
+      <div id="test-result"></div>
+    </div>
+  </section>
 
   <!-- CONFETTI CANVAS -->
   <canvas id="confettiCanvas"></canvas>
