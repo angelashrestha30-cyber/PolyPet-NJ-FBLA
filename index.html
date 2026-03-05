@@ -95,7 +95,7 @@
       <ul id="lesson-list"></ul>
     </div>
 
-    <!-- DYNAMIC WORLD CLOCK -->
+    <!-- WORLD CLOCK -->
     <div class="world-clock">
       <h3 class="world-clock-title">🌍 World Clock</h3>
       <div id="clock-container" class="clock-container"></div>
@@ -112,7 +112,7 @@
   <section id="resources" class="section">
     <h2>Resources</h2>
 
-    <!-- RESOURCE BUTTON CARDS -->
+    <!-- FOUR BUTTON CARDS -->
     <div class="resource-cards">
       <div class="resource-card" onclick="showResource('video')">🎥 Video Lesson</div>
       <div class="resource-card" onclick="showResource('flashcards')">🃏 Flashcards</div>
@@ -128,26 +128,32 @@
 
     <div id="flashcards" class="resource-content" style="display:none;">
       <h3>Flashcards</h3>
-      <div id="flashcard" onclick="flipCard()">Click Load</div>
-      <button onclick="nextCard()">Next</button>
-      <p id="flashcardHint"></p>
+      <div id="flashcard" class="flashcard" onclick="flipCard()">Click "Load Flashcards" to start</div>
+      <div class="menu-buttons">
+        <button onclick="loadFlashcards()">Load Flashcards</button>
+        <button onclick="nextCard()">Next</button>
+      </div>
     </div>
 
     <div id="practice" class="resource-content" style="display:none;">
       <h3>Practice Mode</h3>
-      <p>Fill in the blank, translate sentences, or build a sentence. The system will correct mistakes!</p>
-      <div id="practiceContainer">
+      <div id="practice-box">
+        <p id="practiceQuestion">Click "Start Practice" to begin.</p>
         <input id="practiceInput" type="text" placeholder="Type your answer here">
-        <button onclick="checkPractice()">Check</button>
+        <button onclick="checkPractice()">Check Answer</button>
         <p id="practiceResult"></p>
+        <button onclick="nextPractice()" id="nextPracticeBtn" style="display:none;">Next</button>
+      </div>
+      <div class="menu-buttons">
+        <button onclick="startPractice()">Start Practice</button>
       </div>
     </div>
 
     <div id="test" class="resource-content" style="display:none;">
-      <h3>Unit Test (25 Questions)</h3>
-      <div id="testContainer">
-        <!-- Questions will be dynamically loaded here -->
-      </div>
+      <h3>Unit Test</h3>
+      <form id="unitTestForm">
+        <!-- 25 questions will be dynamically generated -->
+      </form>
       <button onclick="submitTest()">Submit Test</button>
       <p id="testScore"></p>
       <div id="testExplanations"></div>
