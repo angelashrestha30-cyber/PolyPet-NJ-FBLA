@@ -18,11 +18,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let currentPet = petCollection[0]; // first collected as default
 
-  function updatePetUI(){
-    const emojiEl = document.getElementById("current-pet-emoji");
-    const nameInput = document.getElementById("current-pet-name");
-    emojiEl.textContent = currentPet.emoji;
-    nameInput.value = currentPet.name;
+    function updatePetUI(){
+  const emojiEl = document.querySelector(".pet-avatar");
+  const nameDisplay = document.getElementById("pet-name-display");
+   emojiEl.textContent = currentPet.emoji;
+nameDisplay.textContent = petName || currentPet.name;
     document.getElementById("level").textContent = level;
     document.getElementById("streak").textContent = streak;
     document.getElementById("xp-fill").style.width = (xp % 100) + "%";
@@ -281,7 +281,38 @@ if(nameBtn && nameInput){
     document.getElementById("nextPracticeBtn").style.display = "none";
     showPracticeQuestion();
   }
+// ================= UNIT TEST QUESTIONS =================
+const unitTestQuestions = [
+{type:"mc", question:"What does 'aunque' mean?", options:["Although","Because","Before","After"], answer:"Although"},
+{type:"mc", question:"Translate 'perro'", options:["Cat","Dog","Bird","Fish"], answer:"Dog"},
+{type:"mc", question:"Translate 'gato'", options:["Dog","Mouse","Cat","Horse"], answer:"Cat"},
+{type:"mc", question:"What does 'sin embargo' mean?", options:["However","Because","Therefore","Before"], answer:"However"},
+{type:"mc", question:"Translate 'libro'", options:["Pen","Book","Paper","Chair"], answer:"Book"},
 
+{type:"short", question:"Translate 'hola'", answer:"hello"},
+{type:"short", question:"Translate 'gracias'", answer:"thank you"},
+{type:"short", question:"Translate 'escuela'", answer:"school"},
+{type:"short", question:"Translate 'comida'", answer:"food"},
+{type:"short", question:"Translate 'familia'", answer:"family"},
+
+{type:"mc", question:"Translate 'correr'", options:["To run","To eat","To sleep","To drink"], answer:"To run"},
+{type:"mc", question:"Translate 'beber'", options:["To eat","To drink","To run","To jump"], answer:"To drink"},
+{type:"mc", question:"Translate 'comer'", options:["To eat","To drink","To walk","To talk"], answer:"To eat"},
+{type:"mc", question:"Translate 'escuchar'", options:["To listen","To run","To jump","To write"], answer:"To listen"},
+{type:"mc", question:"Translate 'hablar'", options:["To talk","To eat","To drink","To walk"], answer:"To talk"},
+
+{type:"short", question:"Translate 'amigo'", answer:"friend"},
+{type:"short", question:"Translate 'casa'", answer:"house"},
+{type:"short", question:"Translate 'agua'", answer:"water"},
+{type:"short", question:"Translate 'pan'", answer:"bread"},
+{type:"short", question:"Translate 'día'", answer:"day"},
+
+{type:"mc", question:"Translate 'feliz'", options:["Happy","Sad","Angry","Cold"], answer:"Happy"},
+{type:"mc", question:"Translate 'triste'", options:["Happy","Sad","Fast","Cold"], answer:"Sad"},
+{type:"mc", question:"Translate 'rápido'", options:["Fast","Slow","Hot","Cold"], answer:"Fast"},
+{type:"mc", question:"Translate 'caliente'", options:["Cold","Hot","Fast","Big"], answer:"Hot"},
+{type:"mc", question:"Translate 'grande'", options:["Small","Big","Fast","Cold"], answer:"Big"}
+];
   // ================= UNIT TEST =================
   const unitTestForm = document.getElementById("unitTestForm");
   if(unitTestForm){
