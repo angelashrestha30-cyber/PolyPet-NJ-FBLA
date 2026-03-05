@@ -47,140 +47,21 @@ body { background: linear-gradient(180deg,#fff6f6,#ffd6d6); color:#333; scroll-b
 #lesson-list { margin-top:10px; list-style:none; }
 
 /* RESOURCES */
-/* Resource Cards */
-.resource-cards {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  margin-bottom: 30px;
-}
+/* ORIGINAL CSS ... keep everything above your resources intact */
 
-.resource-card {
-  flex: 1 1 200px;
-  background: #f9f9f9;
-  padding: 25px 20px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 1.2rem;
-  border-radius: 15px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  cursor: pointer;
-  transition: transform 0.2s, background 0.2s;
-}
+/* -------------------- RESOURCE SECTION -------------------- */
+.menu-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; }
+.menu-buttons button { padding: 10px 20px; border: none; border-radius: 12px; background: #ff7f7f; color: white; font-weight: 600; cursor: pointer; transition: 0.3s; }
+.menu-buttons button:hover { background: #ff4f4f; }
 
-.resource-card:hover {
-  transform: translateY(-5px);
-  background: #ffe5e5;
-}
+.resource-content { background: #fff8f8; padding: 25px; border-radius: 16px; box-shadow: 0 8px 25px rgba(0,0,0,0.08); margin-bottom: 40px; }
 
-/* Resource Content Box */
-.resource-content {
-  background: #fff8f8;
-  padding: 25px;
-  border-radius: 15px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-  margin-top: 20px;
-}
+.flashcard { background: #fff1f1; padding: 40px; border-radius: 20px; margin: 20px 0; font-weight: 600; text-align: center; cursor: pointer; min-height: 120px; }
 
-/* Flashcards */
-.flashcard {
-  background: #fff1f1;
-  padding: 40px;
-  border-radius: 20px;
-  min-height: 120px;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  transition: transform 0.3s;
-}
+#practice-box { background: #fff1f1; padding: 25px; border-radius: 20px; font-weight: 600; margin-bottom: 20px; }
 
-.flashcard:hover {
-  transform: scale(1.03);
-}
-
-.flashcard-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 15px;
-}
-
-.flashcard-nav button {
-  padding: 8px 16px;
-  border-radius: 10px;
-  border: none;
-  background: #ff7f7f;
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-  transition: 0.3s;
-}
-
-.flashcard-nav button:hover {
-  background: #ff4f4f;
-}
-
-#cardProgress {
-  font-weight: 500;
-}
-
-/* Practice Mode */
-#practice input {
-  padding: 10px;
-  width: 80%;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  margin-top: 10px;
-}
-
-#practice button {
-  margin-top: 10px;
-  padding: 8px 16px;
-  border: none;
-  background: #ff7f7f;
-  color: white;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-#practice button:hover {
-  background: #ff4f4f;
-}
-
-#practiceFeedback {
-  margin-top: 15px;
-  font-weight: 600;
-}
-
-/* Test */
-#testContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-}
-
-#testContainer div {
-  background: #fff1f1;
-  padding: 15px;
-  border-radius: 12px;
-}
-
-#testScore {
-  font-weight: 700;
-  margin-top: 15px;
-}
-
-#testExplanations {
-  margin-top: 10px;
-  background: #fff4f4;
-  padding: 15px;
-  border-radius: 12px;
-}
-
-/* VIDEO EMBED */
-.resource-content iframe { border-radius:15px; margin-top:15px; }
+#test form { display: flex; flex-direction: column; gap: 15px; }
+#testFeedback { margin-top: 15px; font-size: 0.95rem; color: #333; }
 
 /* PET DASHBOARD XP BAR */
 .xp-bar { width:100%; height:12px; background:#ffeaea; border-radius:10px; margin:10px 0; overflow:hidden; }
