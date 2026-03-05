@@ -1,192 +1,279 @@
-/* GENERAL */
+/* ================= GENERAL ================= */
 body {
   margin: 0;
   font-family: 'Inter', sans-serif;
-  background: #fff0f5;
+  background-color: #fff0f5; /* soft pink background */
   color: #333;
 }
 
-h2, h3, h4 {
-  margin: 0.5em 0;
+h2 {
+  font-weight: 700;
+  margin-bottom: 20px;
 }
 
-button {
-  cursor: pointer;
-  border: none;
-  border-radius: 8px;
-  padding: 8px 12px;
-  background: #ff7f7f;
-  color: #fff;
-  font-weight: 600;
-  transition: 0.2s;
+.section {
+  padding: 60px 20px;
+  opacity: 0;
+  transition: opacity 1s ease;
 }
 
-button:hover {
-  background: #ff4f4f;
+.section.visible {
+  opacity: 1;
 }
 
-/* NAVBAR */
+/* ================= NAVBAR ================= */
 .navbar {
-  position: sticky;
-  top: 0;
-  background: #fff;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 24px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: #ffb6c1;
+  padding: 15px 30px;
+  position: sticky;
+  top: 0;
   z-index: 1000;
 }
-.nav-links a {
-  margin-left: 16px;
-  font-weight: 600;
-  color: #333;
+
+.navbar .logo {
+  font-size: 1.5rem;
 }
 
-/* HERO */
+.nav-links a {
+  margin-left: 20px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  text-decoration: underline;
+}
+
+/* ================= HERO ================= */
 .hero {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 60px 24px;
   position: relative;
+  height: 500px;
+  overflow: hidden;
 }
 
 .bg-blobs span {
   position: absolute;
   border-radius: 50%;
-  opacity: 0.3;
-  animation: blobMove 20s infinite alternate;
+  opacity: 0.6;
+  animation: float 8s infinite ease-in-out;
 }
-.bg-blobs span:nth-child(1) {width:300px;height:300px;background:#ffb6c1;top:0;left:0;}
-.bg-blobs span:nth-child(2) {width:250px;height:250px;background:#ff69b4;bottom:50px;right:20px;}
-.bg-blobs span:nth-child(3) {width:200px;height:200px;background:#ffc0cb;top:100px;right:100px;}
 
-@keyframes blobMove {
-  to {transform: translate(50px,50px);}
+.bg-blobs span:nth-child(1) { width: 300px; height: 300px; background: #ffb6c1; top: -50px; left: -50px; }
+.bg-blobs span:nth-child(2) { width: 250px; height: 250px; background: #ff69b4; top: 100px; right: -50px; }
+.bg-blobs span:nth-child(3) { width: 200px; height: 200px; background: #ffc0cb; bottom: -50px; left: 50px; }
+
+@keyframes float {
+  0%,100% { transform: translateY(0px) }
+  50% { transform: translateY(30px) }
 }
 
 .hero-container {
   display: flex;
-  gap: 40px;
-  z-index: 1;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 1200px;
+  position: relative;
+  z-index: 10;
 }
 
-/* PET PANEL */
+/* ================= PET PANEL ================= */
 .pet-panel {
   background: #fff;
-  padding: 16px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  width: 180px;
+  padding: 20px;
+  border-radius: 20px;
   text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
+
+.pet-avatar {
+  font-size: 4rem;
+}
+
 .xp-bar {
   width: 100%;
-  height: 8px;
+  height: 12px;
   background: #eee;
-  border-radius: 4px;
-  margin: 8px 0;
+  border-radius: 6px;
+  margin: 10px 0;
 }
+
 #xp-fill {
   height: 100%;
-  background: #ff7f7f;
+  background: #ff69b4;
+  border-radius: 6px;
   width: 0%;
-  border-radius: 4px;
 }
 
-/* SPEECH BUBBLE */
+/* ================= SPEECH BUBBLE ================= */
 .speech-bubble {
   background: #fff;
-  border-radius: 16px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  flex:1;
+  padding: 30px;
+  border-radius: 20px;
   max-width: 400px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  position: relative;
 }
 
-/* LESSON CARDS */
+/* ================= LESSON CARDS ================= */
 .lesson-cards {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 15px;
 }
+
 .lesson-card {
   background: #fff;
-  padding: 12px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.float {animation: float 3s ease-in-out infinite;}
-.float.delay1 {animation-delay: 0.5s;}
-.float.delay2 {animation-delay: 1s;}
-@keyframes float {
-  0%,100% {transform: translateY(0);}
-  50% {transform: translateY(-10px);}
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
 }
 
-/* SECTION */
-.section {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: 0.6s;
-  padding: 60px 24px;
-}
-.section.visible {
-  opacity: 1;
-  transform: translateY(0);
+.lesson-card:hover {
+  transform: translateY(-5px);
 }
 
-/* SCHEDULE */
+/* ================= SCHEDULE ================= */
 .schedule-grid {
   display: flex;
-  gap: 16px;
+  gap: 20px;
   flex-wrap: wrap;
 }
+
 .event {
   background: #fff;
-  padding: 12px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  width: 200px;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 200px;
 }
-.calendar-box {
-  margin-top: 16px;
+
+/* ================= CALENDAR & WORLD CLOCK ================= */
+.calendar-box, .world-clock {
+  margin-top: 30px;
   background: #fff;
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
 }
-.world-clock {
-  margin-top: 24px;
+
+.clock-container {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
 }
+
 .clock-box {
-  background:#fff; padding:12px; margin-bottom:8px; border-radius:12px; box-shadow:0 2px 6px rgba(0,0,0,0.1);
+  background: #ffb6c1;
+  padding: 10px 15px;
+  border-radius: 10px;
+  color: #fff;
 }
 
-/* RESOURCES */
-.learning-box {
-  background: #fff;
-  padding: 16px;
-  margin-top: 16px;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+/* ================= RESOURCE / LANGUAGE LEARNING ================= */
+.resource-buttons {
+  display: flex;
+  gap: 10px;
+  margin: 20px 0;
 }
+
 .resource-buttons button {
-  margin-right: 12px;
-  margin-bottom: 8px;
+  padding: 10px 20px;
+  background: #ff69b4;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
 }
-.resource-content {display:none;}
-.flashcard-box, .practice-box {
-  background:#fff; padding:24px; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1); margin-bottom:12px; text-align:center; font-size:18px;
-}
-input[type=text] {padding:8px; border-radius:8px; border:1px solid #ccc; width:80%; margin-bottom:8px;}
 
-/* FOOTER */
+.resource-buttons button:hover {
+  background: #ff1493;
+}
+
+.resource-content {
+  display: none;
+  margin-top: 20px;
+  background: #fff;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+/* ================= FLASHCARDS ================= */
+.flashcard-box {
+  text-align: center;
+}
+
+#flashcardLang {
+  padding: 30px;
+  background: #f9f9f9;
+  border-radius: 15px;
+  font-size: 1.3rem;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+}
+
+/* ================= PRACTICE ================= */
+.practice-box input {
+  padding: 10px;
+  width: 100%;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+.practice-box button {
+  padding: 10px 20px;
+  background: #ff69b4;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.practice-box button:hover {
+  background: #ff1493;
+}
+
+/* ================= UNIT TEST ================= */
+#testQuestionsLang div {
+  margin-bottom: 15px;
+}
+
+#unitTestLang input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+}
+
+/* ================= FOOTER ================= */
 footer {
-  text-align:center;
-  padding:24px;
-  margin-top:60px;
-  background:#fff;
-  box-shadow:0 -2px 6px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 20px;
+  background: #ffb6c1;
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ================= CONFETTI ================= */
+#confettiCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1000;
 }
