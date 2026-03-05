@@ -113,48 +113,52 @@
   <section id="resources" class="section">
   <h2>Resources</h2>
 
-  <!-- FOUR BUTTON CARDS -->
-  <div class="resource-cards">
-    <div class="resource-card" onclick="showResource('video')">🎥 Video Lesson</div>
-    <div class="resource-card" onclick="showResource('flashcards')">🃏 Flashcards</div>
-    <div class="resource-card" onclick="showResource('practice')">✏️ Practice Mode</div>
-    <div class="resource-card" onclick="showResource('test')">📝 Unit Test</div>
+  <!-- Language Selector -->
+  <div class="language-selector">
+    <label for="languageSelect">Choose Language:</label>
+    <select id="languageSelect" onchange="changeLanguage(this.value)">
+      <option value="spanish">Spanish</option>
+      <!-- You can add more languages later -->
+    </select>
   </div>
 
-  <!-- RESOURCE CONTENT BOXES -->
-  <div id="video" class="resource-content" style="display:none;">
-    <h3>Video Lesson</h3>
-    <p>Here you can add your video lesson or embed a YouTube link!</p>
+  <!-- Resource Buttons -->
+  <div class="resource-buttons">
+    <div class="resource-box" onclick="showResource('videoLesson')">Video Lessons</div>
+    <div class="resource-box" onclick="showResource('flashcards')">Flashcards</div>
+    <div class="resource-box" onclick="showResource('practice')">Practice Mode</div>
+    <div class="resource-box" onclick="showResource('unitTest')">Unit Test</div>
+  </div>
+
+  <!-- Resource Content Areas -->
+  <div id="videoLesson" class="resource-content" style="display:none;">
+    <iframe width="560" height="315" 
+      src="https://www.youtube.com/embed/9-F3TqB5lMc" 
+      title="Butterfly Spanish" frameborder="0" allowfullscreen></iframe>
   </div>
 
   <div id="flashcards" class="resource-content" style="display:none;">
-    <h3>Flashcards</h3>
-    <div id="flashcard" onclick="flipCard()">Click Load</div>
+    <!-- Flashcards will populate here dynamically -->
+    <div id="flashcardBox"></div>
+    <button onclick="flipCard()">Flip</button>
     <button onclick="nextCard()">Next</button>
   </div>
 
   <div id="practice" class="resource-content" style="display:none;">
-    <h3>Practice Mode</h3>
-    <p>Fill in the blank: ___ es difícil, lo intentaré.</p>
-    <input id="practiceInput" type="text">
+    <!-- Practice exercises will populate here dynamically -->
+    <div id="practiceBox"></div>
+    <input type="text" id="practiceInput">
     <button onclick="checkPractice()">Check</button>
     <p id="practiceResult"></p>
   </div>
 
-  <div id="test" class="resource-content" style="display:none;">
-    <h3>Unit Test</h3>
-    <p>1. "Sin embargo" means:</p>
-    <input type="radio" name="q1" value="however"> However<br>
-    <input type="radio" name="q1" value="despite"> Despite<br><br>
-
-    <p>2. "Lograr" means:</p>
-    <input type="radio" name="q2" value="achieve"> To achieve<br>
-    <input type="radio" name="q2" value="develop"> To develop<br><br>
-
-    <button onclick="submitTest()">Submit Test</button>
-    <p id="testScore"></p>
+  <div id="unitTest" class="resource-content" style="display:none;">
+    <!-- Unit test questions populate here -->
+    <h3>Unit <span id="testUnit">1</span> Test</h3>
+    <div id="testQuestions"></div>
+    <button onclick="gradeTest()">Submit Test</button>
+    <p id="testResult"></p>
   </div>
-
 </section>
 
   <!-- CONFETTI CANVAS -->
