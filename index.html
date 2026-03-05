@@ -20,7 +20,7 @@
   </nav>
 
   <!-- HERO -->
-  <section id="home" class="hero section">
+  <section id="home" class="hero">
     <div class="bg-blobs">
       <span></span>
       <span></span>
@@ -106,60 +106,55 @@
         <button id="add-clock-btn" type="button">Add Clock</button>
       </div>
     </div>
-
   </section>
 
   <!-- RESOURCES -->
   <section id="resources" class="section">
-  <h2>Resources</h2>
+    <h2>Resources</h2>
 
-  <!-- Language Selector -->
-  <div class="language-selector">
-    <label for="languageSelect">Choose Language:</label>
-    <select id="languageSelect" onchange="changeLanguage(this.value)">
-      <option value="spanish">Spanish</option>
-      <!-- You can add more languages later -->
-    </select>
-  </div>
+    <!-- Language Selector -->
+    <div class="language-selector">
+      <label for="languageSelect">Choose Language:</label>
+      <select id="languageSelect" onchange="changeLanguage(this.value)">
+        <option value="spanish">Spanish</option>
+      </select>
+    </div>
 
-  <!-- Resource Buttons -->
-  <div class="resource-buttons">
-    <div class="resource-box" onclick="showResource('videoLesson')">Video Lessons</div>
-    <div class="resource-box" onclick="showResource('flashcards')">Flashcards</div>
-    <div class="resource-box" onclick="showResource('practice')">Practice Mode</div>
-    <div class="resource-box" onclick="showResource('unitTest')">Unit Test</div>
-  </div>
+    <!-- Resource Buttons -->
+    <div class="resource-buttons">
+      <div class="resource-box" onclick="showResource('videoLesson')">Video Lessons</div>
+      <div class="resource-box" onclick="showResource('flashcards')">Flashcards</div>
+      <div class="resource-box" onclick="showResource('practice')">Practice Mode</div>
+      <div class="resource-box" onclick="showResource('unitTest')">Unit Test</div>
+    </div>
 
-  <!-- Resource Content Areas -->
-  <div id="videoLesson" class="resource-content" style="display:none;">
-    <iframe width="560" height="315" 
-      src="https://www.youtube.com/embed/9-F3TqB5lMc" 
-      title="Butterfly Spanish" frameborder="0" allowfullscreen></iframe>
-  </div>
+    <!-- Resource Content Areas -->
+    <div id="videoLesson" class="resource-content" style="display:none;">
+      <iframe width="560" height="315" 
+        src="https://www.youtube.com/embed/9-F3TqB5lMc" 
+        title="Butterfly Spanish" frameborder="0" allowfullscreen></iframe>
+    </div>
 
-  <div id="flashcards" class="resource-content" style="display:none;">
-    <!-- Flashcards will populate here dynamically -->
-    <div id="flashcardBox"></div>
-    <button onclick="flipCard()">Flip</button>
-    <button onclick="nextCard()">Next</button>
-  </div>
+    <div id="flashcards" class="resource-content" style="display:none;">
+      <div id="flashcardBox"></div>
+      <button onclick="flipCard()">Flip</button>
+      <button onclick="nextCard()">Next</button>
+    </div>
 
-  <div id="practice" class="resource-content" style="display:none;">
-    <!-- Practice exercises will populate here dynamically -->
-    <div id="practiceBox"></div>
-    <input type="text" id="practiceInput">
-    <button onclick="checkPractice()">Check</button>
-    <p id="practiceResult"></p>
-  </div>
+    <div id="practice" class="resource-content" style="display:none;">
+      <div id="practiceBox"></div>
+      <input type="text" id="practiceInput">
+      <button onclick="checkPractice()">Check</button>
+      <p id="practiceResult"></p>
+    </div>
 
-  <div id="unitTest" class="resource-content" style="display:none;">
-    <!-- Unit test questions populate here -->
-    <h3>Unit <span id="testUnit">1</span> Test</h3>
-    <div id="testQuestions"></div>
-    <button onclick="gradeTest()">Submit Test</button>
-    <p id="testResult"></p>
-  </div>
-</section>
+    <div id="unitTest" class="resource-content" style="display:none;">
+      <h3>Unit <span id="testUnit">1</span> Test</h3>
+      <div id="testQuestions"></div>
+      <button onclick="gradeTest()">Submit Test</button>
+      <p id="testResult"></p>
+    </div>
+  </section>
 
   <!-- CONFETTI CANVAS -->
   <canvas id="confettiCanvas"></canvas>
