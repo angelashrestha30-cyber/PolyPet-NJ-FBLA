@@ -161,12 +161,6 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentCard = 0;
   let flipped = false;
 
-  window.loadSpanishLevel3 = function(){
-    currentCard = 0;
-    flipped = false;
-    showCard();
-  }
-
   function showCard(){
     const card = document.getElementById("flashcard");
     if(!card) return;
@@ -206,6 +200,16 @@ document.addEventListener("DOMContentLoaded", function () {
     sections.forEach(sec => sec.style.display = "none");
     const target = document.getElementById(name);
     if(target) target.style.display = "block";
+
+    // ====== EMBED BUTTERFLY SPANISH PLAYLIST ======
+    if(name==="video"){
+      const videoContainer = target;
+      videoContainer.innerHTML = `
+        <h3>Video Lesson</h3>
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/videoseries?list=PL6oJ9WqQj2hN6rHxYnHF7xXbU9W38ZfZv" 
+        title="Butterfly Spanish Playlist" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+      `;
+    }
   }
 
   // show Video by default
