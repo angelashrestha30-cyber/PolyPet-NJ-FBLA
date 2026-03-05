@@ -20,7 +20,7 @@
   </nav>
 
   <!-- HERO -->
-  <section id="home" class="hero">
+  <section id="home" class="hero section">
     <div class="bg-blobs">
       <span></span>
       <span></span>
@@ -100,69 +100,62 @@
       <h3 class="world-clock-title">🌍 World Clock</h3>
       <div id="clock-container" class="clock-container"></div>
 
-      <!-- Add custom timezone -->
       <div class="add-clock-box">
         <input type="text" id="new-country" placeholder="Country Name">
         <input type="text" id="new-tz" placeholder="Timezone (e.g. Europe/Berlin)">
         <button id="add-clock-btn" type="button">Add Clock</button>
       </div>
     </div>
+
   </section>
 
   <!-- RESOURCES -->
   <section id="resources" class="section">
-    <h2>Resources</h2>
+  <h2>Resources</h2>
 
-    <!-- Language Selection -->
-    <div class="resource-selection">
-      <label for="languageSelect">Choose Language:</label>
-      <select id="languageSelect" onchange="loadUnit(0)">
-        <option value="spanish">Spanish</option>
-      </select>
-    </div>
+  <!-- FOUR BUTTON CARDS -->
+  <div class="resource-cards">
+    <div class="resource-card" onclick="showResource('video')">🎥 Video Lesson</div>
+    <div class="resource-card" onclick="showResource('flashcards')">🃏 Flashcards</div>
+    <div class="resource-card" onclick="showResource('practice')">✏️ Practice Mode</div>
+    <div class="resource-card" onclick="showResource('test')">📝 Unit Test</div>
+  </div>
 
-    <!-- Resource Buttons -->
-    <div class="resource-buttons">
-      <button onclick="showResource('videoLesson')">Video Lesson</button>
-      <button onclick="showResource('flashcards')">Flashcards</button>
-      <button onclick="showResource('practiceMode')">Practice Mode</button>
-      <button onclick="showResource('unitTest')">Unit Test</button>
-    </div>
+  <!-- RESOURCE CONTENT BOXES -->
+  <div id="video" class="resource-content" style="display:none;">
+    <h3>Video Lesson</h3>
+    <p>Here you can add your video lesson or embed a YouTube link!</p>
+  </div>
 
-    <!-- Resource Contents -->
-    <div id="videoLesson" class="resource-content">
-      <h3>Video Lesson</h3>
-      <iframe width="560" height="315" src="https://www.youtube.com/embed/R6jVz_3OnQQ" 
-        title="Butterfly Spanish" frameborder="0" allowfullscreen></iframe>
-    </div>
+  <div id="flashcards" class="resource-content" style="display:none;">
+    <h3>Flashcards</h3>
+    <div id="flashcard" onclick="flipCard()">Click Load</div>
+    <button onclick="nextCard()">Next</button>
+  </div>
 
-    <div id="flashcards" class="resource-content">
-      <h3>Flashcards</h3>
-      <div id="flashcardBox">
-        <div id="flashcard" onclick="flipCard()"></div>
-        <div class="flashcard-controls">
-          <button onclick="prevCard()">Prev</button>
-          <button onclick="nextCard()">Next</button>
-        </div>
-        <p id="flashcardProgress"></p>
-      </div>
-    </div>
+  <div id="practice" class="resource-content" style="display:none;">
+    <h3>Practice Mode</h3>
+    <p>Fill in the blank: ___ es difícil, lo intentaré.</p>
+    <input id="practiceInput" type="text">
+    <button onclick="checkPractice()">Check</button>
+    <p id="practiceResult"></p>
+  </div>
 
-    <div id="practiceMode" class="resource-content">
-      <h3>Practice Mode</h3>
-      <p id="practiceQuestion"></p>
-      <input type="text" id="practiceInput">
-      <button onclick="checkAnswer()">Check</button>
-      <p id="practiceFeedback"></p>
-    </div>
+  <div id="test" class="resource-content" style="display:none;">
+    <h3>Unit Test</h3>
+    <p>1. "Sin embargo" means:</p>
+    <input type="radio" name="q1" value="however"> However<br>
+    <input type="radio" name="q1" value="despite"> Despite<br><br>
 
-    <div id="unitTest" class="resource-content">
-      <h3>Unit Test - Unit <span id="testUnit">1</span></h3>
-      <div id="testQuestions"></div>
-      <button onclick="submitTest()">Submit Test</button>
-      <p id="testFeedback"></p>
-    </div>
-  </section>
+    <p>2. "Lograr" means:</p>
+    <input type="radio" name="q2" value="achieve"> To achieve<br>
+    <input type="radio" name="q2" value="develop"> To develop<br><br>
+
+    <button onclick="submitTest()">Submit Test</button>
+    <p id="testScore"></p>
+  </div>
+
+</section>
 
   <!-- CONFETTI CANVAS -->
   <canvas id="confettiCanvas"></canvas>
