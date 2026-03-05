@@ -16,6 +16,7 @@
       <a onclick="scrollToSection('home')">Home</a>
       <a onclick="scrollToSection('schedule')">Schedule</a>
       <a onclick="scrollToSection('resources')">Resources</a>
+      <a onclick="scrollToSection('languageSection')">Language</a>
     </div>
   </nav>
 
@@ -28,7 +29,6 @@
     </div>
 
     <div class="hero-container">
-      <!-- LEFT: PET CARD -->
       <div class="pet-panel">
         <div class="pet-avatar">🦊</div>
         <h3>Pika</h3>
@@ -40,13 +40,11 @@
         <button onclick="completeLesson()">Play</button>
       </div>
 
-      <!-- CENTER: SPEECH BUBBLE -->
       <div class="speech-bubble">
         <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
         <p>Clever like a fox, keep up the great work! 🌟</p>
       </div>
 
-      <!-- RIGHT: FLOATING LESSON CARDS -->
       <div class="lesson-cards">
         <div class="lesson-card float">
           <h4>Spanish Basics</h4>
@@ -88,19 +86,15 @@
       </div>
     </div>
 
-    <!-- INTERACTIVE CALENDAR -->
     <div class="calendar-box">
       <input type="date" id="lesson-date">
       <button onclick="scheduleLesson()">Schedule Lesson</button>
       <ul id="lesson-list"></ul>
     </div>
 
-    <!-- DYNAMIC WORLD CLOCK -->
     <div class="world-clock">
       <h3 class="world-clock-title">🌍 World Clock</h3>
       <div id="clock-container" class="clock-container"></div>
-
-      <!-- Add custom timezone -->
       <div class="add-clock-box">
         <input type="text" id="new-country" placeholder="Country Name">
         <input type="text" id="new-tz" placeholder="Timezone (e.g. Europe/Berlin)">
@@ -113,57 +107,90 @@
   <section id="resources" class="section">
     <h2>Resources</h2>
 
-    <!-- Language Selection -->
+    <div class="language-panel">
+      <button onclick="loadSpanishLevel3()">Load Spanish Level 3</button>
+    </div>
+
     <div class="learning-box">
-      <h3>Select Language</h3>
-      <select id="languageSelect" onchange="loadLanguage()">
-        <option value="spanish">Spanish</option>
-      </select>
-    </div>
-
-    <!-- Resource Buttons -->
-    <div class="resource-buttons">
-      <button onclick="showResource('videoLesson')">Video Lesson</button>
-      <button onclick="showResource('flashcardsLesson')">Flashcards</button>
-      <button onclick="showResource('practiceLesson')">Practice Mode</button>
-      <button onclick="showResource('unitTestLesson')">Unit Test</button>
-    </div>
-
-    <!-- VIDEO LESSON -->
-    <div class="learning-box resource-content" id="videoLesson">
-      <h3>Video Lesson</h3>
-      <iframe width="560" height="315" 
-        src="https://www.youtube.com/embed/videoseries?list=PL1FCD45E9F5BFA1CE" 
-        title="Butterfly Spanish Lessons" frameborder="0" allowfullscreen></iframe>
-    </div>
-
-    <!-- FLASHCARDS -->
-    <div class="learning-box resource-content" id="flashcardsLesson">
       <h3>Flashcards</h3>
-      <div id="flashcard" onclick="flipCard()" class="flashcard-box">Click to Flip</div>
+      <div id="flashcard" onclick="flipCard()">Click Load</div>
       <button onclick="nextCard()">Next</button>
     </div>
 
-    <!-- PRACTICE MODE -->
-    <div class="learning-box resource-content" id="practiceLesson">
+    <div class="learning-box">
       <h3>Practice Mode</h3>
-      <div id="practiceQuestion" class="practice-box"></div>
-      <input type="text" id="practiceInput">
+      <p>Fill in the blank: ___ es difícil, lo intentaré.</p>
+      <input id="practiceInput" type="text">
       <button onclick="checkPractice()">Check</button>
-      <p id="practiceFeedback"></p>
+      <p id="practiceResult"></p>
     </div>
 
-    <!-- UNIT TEST -->
-    <div class="learning-box resource-content" id="unitTestLesson">
+    <div class="learning-box">
       <h3>Unit Test</h3>
-      <div id="testQuestions"></div>
+      <p>1. "Sin embargo" means:</p>
+      <input type="radio" name="q1" value="however"> However<br>
+      <input type="radio" name="q1" value="despite"> Despite<br><br>
+      <p>2. "Lograr" means:</p>
+      <input type="radio" name="q2" value="achieve"> To achieve<br>
+      <input type="radio" name="q2" value="develop"> To develop<br><br>
       <button onclick="submitTest()">Submit Test</button>
       <p id="testScore"></p>
-      <div id="testResults"></div>
     </div>
   </section>
 
-  <!-- CONFETTI CANVAS -->
+  <!-- LANGUAGE LEARNING -->
+  <section class="section" id="languageSection">
+    <h2>Language Learning</h2>
+
+    <div class="learning-box">
+      <select id="languageSelect">
+        <option value="spanish">Spanish</option>
+      </select>
+
+      <div class="resource-buttons">
+        <button onclick="showResource('videoLesson')">Video Lessons</button>
+        <button onclick="showResource('flashcardsLang')">Flashcards</button>
+        <button onclick="showResource('practiceModeLang')">Practice Mode</button>
+        <button onclick="showResource('unitTestLang')">Unit Test</button>
+      </div>
+
+      <!-- VIDEO -->
+      <div class="resource-content" id="videoLesson">
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/5KgPZ4JnlxY" title="Butterfly Spanish" frameborder="0" allowfullscreen></iframe>
+      </div>
+
+      <!-- FLASHCARDS -->
+      <div class="resource-content" id="flashcardsLang">
+        <div class="flashcard-box">
+          <p id="flashcardLang">Click Next to Start Flashcards</p>
+          <button onclick="flipCardLang()">Flip</button>
+          <button onclick="nextCardLang()">Next</button>
+        </div>
+      </div>
+
+      <!-- PRACTICE MODE -->
+      <div class="resource-content" id="practiceModeLang">
+        <div class="practice-box">
+          <p id="practiceQuestionLang"></p>
+          <input type="text" id="practiceInputLang" placeholder="Type your answer">
+          <button onclick="checkPracticeLang()">Check Answer</button>
+          <p id="practiceFeedbackLang"></p>
+        </div>
+      </div>
+
+      <!-- UNIT TEST -->
+      <div class="resource-content" id="unitTestLang">
+        <div class="practice-box">
+          <div id="testQuestionsLang"></div>
+          <button onclick="submitTestLang()">Submit Test</button>
+          <p id="testScoreLang"></p>
+          <div id="testResultsLang"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
   <canvas id="confettiCanvas"></canvas>
 
   <footer>
