@@ -20,25 +20,49 @@
   </nav>
 
   <!-- HERO -->
-  <section id="home" class="hero">
-    <div class="bg-blobs"><span></span><span></span><span></span></div>
+  <section id="home" class="hero section">
+    <div class="bg-blobs">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+
     <div class="hero-container">
+      <!-- LEFT: PET CARD -->
       <div class="pet-panel">
         <div class="pet-avatar">🦊</div>
         <h3>Pika</h3>
         <p>Level <span id="level">1</span></p>
-        <div class="xp-bar"><div id="xp-fill"></div></div>
+        <div class="xp-bar">
+          <div id="xp-fill"></div>
+        </div>
         <p>🔥 <span id="streak">0</span> Day Streak</p>
         <button onclick="completeLesson()">Play</button>
       </div>
+
+      <!-- CENTER: SPEECH BUBBLE -->
       <div class="speech-bubble">
         <h2 id="dynamicGreeting">Welcome Back, Emma!</h2>
         <p>Clever like a fox, keep up the great work! 🌟</p>
       </div>
+
+      <!-- RIGHT: FLOATING LESSON CARDS -->
       <div class="lesson-cards">
-        <div class="lesson-card float"><h4>Spanish Basics</h4><p>⭐ ⭐</p><span class="lvl">Lv. 2</span></div>
-        <div class="lesson-card float delay1"><h4>Kanji Practice</h4><p>⭐ ⭐ ⭐</p><span class="lvl">Lv. 3</span></div>
-        <div class="lesson-card float delay2"><h4>Grammar Quiz</h4><p>⭐</p><span class="lvl">Lv. 1</span></div>
+        <div class="lesson-card float">
+          <h4>Spanish Basics</h4>
+          <p>⭐ ⭐</p>
+          <span class="lvl">Lv. 2</span>
+        </div>
+        <div class="lesson-card float delay1">
+          <h4>Kanji Practice</h4>
+          <p>⭐ ⭐ ⭐</p>
+          <span class="lvl">Lv. 3</span>
+        </div>
+        <div class="lesson-card float delay2">
+          <h4>Grammar Quiz</h4>
+          <p>⭐</p>
+          <span class="lvl">Lv. 1</span>
+        </div>
       </div>
     </div>
   </section>
@@ -46,76 +70,99 @@
   <!-- SCHEDULE -->
   <section id="schedule" class="section">
     <h2>Today's Schedule</h2>
+
     <div class="filter-buttons">
       <button onclick="filterSchedule('all')">All</button>
       <button onclick="filterSchedule('spanish')">Spanish</button>
       <button onclick="filterSchedule('mandarin')">Mandarin</button>
     </div>
+
     <div class="schedule-grid">
-      <div class="event spanish"><h3>Spanish Lesson</h3><p>2:00 PM – 3:00 PM EST</p></div>
-      <div class="event mandarin"><h3>Mandarin Lesson</h3><p>6:00 PM – 7:00 PM EST</p></div>
+      <div class="event spanish">
+        <h3>Spanish Lesson</h3>
+        <p>2:00 PM – 3:00 PM EST</p>
+      </div>
+      <div class="event mandarin">
+        <h3>Mandarin Lesson</h3>
+        <p>6:00 PM – 7:00 PM EST</p>
+      </div>
     </div>
+
+    <!-- INTERACTIVE CALENDAR -->
     <div class="calendar-box">
       <input type="date" id="lesson-date">
       <button onclick="scheduleLesson()">Schedule Lesson</button>
       <ul id="lesson-list"></ul>
     </div>
+
+    <!-- DYNAMIC WORLD CLOCK -->
     <div class="world-clock">
       <h3 class="world-clock-title">🌍 World Clock</h3>
       <div id="clock-container" class="clock-container"></div>
+
       <div class="add-clock-box">
         <input type="text" id="new-country" placeholder="Country Name">
         <input type="text" id="new-tz" placeholder="Timezone (e.g. Europe/Berlin)">
         <button id="add-clock-btn" type="button">Add Clock</button>
       </div>
     </div>
+
   </section>
 
-  <!-- RESOURCES / LANGUAGE LEARNING -->
+  <!-- RESOURCES -->
   <section id="resources" class="section">
-    <h2>Resources & Language Learning</h2>
-    <div class="resource-buttons">
-      <button onclick="showResource('video')">Video Lessons</button>
-      <button onclick="showResource('flashcards')">Flashcards</button>
-      <button onclick="showResource('practice')">Practice Mode</button>
-      <button onclick="showResource('test')">Unit Test</button>
-    </div>
+  <h2>Resources</h2>
 
-    <!-- VIDEO LESSONS -->
-    <div class="resource-content" id="video" style="display:none">
-      <p>📹 Video lessons coming soon!</p>
-    </div>
+  <!-- FOUR BUTTON CARDS -->
+  <div class="resource-cards">
+    <div class="resource-card" onclick="showResource('video')">🎥 Video Lesson</div>
+    <div class="resource-card" onclick="showResource('flashcards')">🃏 Flashcards</div>
+    <div class="resource-card" onclick="showResource('practice')">✏️ Practice Mode</div>
+    <div class="resource-card" onclick="showResource('test')">📝 Unit Test</div>
+  </div>
 
-    <!-- FLASHCARDS -->
-    <div class="resource-content" id="flashcards" style="display:none">
-      <div id="flashcard" class="flashcard" onclick="flipCard()">Click to Flip</div>
-      <button onclick="nextCard()">Next Card</button>
-    </div>
+  <!-- RESOURCE CONTENT BOXES -->
+  <div id="video" class="resource-content" style="display:none;">
+    <h3>Video Lesson</h3>
+    <p>Here you can add your video lesson or embed a YouTube link!</p>
+  </div>
 
-    <!-- PRACTICE MODE -->
-    <div class="resource-content" id="practice" style="display:none">
-      <div class="practice-nav">
-        <button onclick="startExercise('translate')">Translate Words</button>
-        <button onclick="startExercise('fillblank')">Fill in the Blank</button>
-        <button onclick="startExercise('sentence')">Sentence Builder</button>
-        <button onclick="startExercise('listening')">Listening Mode</button>
-      </div>
-      <div id="practice-area">
-        <p id="practiceQuestion">Loading...</p>
-        <input type="text" id="practiceInput" placeholder="Type your answer here">
-        <button onclick="checkAnswer()">Check</button>
-        <p id="practiceResult"></p>
-      </div>
-    </div>
+  <div id="flashcards" class="resource-content" style="display:none;">
+    <h3>Flashcards</h3>
+    <div id="flashcard" onclick="flipCard()">Click Load</div>
+    <button onclick="nextCard()">Next</button>
+  </div>
 
-    <!-- UNIT TEST -->
-    <div class="resource-content" id="test" style="display:none">
-      <p>Unit Test coming soon!</p>
-    </div>
-  </section>
+  <div id="practice" class="resource-content" style="display:none;">
+    <h3>Practice Mode</h3>
+    <p>Fill in the blank: ___ es difícil, lo intentaré.</p>
+    <input id="practiceInput" type="text">
+    <button onclick="checkPractice()">Check</button>
+    <p id="practiceResult"></p>
+  </div>
 
+  <div id="test" class="resource-content" style="display:none;">
+    <h3>Unit Test</h3>
+    <p>1. "Sin embargo" means:</p>
+    <input type="radio" name="q1" value="however"> However<br>
+    <input type="radio" name="q1" value="despite"> Despite<br><br>
+
+    <p>2. "Lograr" means:</p>
+    <input type="radio" name="q2" value="achieve"> To achieve<br>
+    <input type="radio" name="q2" value="develop"> To develop<br><br>
+
+    <button onclick="submitTest()">Submit Test</button>
+    <p id="testScore"></p>
+  </div>
+
+</section>
+
+  <!-- CONFETTI CANVAS -->
   <canvas id="confettiCanvas"></canvas>
-  <footer>© 2026 PolyPet | NJ FBLA State Competition</footer>
+
+  <footer>
+    © 2026 PolyPet | NJ FBLA State Competition
+  </footer>
 
   <script src="js/script.js"></script>
 </body>
