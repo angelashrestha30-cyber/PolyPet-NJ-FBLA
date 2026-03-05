@@ -161,16 +161,16 @@ document.addEventListener("DOMContentLoaded", function () {
   let currentCard = 0;
   let flipped = false;
 
-  function showCard(){
-    const card = document.getElementById("flashcard");
-    if(!card) return;
-    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
-  }
-
   window.loadSpanishLevel3 = function(){
     currentCard = 0;
     flipped = false;
     showCard();
+  }
+
+  function showCard(){
+    const card = document.getElementById("flashcard");
+    if(!card) return;
+    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
   }
 
   window.flipCard = function(){
@@ -185,85 +185,101 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ================= PRACTICE MODE =================
-  let practiceQuestions = [
-    {question:"Fill in the blank: ___ es difícil, lo intentaré.", answer:"aunque", explanation:"'Aunque' means 'although'."},
-    {question:"Translate: 'I want to eat' → ___", answer:"quiero comer", explanation:"'Quiero comer' means 'I want to eat'."},
-    {question:"Translate: 'She is happy' → ___", answer:"ella está feliz", explanation:"'Ella está feliz' means 'She is happy'."}
-  ];
-  let practiceIndex = 0;
-
-  function loadPracticeQuestion(){
-    const qEl = document.getElementById("practiceQuestion");
-    const input = document.getElementById("practiceInput");
-    const result = document.getElementById("practiceResult");
-    if(!qEl || !input || !result) return;
-    qEl.textContent = practiceQuestions[practiceIndex].question;
-    input.value = "";
-    result.textContent = "";
-  }
-
   window.checkPractice = function(){
     const input = document.getElementById("practiceInput").value.toLowerCase();
     const result = document.getElementById("practiceResult");
-    if(input === practiceQuestions[practiceIndex].answer.toLowerCase()){
-      result.textContent = "✅ Correct! " + practiceQuestions[practiceIndex].explanation;
-    } else {
-      result.textContent = "❌ Wrong. " + practiceQuestions[practiceIndex].explanation;
-    }
-    practiceIndex = (practiceIndex+1)%practiceQuestions.length;
-    setTimeout(loadPracticeQuestion,2000);
+    if(input==="aunque") result.textContent="✅ Correct!";
+    else result.textContent="❌ Try again.";
   }
 
-  loadPracticeQuestion();
-
-  // ================= UNIT TEST =================
-  let unitTestQuestions = [
-    {q:"Sin embargo means:", options:["However","Despite","Although"], correct:"However", explanation:"'Sin embargo' translates to 'However'."},
-    {q:"Lograr means:", options:["To achieve","To develop","To eat"], correct:"To achieve", explanation:"'Lograr' translates to 'To achieve'."},
-    {q:"A pesar de means:", options:["Despite","However","Although"], correct:"Despite", explanation:"'A pesar de' translates to 'Despite'."},
-    // ...add up to 25 questions similarly
+  // ================= UNIT TEST (25 QUESTIONS) =================
+  const unitTestQuestions = [
+    { type:"mc", question:"Translate 'Aunque' into English.", options:["However","Although","Despite"], answer:"Although" },
+    { type:"mc", question:"Translate 'Sin embargo' into English.", options:["However","Although","Therefore"], answer:"However" },
+    { type:"mc", question:"Translate 'Lograr' into English.", options:["To fail","To achieve","To forget"], answer:"To achieve" },
+    { type:"short", question:"Translate 'Desarrollar' into English.", answer:"To develop" },
+    { type:"mc", question:"Choose the correct article: ___ apple", options:["A","An","The"], answer:"An" },
+    { type:"short", question:"Fill in the blank: I ___ happy today.", answer:"am" },
+    { type:"mc", question:"Select the synonym of 'big'", options:["Small","Large","Tiny"], answer:"Large" },
+    { type:"short", question:"Conjugate 'to be' for he: ___", answer:"is" },
+    { type:"mc", question:"Translate 'A pesar de' into English.", options:["Although","Despite","Because"], answer:"Despite" },
+    { type:"short", question:"Plural of 'child' is ___", answer:"children" },
+    { type:"mc", question:"Choose the past tense of 'go'", options:["Goed","Went","Gone"], answer:"Went" },
+    { type:"short", question:"Translate 'Perro' into English.", answer:"Dog" },
+    { type:"mc", question:"Which is an adjective?", options:["Run","Beautiful","Swim"], answer:"Beautiful" },
+    { type:"short", question:"Opposite of 'hot'", answer:"cold" },
+    { type:"mc", question:"Translate 'Gracias' into English.", options:["Please","Thank you","Sorry"], answer:"Thank you" },
+    { type:"short", question:"Fill in the blank: She ___ to school.", answer:"goes" },
+    { type:"mc", question:"Select correct preposition: I live ___ London.", options:["on","in","at"], answer:"in" },
+    { type:"short", question:"Past tense of 'eat' is ___", answer:"ate" },
+    { type:"mc", question:"Translate 'Amigo' into English.", options:["Friend","Enemy","Brother"], answer:"Friend" },
+    { type:"short", question:"Plural of 'mouse' is ___", answer:"mice" },
+    { type:"mc", question:"Choose the synonym of 'happy'", options:["Sad","Joyful","Angry"], answer:"Joyful" },
+    { type:"short", question:"Translate 'Hola' into English.", answer:"Hello" },
+    { type:"mc", question:"Which is a verb?", options:["Quick","Run","Blue"], answer:"Run" },
+    { type:"short", question:"Fill in the blank: They ___ playing.", answer:"are" },
+    { type:"mc", question:"Choose the past tense of 'see'", options:["Saw","Seen","Seed"], answer:"Saw" },
   ];
 
-  function renderUnitTest(){
-    const container = document.getElementById("test");
-    container.innerHTML = "<h3>Unit Test</h3><form id='unitTestForm'></form><p id='testScore'></p><div id='testExplanations'></div>";
-    const form = document.getElementById("unitTestForm");
+  const testContainer = document.getElementById("unitTest");
+  if(testContainer){
     unitTestQuestions.forEach((q,i)=>{
-      const box = document.createElement("div");
-      box.classList.add("test-box");
-      let html = `<p>${i+1}. ${q.q}</p>`;
-      q.options.forEach(opt=>{
-        html += `<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`;
-      });
-      box.innerHTML = html;
-      form.appendChild(box);
+      const qDiv = document.createElement("div");
+      qDiv.classList.add("question-box");
+      qDiv.style.marginBottom = "20px";
+      const qTitle = document.createElement("p");
+      qTitle.textContent = (i+1)+". "+q.question;
+      qDiv.appendChild(qTitle);
+
+      if(q.type==="mc"){
+        q.options.forEach(opt=>{
+          const label = document.createElement("label");
+          label.style.display="block";
+          const input = document.createElement("input");
+          input.type="radio";
+          input.name="q"+i;
+          input.value=opt;
+          label.appendChild(input);
+          label.appendChild(document.createTextNode(" "+opt));
+          qDiv.appendChild(label);
+        });
+      } else if(q.type==="short"){
+        const input = document.createElement("input");
+        input.type="text";
+        input.id="q"+i;
+        input.style.width="60%";
+        input.style.padding="6px";
+        input.style.marginTop="6px";
+        qDiv.appendChild(input);
+      }
+
+      testContainer.appendChild(qDiv);
     });
+
     const submitBtn = document.createElement("button");
-    submitBtn.textContent = "Submit Test";
-    submitBtn.type = "button";
-    submitBtn.onclick = submitUnitTest;
-    form.appendChild(submitBtn);
-  }
-
-  function submitUnitTest(){
-    let score = 0;
-    const explanations = [];
-    unitTestQuestions.forEach((q,i)=>{
-      const selected = document.querySelector(`input[name="q${i}"]:checked`);
-      if(selected && selected.value === q.correct) score++;
-      explanations.push(`${i+1}. ${selected?.value || "No answer"} → ${q.correct}: ${q.explanation}`);
+    submitBtn.textContent="Submit Test";
+    submitBtn.style.padding="10px 18px";
+    submitBtn.style.background="#ff7f7f";
+    submitBtn.style.color="white";
+    submitBtn.style.border="none";
+    submitBtn.style.borderRadius="10px";
+    submitBtn.style.cursor="pointer";
+    submitBtn.style.fontWeight="600";
+    submitBtn.addEventListener("click",()=>{
+      let score=0;
+      unitTestQuestions.forEach((q,i)=>{
+        if(q.type==="mc"){
+          const selected = document.querySelector('input[name="q'+i+'"]:checked');
+          if(selected && selected.value===q.answer) score++;
+        } else if(q.type==="short"){
+          const answerInput = document.getElementById("q"+i);
+          if(answerInput && answerInput.value.trim().toLowerCase() === q.answer.toLowerCase()) score++;
+        }
+      });
+      alert("Score: "+score+"/"+unitTestQuestions.length);
     });
-    document.getElementById("testScore").textContent = `Score: ${score}/${unitTestQuestions.length}`;
-    const expEl = document.getElementById("testExplanations");
-    expEl.innerHTML = "";
-    explanations.forEach(e=>{
-      const p = document.createElement("p");
-      p.textContent = e;
-      expEl.appendChild(p);
-    });
+    testContainer.appendChild(submitBtn);
   }
-
-  renderUnitTest();
 
   // ================= RESOURCE TAB SWITCHING =================
   window.showResource = function(name){
