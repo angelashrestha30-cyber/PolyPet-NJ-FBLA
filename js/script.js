@@ -151,64 +151,153 @@ document.addEventListener("DOMContentLoaded", function () {
   setInterval(updateWorldClocks,1000);
 
   // ================= LANGUAGE / FLASHCARDS =================
-  let flashcards = [
-    {front:"Aunque", back:"Although"},
-    {front:"Sin embargo", back:"However"},
-    {front:"A pesar de", back:"Despite"},
-    {front:"Lograr", back:"To achieve"},
-    {front:"Desarrollar", back:"To develop"}
-  ];
-  let currentCard = 0;
-  let flipped = false;
+  // ================= RESOURCE SYSTEM =================
 
-  window.loadSpanishLevel3 = function(){
-    currentCard = 0;
-    flipped = false;
-    showCard();
-  }
+const spanishCards = [
+{front:"Hola", back:"Hello"},
+{front:"Adiós", back:"Goodbye"},
+{front:"Gracias", back:"Thank you"},
+{front:"Por favor", back:"Please"},
+{front:"Lo siento", back:"I'm sorry"},
+{front:"Sí", back:"Yes"},
+{front:"No", back:"No"},
+{front:"Buenos días", back:"Good morning"},
+{front:"Buenas tardes", back:"Good afternoon"},
+{front:"Buenas noches", back:"Good night"}
+];
 
-  function showCard(){
-    const card = document.getElementById("flashcard");
-    if(!card) return;
-    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
-  }
+let currentCard = 0;
+let flipped = false;
 
-  window.flipCard = function(){
-    flipped = !flipped;
-    showCard();
-  }
+function showCard(){
 
-  window.nextCard = function(){
-    currentCard = (currentCard+1)%flashcards.length;
-    flipped = false;
-    showCard();
-  }
+const card = spanishCards[currentCard];
+const cardDiv = document.getElementById("flashcard");
 
-  // ================= PRACTICE MODE =================
-  window.checkPractice = function(){
-    const input = document.getElementById("practiceInput").value.toLowerCase();
-    const result = document.getElementById("practiceResult");
-    if(input==="aunque") result.textContent="✅ Correct!";
-    else result.textContent="❌ Try again.";
-  }
+if(!cardDiv) return;
 
-  // ================= UNIT TEST =================
-  window.submitTest = function(){
-    let score = 0;
-    if(document.querySelector('input[name="q1"]:checked')?.value==="however") score++;
-    if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
-    document.getElementById("testScore").textContent="Score: "+score+"/2";
-  }
+cardDiv.textContent = flipped ? card.back : card.front;
 
-  // ================= RESOURCE TAB SWITCHING =================
-  window.showResource = function(name){
-    const sections = document.querySelectorAll(".resource-content");
-    sections.forEach(sec => sec.style.display = "none");
-    const target = document.getElementById(name);
-    if(target) target.style.display = "block";
-  }
+}
 
-  // show Video by default
-  showResource("video");
+window.flipCard = function(){
+
+flipped = !flipped;
+showCard();
+
+}
+
+window.nextCard = function(){
+
+currentCard = (currentCard+1) % spanishCards.length;
+flipped = false;
+showCard();
+
+}
+
+// ================= PRACTICE MODE =================
+
+let practiceIndex = 0;
+
+function loadPractice(){
+
+const q = spanishCards[practiceIndex];
+
+document.getElementById("practiceQuestion").textContent =
+"Translate: " + q.back;
+
+document.getElementById("practiceInput").value = "";
+document.getElementById("practiceFeedback").textContent = "";
+
+}
+
+window.checkAnswer = function(){
+
+const input =
+document.getElementById("practiceInput").value.trim().toLowerCase();
+
+const correct = spanishCards[practiceIndex].front.toLowerCase();
+
+const feedback = document.getElementById("practiceFeedback");
+
+if(input === correct){
+
+feedback.textContent = "✅ Correct!";
+
+}else{
+
+feedback.textContent =
+"❌ Correct answer: " + spanishCards[practiceIndex].front;
+
+}
+
+practiceIndex = (practiceIndex + 1) % spanishCards.length;
+
+setTimeout(loadPractice,800);
+
+}
+
+// ================= UNIT TEST =================
+
+function loadUnitTest(){
+
+const container = document.getElementById("testQuestions");
+
+container.innerHTML = "";
+
+spanishCards.forEach((card,i)=>{
+
+const div = document.createElement("div");
+
+div.className = "test-box";
+
+div.innerHTML = `
+<p>${i+1}. Translate: ${card.back}</p>
+<input type="text" id="testInput${i}">
+`;
+
+container.appendChild(div);
 
 });
+
+document.getElementById("testResults").innerHTML = "";
+
+}
+
+window.gradeTest = function(){
+
+let score = 0;
+let resultsHTML = "";
+
+spanishCards.forEach((card,i)=>{
+
+const input =
+document.getElementById("testInput"+i).value.trim().toLowerCase();
+
+const correct = card.front.toLowerCase();
+
+if(input === correct){
+
+score++;
+
+resultsHTML += `<p>${i+1}. ✅ Correct</p>`;
+
+}else{
+
+resultsHTML += `<p>${i+1}. ❌ Correct: "${card.front}"</p>`;
+
+}
+
+});
+
+resultsHTML +=
+`<p><strong>Score: ${score}/${spanishCards.length}</strong></p>`;
+
+document.getElementById("testResults").innerHTML = resultsHTML;
+
+}
+
+// initialize
+showCard();
+loadPractice();
+loadUnitTest();
