@@ -1,149 +1,279 @@
-// ================= RESOURCES / FLASHCARDS / PRACTICE / TEST =================
-let flashcards = [
-  {front:"Aunque", back:"Although"},
-  {front:"Sin embargo", back:"However"},
-  {front:"A pesar de", back:"Despite"},
-  {front:"Lograr", back:"To achieve"},
-  {front:"Desarrollar", back:"To develop"},
-  {front:"Rápidamente", back:"Quickly"},
-  {front:"Importante", back:"Important"},
-  {front:"Fácil", back:"Easy"},
-  {front:"Difícil", back:"Difficult"},
-  {front:"Gracias", back:"Thank you"}
-];
+// ================= DOM READY =================
+document.addEventListener("DOMContentLoaded", function () {
 
-let currentCard = 0;
-let flipped = false;
-
-function loadFlashcards() {
-  currentCard = 0;
-  flipped = false;
-  showCard();
-}
-
-function showCard() {
-  const card = document.getElementById("flashcard");
-  if(!card) return;
-  card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
-}
-
-function flipCard() {
-  flipped = !flipped;
-  showCard();
-}
-
-function nextCard() {
-  currentCard = (currentCard + 1) % flashcards.length;
-  flipped = false;
-  showCard();
-}
-
-// ================= PRACTICE MODE =================
-let practiceQuestions = [
-  {question:"Translate 'Aunque' to English", answer:"although"},
-  {question:"Translate 'Sin embargo' to English", answer:"however"},
-  {question:"Translate 'Lograr' to English", answer:"to achieve"},
-  {question:"Translate 'Desarrollar' to English", answer:"to develop"},
-  {question:"Translate 'Difícil' to English", answer:"difficult"}
-];
-
-let practiceIndex = 0;
-
-function startPractice() {
-  practiceIndex = 0;
-  document.getElementById("nextPracticeBtn").style.display = "none";
-  showPractice();
-}
-
-function showPractice() {
-  const q = practiceQuestions[practiceIndex];
-  document.getElementById("practiceQuestion").textContent = q.question;
-  document.getElementById("practiceInput").value = "";
-  document.getElementById("practiceResult").textContent = "";
-  document.getElementById("nextPracticeBtn").style.display = "none";
-}
-
-function checkPractice() {
-  const input = document.getElementById("practiceInput").value.trim().toLowerCase();
-  const result = document.getElementById("practiceResult");
-  const correct = practiceQuestions[practiceIndex].answer.toLowerCase();
-
-  if(input === correct) {
-    result.textContent = "✅ Correct!";
-  } else {
-    result.textContent = `❌ Incorrect. Correct answer: ${practiceQuestions[practiceIndex].answer}`;
+  // ================= SCROLLING =================
+  window.scrollToSection = function(id){
+    const el = document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:"smooth"});
   }
 
-  document.getElementById("nextPracticeBtn").style.display = "inline-block";
-}
+  // ================= PET XP / LEVEL / STREAK =================
+  let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+  let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+  let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
 
-function nextPractice() {
-  practiceIndex++;
-  if(practiceIndex >= practiceQuestions.length) {
-    document.getElementById("practiceQuestion").textContent = "🎉 Practice complete!";
-    document.getElementById("practiceInput").style.display = "none";
-    document.getElementById("nextPracticeBtn").style.display = "none";
-    document.getElementById("practiceResult").textContent = "";
-  } else {
-    showPractice();
+  function updatePetUI(){
+    document.getElementById("level").textContent = level;
+    document.getElementById("streak").textContent = streak;
+    document.getElementById("xp-fill").style.width = (xp % 100) + "%";
   }
-}
 
-// ================= UNIT TEST =================
-let unitTestQuestions = [
-  {q:"'Aunque' means:", options:["Although","Because"], correct:"Although", explanation:"Aunque = Although"},
-  {q:"'Sin embargo' means:", options:["However","Therefore"], correct:"However", explanation:"Sin embargo = However"},
-  {q:"'A pesar de' means:", options:["Despite","Until"], correct:"Despite", explanation:"A pesar de = Despite"},
-  {q:"'Lograr' means:", options:["To achieve","To fail"], correct:"To achieve", explanation:"Lograr = To achieve"},
-  {q:"'Desarrollar' means:", options:["To develop","To destroy"], correct:"To develop", explanation:"Desarrollar = To develop"},
-  {q:"'Rápidamente' means:", options:["Quickly","Slowly"], correct:"Quickly", explanation:"Rápidamente = Quickly"},
-  {q:"'Importante' means:", options:["Important","Unimportant"], correct:"Important", explanation:"Importante = Important"},
-  {q:"'Fácil' means:", options:["Easy","Hard"], correct:"Easy", explanation:"Fácil = Easy"},
-  {q:"'Difícil' means:", options:["Difficult","Simple"], correct:"Difficult", explanation:"Difícil = Difficult"},
-  {q:"'Gracias' means:", options:["Thank you","Please"], correct:"Thank you", explanation:"Gracias = Thank you"},
-  // Add 15 more questions here to reach 25
-  {q:"'Hola' means:", options:["Hello","Goodbye"], correct:"Hello", explanation:"Hola = Hello"},
-  {q:"'Adiós' means:", options:["Goodbye","Hi"], correct:"Goodbye", explanation:"Adiós = Goodbye"},
-  {q:"'Amigo' means:", options:["Friend","Enemy"], correct:"Friend", explanation:"Amigo = Friend"},
-  {q:"'Perro' means:", options:["Dog","Cat"], correct:"Dog", explanation:"Perro = Dog"},
-  {q:"'Gato' means:", options:["Cat","Dog"], correct:"Cat", explanation:"Gato = Cat"},
-  {q:"'Casa' means:", options:["House","Car"], correct:"House", explanation:"Casa = House"},
-  {q:"'Escuela' means:", options:["School","Hospital"], correct:"School", explanation:"Escuela = School"},
-  {q:"'Libro' means:", options:["Book","Pen"], correct:"Book", explanation:"Libro = Book"},
-  {q:"'Agua' means:", options:["Water","Juice"], correct:"Water", explanation:"Agua = Water"},
-  {q:"'Comida' means:", options:["Food","Drink"], correct:"Food", explanation:"Comida = Food"},
-  {q:"'Familia' means:", options:["Family","Friend"], correct:"Family", explanation:"Familia = Family"},
-  {q:"'Tiempo' means:", options:["Time","Weather"], correct:"Time", explanation:"Tiempo = Time"},
-  {q:"'Feliz' means:", options:["Happy","Sad"], correct:"Happy", explanation:"Feliz = Happy"},
-  {q:"'Triste' means:", options:["Sad","Happy"], correct:"Sad", explanation:"Triste = Sad"}
-];
+  window.completeLesson = function(){
+    xp += 20;
+    streak += 1;
+    if(xp >= level*100){
+      level++;
+      launchConfetti();
+    }
+    localStorage.setItem("xp",xp);
+    localStorage.setItem("level",level);
+    localStorage.setItem("streak",streak);
+    updatePetUI();
+  }
+  updatePetUI();
 
-function renderUnitTest() {
-  const form = document.getElementById("unitTestForm");
-  form.innerHTML = "";
-  unitTestQuestions.forEach((item, i)=>{
-    const div = document.createElement("div");
-    div.classList.add("test-box");
-    div.innerHTML = `<p>${i+1}. ${item.q}</p>` + item.options.map(opt=>
-      `<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label><br>`).join('');
-    form.appendChild(div);
-  });
-}
+  // ================= SCHEDULE FILTER =================
+  window.filterSchedule = function(day){
+    const events = document.querySelectorAll('.event');
+    events.forEach(event=>{
+      event.style.display = (day==="all" || event.classList.contains(day)) ? "block" : "none";
+    });
+  }
 
-// ================= TEST SUBMISSION =================
-function submitTest() {
-  let score = 0;
-  let explanations = "";
-  unitTestQuestions.forEach((item,i)=>{
-    const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value;
-    if(selected === item.correct) score++;
-    else explanations += `<p>Q${i+1}: ${item.explanation}</p>`;
-  });
-  document.getElementById("testScore").innerHTML = `Score: ${score}/${unitTestQuestions.length}`;
-  document.getElementById("testExplanations").innerHTML = explanations;
-}
+  // ================= INTERACTIVE CALENDAR =================
+  window.scheduleLesson = function(){
+    const date = document.getElementById("lesson-date").value;
+    if(!date) return;
+    const li = document.createElement("li");
+    li.textContent = "Lesson scheduled for " + date;
+    document.getElementById("lesson-list").appendChild(li);
+  }
 
-// ================= INITIALIZE =================
-document.addEventListener("DOMContentLoaded",()=>{
+  // ================= FADE-IN SECTIONS =================
+  const sections = document.querySelectorAll(".section");
+  function fadeInSections(){
+    sections.forEach(section=>{
+      const top = section.getBoundingClientRect().top;
+      if(top < window.innerHeight - 100){
+        section.classList.add("visible");
+      }
+    });
+  }
+  fadeInSections();
+  window.addEventListener("scroll", fadeInSections);
+
+  // ================= TIME GREETING =================
+  function setGreeting(){
+    const hour = new Date().getHours();
+    let greeting = (hour<12) ? "Good Morning, Emma ☀️" :
+                   (hour<18) ? "Good Afternoon, Emma 🌸" :
+                   "Good Evening, Emma 🌙";
+    document.getElementById("dynamicGreeting").textContent = greeting;
+  }
+  setGreeting();
+
+  // ================= CONFETTI =================
+  const canvas = document.getElementById("confettiCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let confetti = [];
+
+  function launchConfetti(){
+    for(let i=0;i<100;i++){
+      confetti.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height - canvas.height,
+        size: Math.random()*6+4,
+        speed: Math.random()*3+2
+      });
+    }
+    animateConfetti();
+  }
+
+  function animateConfetti(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    confetti.forEach(p=>{
+      p.y += p.speed;
+      ctx.fillStyle = "#ff7f7f";
+      ctx.fillRect(p.x,p.y,p.size,p.size);
+    });
+    confetti = confetti.filter(p=>p.y < canvas.height);
+    if(confetti.length>0) requestAnimationFrame(animateConfetti);
+  }
+
+  // ================= WORLD CLOCK =================
+  let timezones = [
+    { country: "Japan", code: "Asia/Tokyo", flag: "🇯🇵" },
+    { country: "Spain", code: "Europe/Madrid", flag: "🇪🇸" },
+    { country: "China", code: "Asia/Shanghai", flag: "🇨🇳" }
+  ];
+
+  function createSafeId(str){ return str.replace(/\//g,"-").replace(/\s/g,"").toLowerCase(); }
+
+  function renderClocks(){
+    const container = document.getElementById("clock-container");
+    if(!container) return;
+    container.innerHTML = "";
+    timezones.forEach(tz=>{
+      const id = createSafeId(tz.code);
+      const box = document.createElement("div");
+      box.classList.add("clock-box");
+      box.innerHTML = `<h4>${tz.flag} ${tz.country}</h4><p id="${id}">--:--:--</p>`;
+      container.appendChild(box);
+    });
+  }
+
+  function updateWorldClocks(){
+    const now = new Date();
+    timezones.forEach(tz=>{
+      const id = createSafeId(tz.code);
+      const el = document.getElementById(id);
+      if(el) el.textContent = now.toLocaleTimeString("en-US",{timeZone:tz.code});
+    });
+  }
+
+  const addClockBtn = document.getElementById("add-clock-btn");
+  if(addClockBtn){
+    addClockBtn.addEventListener("click", ()=>{
+      const countryInput = document.getElementById("new-country").value.trim();
+      const tzInput = document.getElementById("new-tz").value.trim();
+      if(!countryInput || !tzInput) return alert("Enter country and timezone");
+      timezones.push({country:countryInput, code:tzInput, flag:"🌍"});
+      document.getElementById("new-country").value="";
+      document.getElementById("new-tz").value="";
+      renderClocks();
+    });
+  }
+
+  renderClocks();
+  updateWorldClocks();
+  setInterval(updateWorldClocks,1000);
+
+  // ================= LANGUAGE / FLASHCARDS =================
+  let flashcards = [
+    {front:"Aunque", back:"Although"},
+    {front:"Sin embargo", back:"However"},
+    {front:"A pesar de", back:"Despite"},
+    {front:"Lograr", back:"To achieve"},
+    {front:"Desarrollar", back:"To develop"}
+  ];
+  let currentCard = 0;
+  let flipped = false;
+
+  function showCard(){
+    const card = document.getElementById("flashcard");
+    if(!card) return;
+    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
+  }
+
+  window.loadSpanishLevel3 = function(){
+    currentCard = 0;
+    flipped = false;
+    showCard();
+  }
+
+  window.flipCard = function(){
+    flipped = !flipped;
+    showCard();
+  }
+
+  window.nextCard = function(){
+    currentCard = (currentCard+1)%flashcards.length;
+    flipped = false;
+    showCard();
+  }
+
+  // ================= PRACTICE MODE =================
+  let practiceQuestions = [
+    {question:"Fill in the blank: ___ es difícil, lo intentaré.", answer:"aunque", explanation:"'Aunque' means 'although'."},
+    {question:"Translate: 'I want to eat' → ___", answer:"quiero comer", explanation:"'Quiero comer' means 'I want to eat'."},
+    {question:"Translate: 'She is happy' → ___", answer:"ella está feliz", explanation:"'Ella está feliz' means 'She is happy'."}
+  ];
+  let practiceIndex = 0;
+
+  function loadPracticeQuestion(){
+    const qEl = document.getElementById("practiceQuestion");
+    const input = document.getElementById("practiceInput");
+    const result = document.getElementById("practiceResult");
+    if(!qEl || !input || !result) return;
+    qEl.textContent = practiceQuestions[practiceIndex].question;
+    input.value = "";
+    result.textContent = "";
+  }
+
+  window.checkPractice = function(){
+    const input = document.getElementById("practiceInput").value.toLowerCase();
+    const result = document.getElementById("practiceResult");
+    if(input === practiceQuestions[practiceIndex].answer.toLowerCase()){
+      result.textContent = "✅ Correct! " + practiceQuestions[practiceIndex].explanation;
+    } else {
+      result.textContent = "❌ Wrong. " + practiceQuestions[practiceIndex].explanation;
+    }
+    practiceIndex = (practiceIndex+1)%practiceQuestions.length;
+    setTimeout(loadPracticeQuestion,2000);
+  }
+
+  loadPracticeQuestion();
+
+  // ================= UNIT TEST =================
+  let unitTestQuestions = [
+    {q:"Sin embargo means:", options:["However","Despite","Although"], correct:"However", explanation:"'Sin embargo' translates to 'However'."},
+    {q:"Lograr means:", options:["To achieve","To develop","To eat"], correct:"To achieve", explanation:"'Lograr' translates to 'To achieve'."},
+    {q:"A pesar de means:", options:["Despite","However","Although"], correct:"Despite", explanation:"'A pesar de' translates to 'Despite'."},
+    // ...add up to 25 questions similarly
+  ];
+
+  function renderUnitTest(){
+    const container = document.getElementById("test");
+    container.innerHTML = "<h3>Unit Test</h3><form id='unitTestForm'></form><p id='testScore'></p><div id='testExplanations'></div>";
+    const form = document.getElementById("unitTestForm");
+    unitTestQuestions.forEach((q,i)=>{
+      const box = document.createElement("div");
+      box.classList.add("test-box");
+      let html = `<p>${i+1}. ${q.q}</p>`;
+      q.options.forEach(opt=>{
+        html += `<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`;
+      });
+      box.innerHTML = html;
+      form.appendChild(box);
+    });
+    const submitBtn = document.createElement("button");
+    submitBtn.textContent = "Submit Test";
+    submitBtn.type = "button";
+    submitBtn.onclick = submitUnitTest;
+    form.appendChild(submitBtn);
+  }
+
+  function submitUnitTest(){
+    let score = 0;
+    const explanations = [];
+    unitTestQuestions.forEach((q,i)=>{
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
+      if(selected && selected.value === q.correct) score++;
+      explanations.push(`${i+1}. ${selected?.value || "No answer"} → ${q.correct}: ${q.explanation}`);
+    });
+    document.getElementById("testScore").textContent = `Score: ${score}/${unitTestQuestions.length}`;
+    const expEl = document.getElementById("testExplanations");
+    expEl.innerHTML = "";
+    explanations.forEach(e=>{
+      const p = document.createElement("p");
+      p.textContent = e;
+      expEl.appendChild(p);
+    });
+  }
+
   renderUnitTest();
+
+  // ================= RESOURCE TAB SWITCHING =================
+  window.showResource = function(name){
+    const sections = document.querySelectorAll(".resource-content");
+    sections.forEach(sec => sec.style.display = "none");
+    const target = document.getElementById(name);
+    if(target) target.style.display = "block";
+  }
+
+  // show Video by default
+  showResource("video");
+
 });
