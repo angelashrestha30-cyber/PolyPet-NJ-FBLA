@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", function () {
       ctx.fillStyle = "#ff7f7f";
       ctx.fillRect(p.x,p.y,p.size,p.size);
     });
-    confetti = confetti.filter(p=>p.y < canvas.height); 
+    confetti = confetti.filter(p=>p.y < canvas.height);
     if(confetti.length>0) requestAnimationFrame(animateConfetti);
   }
 
@@ -150,41 +150,57 @@ document.addEventListener("DOMContentLoaded", function () {
   updateWorldClocks();
   setInterval(updateWorldClocks,1000);
 
-  // ================= RESOURCES =================
-
-  // ---------- Spanish Units Data ----------
-  const spanishUnits = [
-    // Unit 1
-    [
-      {front:"Hola", back:"Hello"},
-      {front:"Adiós", back:"Goodbye"},
-      {front:"Gracias", back:"Thank you"},
-      {front:"Por favor", back:"Please"},
-      {front:"Lo siento", back:"Sorry"},
-      {front:"Sí", back:"Yes"},
-      {front:"No", back:"No"},
-      {front:"¿Cómo estás?", back:"How are you?"},
-      {front:"Bien", back:"Good"},
-      {front:"Mal", back:"Bad"},
-      {front:"¿Qué tal?", back:"What's up?"},
-      {front:"Buenos días", back:"Good morning"},
-      {front:"Buenas noches", back:"Good night"},
-      {front:"Hasta luego", back:"See you later"},
-      {front:"Nos vemos", back:"See you"},
-      {front:"Mucho gusto", back:"Nice to meet you"},
-      {front:"Encantado", back:"Delighted"},
-      {front:"¿Cuál es tu nombre?", back:"What is your name?"},
-      {front:"Mi nombre es...", back:"My name is..."},
-      {front:"¿De dónde eres?", back:"Where are you from?"}
-    ],
-    // Units 2-5 can be added similarly
+  // ================= LANGUAGE / FLASHCARDS =================
+  let flashcards = [
+    {front:"Aunque", back:"Although"},
+    {front:"Sin embargo", back:"However"},
+    {front:"A pesar de", back:"Despite"},
+    {front:"Lograr", back:"To achieve"},
+    {front:"Desarrollar", back:"To develop"}
   ];
-
-  let currentUnit = 0;
   let currentCard = 0;
   let flipped = false;
 
-  // Show only clicked resource
+  window.loadSpanishLevel3 = function(){
+    currentCard = 0;
+    flipped = false;
+    showCard();
+  }
+
+  function showCard(){
+    const card = document.getElementById("flashcard");
+    if(!card) return;
+    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
+  }
+
+  window.flipCard = function(){
+    flipped = !flipped;
+    showCard();
+  }
+
+  window.nextCard = function(){
+    currentCard = (currentCard+1)%flashcards.length;
+    flipped = false;
+    showCard();
+  }
+
+  // ================= PRACTICE MODE =================
+  window.checkPractice = function(){
+    const input = document.getElementById("practiceInput").value.toLowerCase();
+    const result = document.getElementById("practiceResult");
+    if(input==="aunque") result.textContent="✅ Correct!";
+    else result.textContent="❌ Try again.";
+  }
+
+  // ================= UNIT TEST =================
+  window.submitTest = function(){
+    let score = 0;
+    if(document.querySelector('input[name="q1"]:checked')?.value==="however") score++;
+    if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
+    document.getElementById("testScore").textContent="Score: "+score+"/2";
+  }
+
+  // ================= RESOURCE TAB SWITCHING =================
   window.showResource = function(name){
     const sections = document.querySelectorAll(".resource-content");
     sections.forEach(sec => sec.style.display = "none");
@@ -192,67 +208,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if(target) target.style.display = "block";
   }
 
-  // ---------- Flashcards ----------
-  function showFlashcard(){
-    const cardEl = document.getElementById("flashcard");
-    if(!cardEl) return;
-    const card = spanishUnits[currentUnit][currentCard];
-    cardEl.textContent = flipped ? card.back : card.front;
-  }
-
-  window.flipCard = function(){
-    flipped = !flipped;
-    showFlashcard();
-  }
-
-  window.nextCard = function(){
-    currentCard = (currentCard + 1) % spanishUnits[currentUnit].length;
-    flipped = false;
-    showFlashcard();
-  }
-
-  // ---------- Practice Mode ----------
-  window.checkPractice = function(){
-    const input = document.getElementById("practiceInput").value.trim().toLowerCase();
-    const feedback = document.getElementById("practiceFeedback");
-    const correct = spanishUnits[currentUnit][currentCard].back.toLowerCase();
-    if(input === correct){
-      feedback.textContent = "✅ Correct!";
-      nextCard();
-      document.getElementById("practiceInput").value="";
-    } else {
-      feedback.textContent = `❌ Incorrect. Try again!`;
-    }
-  }
-
-  // ---------- Unit Test ----------
-  window.loadUnitTest = function(unitIndex){
-    currentUnit = unitIndex;
-    const container = document.getElementById("testQuestions");
-    container.innerHTML = "";
-    spanishUnits[currentUnit].forEach((card,i)=>{
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <p>${i+1}. Translate: ${card.front}</p>
-        <input type="text" id="testInput${i}">
-      `;
-      container.appendChild(div);
-    });
-  }
-
-  window.submitTest = function(){
-    let score = 0;
-    let feedbackText = "";
-    spanishUnits[currentUnit].forEach((card,i)=>{
-      const input = document.getElementById(`testInput${i}`).value.trim().toLowerCase();
-      const correct = card.back.toLowerCase();
-      if(input === correct){
-        score++;
-      } else {
-        feedbackText += `<p>${i+1}. Correct: ${card.back} - Explanation: "${card.front}" means "${card.back}"</p>`;
-      }
-    });
-    document.getElementById("testScore").innerHTML = `Score: ${score}/${spanishUnits[currentUnit].length}` + feedbackText;
-  }
+  // show Video by default
+  showResource("video");
 
 });
