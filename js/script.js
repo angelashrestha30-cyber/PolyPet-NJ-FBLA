@@ -212,3 +212,17 @@ document.addEventListener("DOMContentLoaded", function () {
   showResource("video");
 
 });
+// UNIT TEST
+function loadUnitTest(unitIndex){
+  currentUnit = unitIndex;
+  document.getElementById("testUnit").textContent = currentUnit+1;
+  const container = document.getElementById("testQuestions");
+  container.innerHTML = "";
+  spanishUnits[currentUnit].forEach((card,i)=>{
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <p>${i+1}. Translate: ${card.back}</p>
+      <input type="text" id="testInput${i}">
+    `;
+    container.appendChild(div);
+  });
