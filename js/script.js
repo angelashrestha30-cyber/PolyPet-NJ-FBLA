@@ -150,69 +150,119 @@ document.addEventListener("DOMContentLoaded", function () {
   updateWorldClocks();
   setInterval(updateWorldClocks,1000);
 
-  // ================= LANGUAGE / FLASHCARDS =================
-  let flashcards = [
-    {front:"Aunque", back:"Although"},
-    {front:"Sin embargo", back:"However"},
-    {front:"A pesar de", back:"Despite"},
-    {front:"Lograr", back:"To achieve"},
-    {front:"Desarrollar", back:"To develop"}
-  ];
-  let currentCard = 0;
-  let flipped = false;
+  // ================= FLASHCARDS =================
+let flashcards = [
+  {front:"Aunque", back:"Although"},
+  {front:"Sin embargo", back:"However"},
+  {front:"A pesar de", back:"Despite"},
+  {front:"Lograr", back:"To achieve"},
+  {front:"Desarrollar", back:"To develop"},
+  {front:"Fácil", back:"Easy"},
+  {front:"Difícil", back:"Difficult"},
+  {front:"Rápido", back:"Fast"},
+  {front:"Lento", back:"Slow"},
+  {front:"Bonito", back:"Beautiful"},
+  {front:"Feo", back:"Ugly"},
+  {front:"Grande", back:"Big"},
+  {front:"Pequeño", back:"Small"},
+  {front:"Nuevo", back:"New"},
+  {front:"Viejo", back:"Old"},
+  {front:"Feliz", back:"Happy"},
+  {front:"Triste", back:"Sad"},
+  {front:"Rico", back:"Rich"},
+  {front:"Pobre", back:"Poor"},
+  {front:"Importante", back:"Important"}
+];
+let currentCard = 0;
+let flipped = false;
 
-  function showCard(){
-    const card = document.getElementById("flashcard");
-    if(!card) return;
-    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
+function showCard(){
+  const card = document.getElementById("flashcard");
+  if(!card) return;
+  card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
+  document.getElementById("cardProgress").textContent = `Card ${currentCard+1} / ${flashcards.length}`;
+}
+
+window.flipCard = function(){
+  flipped = !flipped;
+  showCard();
+}
+
+window.nextCard = function(){
+  currentCard = (currentCard+1) % flashcards.length;
+  flipped = false;
+  showCard();
+}
+
+window.prevCard = function(){
+  currentCard = (currentCard-1+flashcards.length) % flashcards.length;
+  flipped = false;
+  showCard();
+}
+
+// ================= PRACTICE MODE =================
+let practiceQuestions = [
+  {question:"Fill in the blank: ___ es difícil, lo intentaré.", answer:"aunque", explanation:"Correct! 'Aunque' means 'although'."},
+  {question:"Translate to Spanish: 'I want to learn'", answer:"quiero aprender", explanation:"Correct! 'Quiero aprender' means 'I want to learn'."},
+  {question:"Sentence builder: make a correct sentence from ['Yo', 'manzana', 'como']", answer:"Yo como manzana", explanation:"Correct! 'Yo como manzana' = 'I eat an apple'."},
+  // ...add unlimited more questions
+];
+let currentPractice = 0;
+
+function loadPractice(){
+  const pq = practiceQuestions[currentPractice];
+  document.getElementById("practiceQuestion").textContent = pq.question;
+  document.getElementById("practiceInput").value="";
+  document.getElementById("practiceFeedback").textContent="";
+}
+
+window.checkPractice = function(){
+  const input = document.getElementById("practiceInput").value.toLowerCase().trim();
+  const pq = practiceQuestions[currentPractice];
+  const feedback = document.getElementById("practiceFeedback");
+  if(input === pq.answer.toLowerCase()){
+    feedback.textContent = "✅ Correct!";
+  } else {
+    feedback.textContent = `❌ Incorrect. ${pq.explanation}`;
   }
+}
 
-  window.flipCard = function(){
-    flipped = !flipped;
-    showCard();
-  }
+window.nextPractice = function(){
+  currentPractice = (currentPractice+1) % practiceQuestions.length;
+  loadPractice();
+}
 
-  window.nextCard = function(){
-    currentCard = (currentCard+1)%flashcards.length;
-    flipped = false;
-    showCard();
-  }
+// ================= UNIT TEST =================
+let testQuestions = [
+  {q:"'Sin embargo' means?", options:["However","Despite"], answer:"However", explanation:"'Sin embargo' translates to 'However'."},
+  {q:"'Lograr' means?", options:["To achieve","To develop"], answer:"To achieve", explanation:"'Lograr' = 'To achieve'."},
+  // ...add up to 25 mixed questions
+];
 
-  // ================= PRACTICE MODE =================
-  window.checkPractice = function(){
-    const input = document.getElementById("practiceInput").value.toLowerCase();
-    const result = document.getElementById("practiceResult");
-    if(input==="aunque") result.textContent="✅ Correct!";
-    else result.textContent="❌ Try again.";
-  }
+function loadTest(){
+  const container = document.getElementById("testContainer");
+  container.innerHTML="";
+  testQuestions.forEach((t,i)=>{
+    const div = document.createElement("div");
+    div.innerHTML = `<p>${i+1}. ${t.q}</p>` + t.options.map(o=>`
+      <label><input type="radio" name="q${i}" value="${o}"> ${o}</label><br>
+    `).join('');
+    container.appendChild(div);
+  });
+}
 
-  // ================= UNIT TEST =================
-  window.submitTest = function(){
-    let score = 0;
-    if(document.querySelector('input[name="q1"]:checked')?.value==="however") score++;
-    if(document.querySelector('input[name="q2"]:checked')?.value==="achieve") score++;
-    document.getElementById("testScore").textContent="Score: "+score+"/2";
-  }
+window.submitTest = function(){
+  let score = 0;
+  const explanations = [];
+  testQuestions.forEach((t,i)=>{
+    const selected = document.querySelector(`input[name="q${i}"]:checked`)?.value;
+    if(selected === t.answer) score++;
+    else explanations.push(`Q${i+1}: ${t.explanation}`);
+  });
+  document.getElementById("testScore").textContent = `Score: ${score} / ${testQuestions.length}`;
+  document.getElementById("testExplanations").innerHTML = explanations.join("<br>");
+}
 
-  // ================= RESOURCE TAB SWITCHING =================
-  window.showResource = function(name){
-    const sections = document.querySelectorAll(".resource-content");
-    sections.forEach(sec => sec.style.display = "none");
-    const target = document.getElementById(name);
-    if(target) target.style.display = "block";
-
-    // ====== EMBED BUTTERFLY SPANISH PLAYLIST ======
-    if(name==="video"){
-      const videoContainer = target;
-      videoContainer.innerHTML = `
-        <h3>Video Lesson</h3>
-        <iframe width="100%" height="315" src="https://www.youtube.com/embed/videoseries?list=PL6oJ9WqQj2hN6rHxYnHF7xXbU9W38ZfZv" 
-        title="Butterfly Spanish Playlist" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-      `;
-    }
-  }
-
-  // show Video by default
-  showResource("video");
-
-});
+loadFlashcards();
+loadPractice();
+loadTest();
