@@ -100,6 +100,7 @@
       <h3 class="world-clock-title">🌍 World Clock</h3>
       <div id="clock-container" class="clock-container"></div>
 
+      <!-- Add custom timezone -->
       <div class="add-clock-box">
         <input type="text" id="new-country" placeholder="Country Name">
         <input type="text" id="new-tz" placeholder="Timezone (e.g. Europe/Berlin)">
@@ -112,47 +113,53 @@
   <section id="resources" class="section">
     <h2>Resources</h2>
 
-    <!-- Language Selector -->
-    <div class="language-selector">
-      <label for="languageSelect">Choose Language:</label>
-      <select id="languageSelect" onchange="changeLanguage(this.value)">
+    <!-- Language Selection -->
+    <div class="learning-box">
+      <h3>Select Language</h3>
+      <select id="languageSelect" onchange="loadLanguage()">
         <option value="spanish">Spanish</option>
       </select>
     </div>
 
     <!-- Resource Buttons -->
     <div class="resource-buttons">
-      <div class="resource-box" onclick="showResource('videoLesson')">Video Lessons</div>
-      <div class="resource-box" onclick="showResource('flashcards')">Flashcards</div>
-      <div class="resource-box" onclick="showResource('practice')">Practice Mode</div>
-      <div class="resource-box" onclick="showResource('unitTest')">Unit Test</div>
+      <button onclick="showResource('videoLesson')">Video Lesson</button>
+      <button onclick="showResource('flashcardsLesson')">Flashcards</button>
+      <button onclick="showResource('practiceLesson')">Practice Mode</button>
+      <button onclick="showResource('unitTestLesson')">Unit Test</button>
     </div>
 
-    <!-- Resource Content Areas -->
-    <div id="videoLesson" class="resource-content" style="display:none;">
+    <!-- VIDEO LESSON -->
+    <div class="learning-box resource-content" id="videoLesson">
+      <h3>Video Lesson</h3>
       <iframe width="560" height="315" 
-        src="https://www.youtube.com/embed/9-F3TqB5lMc" 
-        title="Butterfly Spanish" frameborder="0" allowfullscreen></iframe>
+        src="https://www.youtube.com/embed/videoseries?list=PL1FCD45E9F5BFA1CE" 
+        title="Butterfly Spanish Lessons" frameborder="0" allowfullscreen></iframe>
     </div>
 
-    <div id="flashcards" class="resource-content" style="display:none;">
-      <div id="flashcardBox"></div>
-      <button onclick="flipCard()">Flip</button>
+    <!-- FLASHCARDS -->
+    <div class="learning-box resource-content" id="flashcardsLesson">
+      <h3>Flashcards</h3>
+      <div id="flashcard" onclick="flipCard()" class="flashcard-box">Click to Flip</div>
       <button onclick="nextCard()">Next</button>
     </div>
 
-    <div id="practice" class="resource-content" style="display:none;">
-      <div id="practiceBox"></div>
+    <!-- PRACTICE MODE -->
+    <div class="learning-box resource-content" id="practiceLesson">
+      <h3>Practice Mode</h3>
+      <div id="practiceQuestion" class="practice-box"></div>
       <input type="text" id="practiceInput">
       <button onclick="checkPractice()">Check</button>
-      <p id="practiceResult"></p>
+      <p id="practiceFeedback"></p>
     </div>
 
-    <div id="unitTest" class="resource-content" style="display:none;">
-      <h3>Unit <span id="testUnit">1</span> Test</h3>
+    <!-- UNIT TEST -->
+    <div class="learning-box resource-content" id="unitTestLesson">
+      <h3>Unit Test</h3>
       <div id="testQuestions"></div>
-      <button onclick="gradeTest()">Submit Test</button>
-      <p id="testResult"></p>
+      <button onclick="submitTest()">Submit Test</button>
+      <p id="testScore"></p>
+      <div id="testResults"></div>
     </div>
   </section>
 
