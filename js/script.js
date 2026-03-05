@@ -1,279 +1,258 @@
-/* ================= GENERAL ================= */
-body {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  background-color: #fff0f5; /* soft pink background */
-  color: #333;
-}
+// ================= DOM READY =================
+document.addEventListener("DOMContentLoaded", function () {
 
-h2 {
-  font-weight: 700;
-  margin-bottom: 20px;
-}
+  // ================= SCROLLING =================
+  window.scrollToSection = function(id){
+    const el = document.getElementById(id);
+    if(el) el.scrollIntoView({behavior:"smooth"});
+  }
 
-.section {
-  padding: 60px 20px;
-  opacity: 0;
-  transition: opacity 1s ease;
-}
+  // ================= PET XP / LEVEL / STREAK =================
+  let xp = localStorage.getItem("xp") ? parseInt(localStorage.getItem("xp")) : 0;
+  let level = localStorage.getItem("level") ? parseInt(localStorage.getItem("level")) : 1;
+  let streak = localStorage.getItem("streak") ? parseInt(localStorage.getItem("streak")) : 0;
 
-.section.visible {
-  opacity: 1;
-}
+  function updatePetUI(){
+    document.getElementById("level").textContent = level;
+    document.getElementById("streak").textContent = streak;
+    document.getElementById("xp-fill").style.width = (xp % 100) + "%";
+  }
 
-/* ================= NAVBAR ================= */
-.navbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #ffb6c1;
-  padding: 15px 30px;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
+  window.completeLesson = function(){
+    xp += 20;
+    streak += 1;
+    if(xp >= level*100){
+      level++;
+      launchConfetti();
+    }
+    localStorage.setItem("xp",xp);
+    localStorage.setItem("level",level);
+    localStorage.setItem("streak",streak);
+    updatePetUI();
+  }
+  updatePetUI();
 
-.navbar .logo {
-  font-size: 1.5rem;
-}
+  // ================= SCHEDULE FILTER =================
+  window.filterSchedule = function(day){
+    const events = document.querySelectorAll('.event');
+    events.forEach(event=>{
+      event.style.display = (day==="all" || event.classList.contains(day)) ? "block" : "none";
+    });
+  }
 
-.nav-links a {
-  margin-left: 20px;
-  cursor: pointer;
-  font-weight: 600;
-  color: #fff;
-  text-decoration: none;
-}
+  // ================= INTERACTIVE CALENDAR =================
+  window.scheduleLesson = function(){
+    const date = document.getElementById("lesson-date").value;
+    if(!date) return;
+    const li = document.createElement("li");
+    li.textContent = "Lesson scheduled for " + date;
+    document.getElementById("lesson-list").appendChild(li);
+  }
 
-.nav-links a:hover {
-  text-decoration: underline;
-}
+  // ================= FADE-IN SECTIONS =================
+  const sections = document.querySelectorAll(".section");
+  function fadeInSections(){
+    sections.forEach(section=>{
+      const top = section.getBoundingClientRect().top;
+      if(top < window.innerHeight - 100){
+        section.classList.add("visible");
+      }
+    });
+  }
+  fadeInSections();
+  window.addEventListener("scroll", fadeInSections);
 
-/* ================= HERO ================= */
-.hero {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  height: 500px;
-  overflow: hidden;
-}
+  // ================= TIME GREETING =================
+  function setGreeting(){
+    const hour = new Date().getHours();
+    let greeting = (hour<12) ? "Good Morning, Emma ☀️" :
+                   (hour<18) ? "Good Afternoon, Emma 🌸" :
+                   "Good Evening, Emma 🌙";
+    document.getElementById("dynamicGreeting").textContent = greeting;
+  }
+  setGreeting();
 
-.bg-blobs span {
-  position: absolute;
-  border-radius: 50%;
-  opacity: 0.6;
-  animation: float 8s infinite ease-in-out;
-}
+  // ================= CONFETTI =================
+  const canvas = document.getElementById("confettiCanvas");
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  let confetti = [];
 
-.bg-blobs span:nth-child(1) { width: 300px; height: 300px; background: #ffb6c1; top: -50px; left: -50px; }
-.bg-blobs span:nth-child(2) { width: 250px; height: 250px; background: #ff69b4; top: 100px; right: -50px; }
-.bg-blobs span:nth-child(3) { width: 200px; height: 200px; background: #ffc0cb; bottom: -50px; left: 50px; }
+  function launchConfetti(){
+    for(let i=0;i<100;i++){
+      confetti.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height - canvas.height,
+        size: Math.random()*6+4,
+        speed: Math.random()*3+2
+      });
+    }
+    animateConfetti();
+  }
 
-@keyframes float {
-  0%,100% { transform: translateY(0px) }
-  50% { transform: translateY(30px) }
-}
+  function animateConfetti(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    confetti.forEach(p=>{
+      p.y += p.speed;
+      ctx.fillStyle = "#ff7f7f";
+      ctx.fillRect(p.x,p.y,p.size,p.size);
+    });
+    confetti = confetti.filter(p=>p.y < canvas.height); 
+    if(confetti.length>0) requestAnimationFrame(animateConfetti);
+  }
 
-.hero-container {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  max-width: 1200px;
-  position: relative;
-  z-index: 10;
-}
+  // ================= WORLD CLOCK =================
+  let timezones = [
+    { country: "Japan", code: "Asia/Tokyo", flag: "🇯🇵" },
+    { country: "Spain", code: "Europe/Madrid", flag: "🇪🇸" },
+    { country: "China", code: "Asia/Shanghai", flag: "🇨🇳" }
+  ];
 
-/* ================= PET PANEL ================= */
-.pet-panel {
-  background: #fff;
-  padding: 20px;
-  border-radius: 20px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
+  function createSafeId(str){ return str.replace(/\//g,"-").replace(/\s/g,"").toLowerCase(); }
 
-.pet-avatar {
-  font-size: 4rem;
-}
+  function renderClocks(){
+    const container = document.getElementById("clock-container");
+    if(!container) return;
+    container.innerHTML = "";
+    timezones.forEach(tz=>{
+      const id = createSafeId(tz.code);
+      const box = document.createElement("div");
+      box.classList.add("clock-box");
+      box.innerHTML = `<h4>${tz.flag} ${tz.country}</h4><p id="${id}">--:--:--</p>`;
+      container.appendChild(box);
+    });
+  }
 
-.xp-bar {
-  width: 100%;
-  height: 12px;
-  background: #eee;
-  border-radius: 6px;
-  margin: 10px 0;
-}
+  function updateWorldClocks(){
+    const now = new Date();
+    timezones.forEach(tz=>{
+      const id = createSafeId(tz.code);
+      const el = document.getElementById(id);
+      if(el) el.textContent = now.toLocaleTimeString("en-US",{timeZone:tz.code});
+    });
+  }
 
-#xp-fill {
-  height: 100%;
-  background: #ff69b4;
-  border-radius: 6px;
-  width: 0%;
-}
+  const addClockBtn = document.getElementById("add-clock-btn");
+  if(addClockBtn){
+    addClockBtn.addEventListener("click", ()=>{
+      const countryInput = document.getElementById("new-country").value.trim();
+      const tzInput = document.getElementById("new-tz").value.trim();
+      if(!countryInput || !tzInput) return alert("Enter country and timezone");
+      timezones.push({country:countryInput, code:tzInput, flag:"🌍"});
+      document.getElementById("new-country").value="";
+      document.getElementById("new-tz").value="";
+      renderClocks();
+    });
+  }
 
-/* ================= SPEECH BUBBLE ================= */
-.speech-bubble {
-  background: #fff;
-  padding: 30px;
-  border-radius: 20px;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  position: relative;
-}
+  renderClocks();
+  updateWorldClocks();
+  setInterval(updateWorldClocks,1000);
 
-/* ================= LESSON CARDS ================= */
-.lesson-cards {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+  // ================= RESOURCES =================
 
-.lesson-card {
-  background: #fff;
-  padding: 15px;
-  border-radius: 15px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-  cursor: pointer;
-}
+  // ---------- Spanish Units Data ----------
+  const spanishUnits = [
+    // Unit 1
+    [
+      {front:"Hola", back:"Hello"},
+      {front:"Adiós", back:"Goodbye"},
+      {front:"Gracias", back:"Thank you"},
+      {front:"Por favor", back:"Please"},
+      {front:"Lo siento", back:"Sorry"},
+      {front:"Sí", back:"Yes"},
+      {front:"No", back:"No"},
+      {front:"¿Cómo estás?", back:"How are you?"},
+      {front:"Bien", back:"Good"},
+      {front:"Mal", back:"Bad"},
+      {front:"¿Qué tal?", back:"What's up?"},
+      {front:"Buenos días", back:"Good morning"},
+      {front:"Buenas noches", back:"Good night"},
+      {front:"Hasta luego", back:"See you later"},
+      {front:"Nos vemos", back:"See you"},
+      {front:"Mucho gusto", back:"Nice to meet you"},
+      {front:"Encantado", back:"Delighted"},
+      {front:"¿Cuál es tu nombre?", back:"What is your name?"},
+      {front:"Mi nombre es...", back:"My name is..."},
+      {front:"¿De dónde eres?", back:"Where are you from?"}
+    ],
+    // Units 2-5 can be added similarly
+  ];
 
-.lesson-card:hover {
-  transform: translateY(-5px);
-}
+  let currentUnit = 0;
+  let currentCard = 0;
+  let flipped = false;
 
-/* ================= SCHEDULE ================= */
-.schedule-grid {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-}
+  // Show only clicked resource
+  window.showResource = function(name){
+    const sections = document.querySelectorAll(".resource-content");
+    sections.forEach(sec => sec.style.display = "none");
+    const target = document.getElementById(name);
+    if(target) target.style.display = "block";
+  }
 
-.event {
-  background: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-  flex: 1;
-  min-width: 200px;
-}
+  // ---------- Flashcards ----------
+  function showFlashcard(){
+    const cardEl = document.getElementById("flashcard");
+    if(!cardEl) return;
+    const card = spanishUnits[currentUnit][currentCard];
+    cardEl.textContent = flipped ? card.back : card.front;
+  }
 
-/* ================= CALENDAR & WORLD CLOCK ================= */
-.calendar-box, .world-clock {
-  margin-top: 30px;
-  background: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 3px 15px rgba(0,0,0,0.1);
-}
+  window.flipCard = function(){
+    flipped = !flipped;
+    showFlashcard();
+  }
 
-.clock-container {
-  display: flex;
-  gap: 15px;
-  flex-wrap: wrap;
-}
+  window.nextCard = function(){
+    currentCard = (currentCard + 1) % spanishUnits[currentUnit].length;
+    flipped = false;
+    showFlashcard();
+  }
 
-.clock-box {
-  background: #ffb6c1;
-  padding: 10px 15px;
-  border-radius: 10px;
-  color: #fff;
-}
+  // ---------- Practice Mode ----------
+  window.checkPractice = function(){
+    const input = document.getElementById("practiceInput").value.trim().toLowerCase();
+    const feedback = document.getElementById("practiceFeedback");
+    const correct = spanishUnits[currentUnit][currentCard].back.toLowerCase();
+    if(input === correct){
+      feedback.textContent = "✅ Correct!";
+      nextCard();
+      document.getElementById("practiceInput").value="";
+    } else {
+      feedback.textContent = `❌ Incorrect. Try again!`;
+    }
+  }
 
-/* ================= RESOURCE / LANGUAGE LEARNING ================= */
-.resource-buttons {
-  display: flex;
-  gap: 10px;
-  margin: 20px 0;
-}
+  // ---------- Unit Test ----------
+  window.loadUnitTest = function(unitIndex){
+    currentUnit = unitIndex;
+    const container = document.getElementById("testQuestions");
+    container.innerHTML = "";
+    spanishUnits[currentUnit].forEach((card,i)=>{
+      const div = document.createElement("div");
+      div.innerHTML = `
+        <p>${i+1}. Translate: ${card.front}</p>
+        <input type="text" id="testInput${i}">
+      `;
+      container.appendChild(div);
+    });
+  }
 
-.resource-buttons button {
-  padding: 10px 20px;
-  background: #ff69b4;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-}
+  window.submitTest = function(){
+    let score = 0;
+    let feedbackText = "";
+    spanishUnits[currentUnit].forEach((card,i)=>{
+      const input = document.getElementById(`testInput${i}`).value.trim().toLowerCase();
+      const correct = card.back.toLowerCase();
+      if(input === correct){
+        score++;
+      } else {
+        feedbackText += `<p>${i+1}. Correct: ${card.back} - Explanation: "${card.front}" means "${card.back}"</p>`;
+      }
+    });
+    document.getElementById("testScore").innerHTML = `Score: ${score}/${spanishUnits[currentUnit].length}` + feedbackText;
+  }
 
-.resource-buttons button:hover {
-  background: #ff1493;
-}
-
-.resource-content {
-  display: none;
-  margin-top: 20px;
-  background: #fff;
-  padding: 25px;
-  border-radius: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-}
-
-/* ================= FLASHCARDS ================= */
-.flashcard-box {
-  text-align: center;
-}
-
-#flashcardLang {
-  padding: 30px;
-  background: #f9f9f9;
-  border-radius: 15px;
-  font-size: 1.3rem;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-  margin-bottom: 15px;
-}
-
-/* ================= PRACTICE ================= */
-.practice-box input {
-  padding: 10px;
-  width: 100%;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-.practice-box button {
-  padding: 10px 20px;
-  background: #ff69b4;
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-weight: 600;
-}
-
-.practice-box button:hover {
-  background: #ff1493;
-}
-
-/* ================= UNIT TEST ================= */
-#testQuestionsLang div {
-  margin-bottom: 15px;
-}
-
-#unitTestLang input[type="text"] {
-  width: 100%;
-  padding: 8px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
-/* ================= FOOTER ================= */
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #ffb6c1;
-  color: #fff;
-  font-weight: 600;
-}
-
-/* ================= CONFETTI ================= */
-#confettiCanvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-  z-index: 1000;
-}
+});
