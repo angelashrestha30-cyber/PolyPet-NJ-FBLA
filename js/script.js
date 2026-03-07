@@ -1,272 +1,208 @@
-document.addEventListener("DOMContentLoaded",function(){
+// ----------------------------
+// PET SYSTEM
+// ----------------------------
 
-/* ================= PET SYSTEM ================= */
+let petCollection = JSON.parse(localStorage.getItem("petCollection")) || ["Fox"];
+let equippedPet = localStorage.getItem("equippedPet") || "Fox";
+let petName = localStorage.getItem("petName") || "Your Pet";
 
-let petCollection=JSON.parse(localStorage.getItem("petCollection"))||[
-{name:"Fox",emoji:"🦊",language:"Starter"}
-];
+const petDisplay = document.getElementById("pet-display");
+const petNameDisplay = document.getElementById("pet-name");
+const nameInput = document.getElementById("pet-name-input");
+const nameBtn = document.getElementById("pet-name-btn");
+const petCollectionDiv = document.getElementById("pet-collection");
 
-let currentPet=JSON.parse(localStorage.getItem("currentPet"))||petCollection[0];
-
-let petName=localStorage.getItem("petName");
-
-const avatar=document.querySelector(".pet-avatar");
-const nameDisplay=document.getElementById("pet-name-display");
-
-const nameInput=document.getElementById("pet-name-input");
-const nameBtn=document.getElementById("pet-name-btn");
-
-if(petName){
-
-nameDisplay.textContent=petName;
-
-document.querySelector(".pet-name-input-container").style.display="none";
-
-}
-
-function updatePet(){
-
-avatar.textContent=currentPet.emoji;
-
-if(currentPet.name==="Wolf"){
-
-document.body.style.background="linear-gradient(180deg,#e6f2ff,#b3d9ff)";
-
-}
-
-}
-
-/* rename pet */
-
-nameBtn.onclick=function(){
-
-if(nameInput.value.trim()!==""){
-
-petName=nameInput.value;
-
-localStorage.setItem("petName",petName);
-
-nameDisplay.textContent=petName;
-
-document.querySelector(".pet-name-input-container").style.display="none";
-
-}
-
-}
-
-/* ================= PET COLLECTION ================= */
-
-function renderPets(){
-
-const container=document.getElementById("pet-collection");
-
-container.innerHTML="";
-
-petCollection.forEach(pet=>{
-
-let card=document.createElement("div");
-
-card.className="pet-card";
-
-card.innerHTML=`
-<div class="pet-emoji">${pet.emoji}</div>
-<div class="pet-name">${pet.name}</div>
-<div class="language-badge">${pet.language}</div>
-`;
-
-card.onclick=function(){
-
-currentPet=pet;
-
-localStorage.setItem("currentPet",JSON.stringify(pet));
-
-updatePet();
-
+const petAvatars = {
+  Fox: "🦊",
+  Wolf: "🐺"
 };
 
-container.appendChild(card);
-
-});
-
+function updatePetUI() {
+  if (petDisplay) petDisplay.textContent = petAvatars[equippedPet];
+  if (petNameDisplay) petNameDisplay.textContent = petName;
 }
 
-renderPets();
+function renderPetCollection() {
+  if (!petCollectionDiv) return;
 
+  petCollectionDiv.innerHTML = "";
 
-window.collectPet=function(lang){
+  petCollection.forEach(pet => {
+    const btn = document.createElement("button");
+    btn.className = "pet-btn";
+    btn.textContent = petAvatars[pet] + " " + pet;
 
-let newPet;
+    btn.onclick = () => {
+      equippedPet = pet;
+      localStorage.setItem("equippedPet", pet);
+      updatePetUI();
+    };
 
-if(lang==="Spanish") newPet={name:"Fox",emoji:"🦊",language:"Spanish"};
-
-if(lang==="Mandarin") newPet={name:"Panda",emoji:"🐼",language:"Mandarin"};
-
-if(lang==="Japanese") newPet={name:"Cat",emoji:"🐱",language:"Japanese"};
-
-if(lang==="German") newPet={name:"Wolf",emoji:"🐺",language:"German"};
-
-if(!petCollection.find(p=>p.name===newPet.name)){
-
-petCollection.push(newPet);
-
-localStorage.setItem("petCollection",JSON.stringify(petCollection));
-
-renderPets();
-
-alert("New Pet Collected!");
-
+    petCollectionDiv.appendChild(btn);
+  });
 }
 
+function collectPet(unitName) {
+  let petToUnlock = null;
+
+  if (unitName === "German") {
+    petToUnlock = "Wolf";
+  }
+
+  if (petToUnlock && !petCollection.includes(petToUnlock)) {
+    petCollection.push(petToUnlock);
+    localStorage.setItem("petCollection", JSON.stringify(petCollection));
+    renderPetCollection();
+  }
 }
 
-/* ================= FLASHCARDS ================= */
+if (nameBtn) {
+  nameBtn.addEventListener("click", function () {
+    const newName = nameInput.value.trim();
 
-let flashcards=[
-{front:"hola",back:"hello"},
-{front:"perro",back:"dog"},
-{front:"gato",back:"cat"},
-{front:"agua",back:"water"}
-];
+    if (newName) {
+      petName = newName;
+      localStorage.setItem("petName", newName);
+      updatePetUI();
 
-let cardIndex=0;
+      const renameBox = document.querySelector(".pet-name-input-container");
+      if (renameBox) renameBox.style.display = "none";
 
-window.loadSpanish=function(){
-
-cardIndex=0;
-
-document.getElementById("flashcard").textContent=flashcards[0].front;
-
+      nameInput.value = "";
+    }
+  });
 }
 
-window.nextCard=function(){
+updatePetUI();
+renderPetCollection();
 
-cardIndex=(cardIndex+1)%flashcards.length;
 
-document.getElementById("flashcard").textContent=flashcards[cardIndex].front;
+// ----------------------------
+// CONFETTI
+// ----------------------------
 
+function launchConfetti() {
+  const duration = 2000;
+  const end = Date.now() + duration;
+
+  (function frame() {
+    confetti({
+      particleCount: 4,
+      angle: 60,
+      spread: 55,
+      origin: { x: 0 }
+    });
+
+    confetti({
+      particleCount: 4,
+      angle: 120,
+      spread: 55,
+      origin: { x: 1 }
+    });
+
+    if (Date.now() < end) {
+      requestAnimationFrame(frame);
+    }
+  })();
 }
 
-/* ================= PRACTICE ================= */
 
-let practiceQuestions=[
-{q:"hola",a:"hello"},
-{q:"perro",a:"dog"},
-{q:"gato",a:"cat"},
-{q:"agua",a:"water"}
-];
+// ----------------------------
+// UNIT TEST SYSTEM
+// ----------------------------
 
-let practiceIndex=0;
+const unitTestContainer = document.getElementById("unit-test-container");
+const submitBtn = document.getElementById("submit-test");
 
-window.checkPractice=function(){
+const unitTestQuestions = [
 
-let input=document.getElementById("practiceInput").value.toLowerCase();
+{question:"What does hola mean?",options:["Hello","Bye","Thanks","Please"],answer:"Hello",exp:"Hola means Hello."},
+{question:"Translate perro",options:["Dog","Cat","Fish","Bird"],answer:"Dog",exp:"Perro means Dog."},
+{question:"Translate gato",options:["Dog","Cat","Fish","Bird"],answer:"Cat",exp:"Gato means Cat."},
+{question:"Translate libro",options:["Book","Pen","Desk","Chair"],answer:"Book",exp:"Libro means Book."},
+{question:"Translate agua",options:["Water","Milk","Bread","Juice"],answer:"Water",exp:"Agua means Water."},
 
-let correct=practiceQuestions[practiceIndex].a;
+{question:"Translate casa",options:["House","Car","Door","Tree"],answer:"House",exp:"Casa means House."},
+{question:"Translate amigo",options:["Enemy","Friend","Teacher","Dog"],answer:"Friend",exp:"Amigo means Friend."},
+{question:"Translate escuela",options:["School","Park","Library","Market"],answer:"School",exp:"Escuela means School."},
+{question:"Translate comida",options:["Food","Drink","Sleep","Run"],answer:"Food",exp:"Comida means Food."},
+{question:"Translate beber",options:["Eat","Drink","Walk","Sleep"],answer:"Drink",exp:"Beber means Drink."},
 
-if(input===correct){
+{question:"Translate feliz",options:["Sad","Happy","Angry","Hungry"],answer:"Happy",exp:"Feliz means Happy."},
+{question:"Translate triste",options:["Happy","Sad","Fast","Slow"],answer:"Sad",exp:"Triste means Sad."},
+{question:"Translate grande",options:["Small","Big","Tall","Wide"],answer:"Big",exp:"Grande means Big."},
+{question:"Translate pequeño",options:["Big","Small","Tall","Fast"],answer:"Small",exp:"Pequeño means Small."},
+{question:"Translate rojo",options:["Red","Blue","Green","Yellow"],answer:"Red",exp:"Rojo means Red."},
 
-document.getElementById("practiceResult").textContent="Correct!";
-
-}else{
-
-document.getElementById("practiceResult").textContent="Correct: "+correct;
-
-}
-
-}
-
-window.nextPractice=function(){
-
-practiceIndex=(practiceIndex+1)%practiceQuestions.length;
-
-document.getElementById("practiceQuestion").textContent=practiceQuestions[practiceIndex].q;
-
-}
-
-/* ================= 20 QUESTION TEST ================= */
-
-const testQuestions=[
-
-{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
-{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
-{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
-{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
-{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"},
-
-{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
-{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
-{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
-{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
-{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"},
-
-{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
-{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
-{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
-{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
-{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"},
-
-{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
-{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
-{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
-{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
-{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"}
+{question:"Translate verde",options:["Blue","Green","Red","Black"],answer:"Green",exp:"Verde means Green."},
+{question:"Translate día",options:["Night","Day","Morning","Evening"],answer:"Day",exp:"Día means Day."},
+{question:"Translate noche",options:["Morning","Day","Night","Afternoon"],answer:"Night",exp:"Noche means Night."},
+{question:"Translate mañana",options:["Morning","Night","Day","Food"],answer:"Morning",exp:"Mañana means Morning."},
+{question:"Translate familia",options:["Friend","Family","Teacher","Dog"],answer:"Family",exp:"Familia means Family."}
 
 ];
 
-const testBox=document.getElementById("unitTest");
+function renderTest() {
 
-testQuestions.forEach((q,i)=>{
+  if (!unitTestContainer) return;
 
-let div=document.createElement("div");
+  unitTestContainer.innerHTML = "";
 
-div.className="question-box";
+  unitTestQuestions.forEach((q, i) => {
 
-let html=`<p>${i+1}. ${q.q}</p>`;
+    const div = document.createElement("div");
+    div.className = "test-question";
 
-q.options.forEach(opt=>{
+    let html = `<p>${i+1}. ${q.question}</p>`;
 
-html+=`<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label><br>`;
+    q.options.forEach(opt => {
+      html += `
+      <label>
+      <input type="radio" name="q${i}" value="${opt}">
+      ${opt}
+      </label><br>
+      `;
+    });
 
-});
+    div.innerHTML = html;
 
-div.innerHTML=html;
+    unitTestContainer.appendChild(div);
 
-testBox.appendChild(div);
-
-});
-
-let submit=document.createElement("button");
-
-submit.textContent="Submit Test";
-
-submit.onclick=function(){
-
-let score=0;
-
-let resultHTML="";
-
-testQuestions.forEach((q,i)=>{
-
-let selected=document.querySelector(`input[name="q${i}"]:checked`);
-
-if(selected && selected.value===q.a){
-
-score++;
-
-}else{
-
-resultHTML+=`<p>Q${i+1}: Correct = ${q.a} (${q.exp})</p>`;
+  });
 
 }
 
-});
+if (submitBtn) {
 
-let percent=Math.round((score/testQuestions.length)*100);
+  submitBtn.onclick = function () {
 
-testBox.innerHTML=`<h2>Your Score: ${percent}%</h2>${resultHTML}`;
+    let score = 0;
+    let explanations = "";
 
-};
+    unitTestQuestions.forEach((q, i) => {
 
-testBox.appendChild(submit);
+      const selected = document.querySelector(`input[name="q${i}"]:checked`);
 
-});
+      if (selected && selected.value === q.answer) {
+        score++;
+      } else {
+        explanations += `<p><b>Q${i+1}</b>: ${q.exp}</p>`;
+      }
+
+    });
+
+    const percent = Math.round((score / unitTestQuestions.length) * 100);
+
+    unitTestContainer.innerHTML =
+      `<h2>Your Score: ${score}/${unitTestQuestions.length} (${percent}%)</h2>`
+      + explanations;
+
+    if (percent >= 80) {
+      launchConfetti();
+    }
+
+  };
+
+}
+
+renderTest();
