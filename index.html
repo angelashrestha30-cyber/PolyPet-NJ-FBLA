@@ -4,12 +4,64 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PolyPet</title>
-  
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* ================= PET / COLLECTION CSS ================= */
+    #pet-collection-section {
+      padding: 20px;
+      background: #fff0f0;
+      margin-bottom: 40px;
+    }
+    .pet-collection, .current-pet {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .pet-card {
+      border: 2px solid #ff7f7f;
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center;
+      width: 120px;
+      background: #fff8f8;
+      box-shadow: 2px 2px 6px rgba(0,0,0,0.1);
+      cursor: default;
+    }
+    .pet-emoji {
+      font-size: 50px;
+    }
+    .pet-name {
+      font-weight: 600;
+      margin-top: 5px;
+    }
+    .language-badge {
+      margin-top: 3px;
+      font-size: 12px;
+      background: #ffe6e6;
+      padding: 2px 6px;
+      border-radius: 8px;
+      display: inline-block;
+    }
+    .collect-btn {
+      padding: 6px 10px;
+      background: #ff7f7f;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    #confettiCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 9999;
+    }
+  </style>
 </head>
 <body>
 
@@ -24,16 +76,12 @@
     </div>
   </nav>
 
-  <!-- HERO SECTION -->
+  <!-- HERO -->
   <section id="home" class="hero section">
-    <div class="bg-blobs">
-      <span></span>
-      <span></span>
-      <span></span>
-    </div>
+    <div class="bg-blobs"><span></span><span></span><span></span></div>
     <div class="hero-container">
-      
-      <!-- LEFT: PET PANEL -->
+
+      <!-- LEFT: PET CARD -->
       <div class="pet-panel">
         <div class="pet-avatar">🦊</div>
         <h3 id="pet-name-display">Pika</h3>
@@ -42,7 +90,9 @@
           <button id="pet-name-btn">Rename</button>
         </div>
         <p>Level <span id="level">1</span></p>
-        <div class="xp-bar"><div id="xp-fill"></div></div>
+        <div class="xp-bar">
+          <div id="xp-fill"></div>
+        </div>
         <p>🔥 <span id="streak">0</span> Day Streak</p>
         <button onclick="completeLesson()">Play</button>
       </div>
@@ -75,7 +125,7 @@
     </div>
   </section>
 
-  <!-- PET COLLECTION SECTION -->
+  <!-- PET COLLECTION -->
   <section id="pet-collection-section" class="section">
     <h2>Pet Collection</h2>
     <div class="current-pet"></div>
@@ -86,7 +136,7 @@
     <button class="collect-btn" onclick="collectPet('Japanese')">Japanese 🐱</button>
   </section>
 
-  <!-- SCHEDULE SECTION -->
+  <!-- SCHEDULE -->
   <section id="schedule" class="section">
     <h2>Today's Schedule</h2>
     <div class="filter-buttons">
@@ -105,7 +155,7 @@
       </div>
     </div>
 
-    <!-- INTERACTIVE CALENDAR -->
+    <!-- CALENDAR -->
     <div class="calendar-box">
       <input type="date" id="lesson-date">
       <button onclick="scheduleLesson()">Schedule Lesson</button>
@@ -122,12 +172,13 @@
         <button id="add-clock-btn" type="button">Add Clock</button>
       </div>
     </div>
-
   </section>
 
-  <!-- RESOURCES SECTION -->
+  <!-- RESOURCES -->
   <section id="resources" class="section">
     <h2>Resources</h2>
+
+    <!-- RESOURCE CARDS -->
     <div class="resource-cards">
       <div class="resource-card" onclick="showResource('video')">🎥 Video Lesson</div>
       <div class="resource-card" onclick="showResource('flashcards')">🃏 Flashcards</div>
@@ -136,20 +187,44 @@
     </div>
 
     <!-- RESOURCE CONTENT -->
-    <div id="video" class="resource-content"></div>
-    <div id="flashcards" class="resource-content"></div>
-    <div id="practice" class="resource-content"></div>
-    <div id="test" class="resource-content"></div>
-
+    <div id="video" class="resource-content" style="display:none;">
+      <h3>Video Lesson</h3>
+      <p>Here you can add your video lesson or embed a YouTube link!</p>
+    </div>
+    <div id="flashcards" class="resource-content" style="display:none;">
+      <h3>Flashcards</h3>
+      <div id="flashcard" class="flashcard" onclick="flipCard()">Click "Load Flashcards" to start</div>
+      <div class="menu-buttons">
+        <button onclick="loadSpanishLevel3()">Load Flashcards</button>
+        <button onclick="nextCard()">Next</button>
+      </div>
+    </div>
+    <div id="practice" class="resource-content" style="display:none;">
+      <h3>Practice Mode</h3>
+      <div id="practice-box">
+        <p id="practiceQuestion">Click "Start Practice" to begin.</p>
+        <input id="practiceInput" type="text" placeholder="Type your answer here">
+        <button onclick="checkPractice()">Check Answer</button>
+        <p id="practiceResult"></p>
+        <button onclick="nextPractice()" id="nextPracticeBtn" style="display:none;">Next</button>
+      </div>
+      <div class="menu-buttons">
+        <button onclick="startPractice()">Start Practice</button>
+      </div>
+    </div>
+    <div id="test" class="resource-content" style="display:none;">
+      <h3>Unit Test</h3>
+      <div id="unitTest"></div>
+    </div>
   </section>
 
   <!-- CONFETTI CANVAS -->
   <canvas id="confettiCanvas"></canvas>
 
-  <!-- FOOTER -->
-  <footer>© 2026 PolyPet | NJ FBLA State Competition</footer>
+  <footer>
+    © 2026 PolyPet | NJ FBLA State Competition
+  </footer>
 
-  <!-- JS -->
   <script src="js/script.js"></script>
 </body>
 </html>
