@@ -1,466 +1,272 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded",function(){
 
-  // ================= SCROLL =================
-  window.scrollToSection = function(id){
-    const el = document.getElementById(id);
-    if(el) el.scrollIntoView({behavior:"smooth"});
-  }
+/* ================= PET SYSTEM ================= */
 
-  // ================= PET DATA =================
-  let xp = parseInt(localStorage.getItem("xp")) || 0;
-  let level = parseInt(localStorage.getItem("level")) || 1;
-  let streak = parseInt(localStorage.getItem("streak")) || 0;
+let petCollection=JSON.parse(localStorage.getItem("petCollection"))||[
+{name:"Fox",emoji:"🦊",language:"Starter"}
+];
 
-  let petCollection = JSON.parse(localStorage.getItem("petCollection")) || [
-    {name:"Fox", emoji:"🦊", language:"Starter"}
-  ];
+let currentPet=JSON.parse(localStorage.getItem("currentPet"))||petCollection[0];
 
-  let currentPet = JSON.parse(localStorage.getItem("currentPet")) || petCollection[0];
+let petName=localStorage.getItem("petName");
 
-  let petName = localStorage.getItem("petName") || "Pika";
+const avatar=document.querySelector(".pet-avatar");
+const nameDisplay=document.getElementById("pet-name-display");
 
-  function updatePetUI(){
+const nameInput=document.getElementById("pet-name-input");
+const nameBtn=document.getElementById("pet-name-btn");
 
-    const avatar = document.querySelector(".pet-avatar");
-    const nameDisplay = document.getElementById("pet-name-display");
+if(petName){
 
-    if(avatar) avatar.textContent = currentPet.emoji;
-    if(nameDisplay) nameDisplay.textContent = petName;
+nameDisplay.textContent=petName;
 
-    document.getElementById("level").textContent = level;
-    document.getElementById("streak").textContent = streak;
-    document.getElementById("xp-fill").style.width = (xp % 100) + "%";
+document.querySelector(".pet-name-input-container").style.display="none";
 
-    // Background change if wolf equipped
-    if(currentPet.name === "Wolf"){
-      document.body.style.background =
-      "linear-gradient(180deg,#e6f2ff,#b3d9ff)";
-    } else {
-      document.body.style.background =
-      "linear-gradient(180deg,#fff6f6,#ffd6d6)";
-    }
+}
 
-  }
+function updatePet(){
 
-  updatePetUI();
+avatar.textContent=currentPet.emoji;
 
-  // ================= PET RENAME =================
-  const nameBtn = document.getElementById("pet-name-btn");
-  const nameInput = document.getElementById("pet-name-input");
+if(currentPet.name==="Wolf"){
 
-  if(nameBtn){
-    nameBtn.addEventListener("click", function(){
+document.body.style.background="linear-gradient(180deg,#e6f2ff,#b3d9ff)";
 
-      const newName = nameInput.value.trim();
+}
 
-      if(newName){
-        petName = newName;
-        localStorage.setItem("petName", newName);
-        updatePetUI();
-        nameInput.value="";
-      }
+}
 
-    });
-  }
+/* rename pet */
 
-  // ================= LESSON XP =================
-  window.completeLesson = function(){
+nameBtn.onclick=function(){
 
-    xp += 20;
-    streak += 1;
+if(nameInput.value.trim()!==""){
 
-    if(xp >= level*100){
-      level++;
-      launchConfetti();
-    }
+petName=nameInput.value;
 
-    localStorage.setItem("xp",xp);
-    localStorage.setItem("level",level);
-    localStorage.setItem("streak",streak);
+localStorage.setItem("petName",petName);
 
-    updatePetUI();
+nameDisplay.textContent=petName;
 
-  }
+document.querySelector(".pet-name-input-container").style.display="none";
 
-  // ================= PET COLLECTION =================
-  function renderPetCollection(){
+}
 
-    const container = document.getElementById("pet-collection");
-    if(!container) return;
+}
 
-    container.innerHTML="";
+/* ================= PET COLLECTION ================= */
 
-    petCollection.forEach(pet=>{
+function renderPets(){
 
-      const card=document.createElement("div");
-      card.className="pet-card";
+const container=document.getElementById("pet-collection");
 
-      card.innerHTML=`
-        <div class="pet-emoji">${pet.emoji}</div>
-        <div class="pet-name">${pet.name}</div>
-        <div class="language-badge">${pet.language}</div>
-      `;
+container.innerHTML="";
 
-      // click to equip pet
-      card.addEventListener("click",function(){
+petCollection.forEach(pet=>{
 
-        currentPet = pet;
-        localStorage.setItem("currentPet",JSON.stringify(pet));
+let card=document.createElement("div");
 
-        updatePetUI();
+card.className="pet-card";
 
-      });
+card.innerHTML=`
+<div class="pet-emoji">${pet.emoji}</div>
+<div class="pet-name">${pet.name}</div>
+<div class="language-badge">${pet.language}</div>
+`;
 
-      container.appendChild(card);
+card.onclick=function(){
 
-    });
+currentPet=pet;
 
-  }
+localStorage.setItem("currentPet",JSON.stringify(pet));
 
-  renderPetCollection();
+updatePet();
 
-  // ================= COLLECT PET =================
-  window.collectPet=function(lang){
+};
 
-    let newPet;
+container.appendChild(card);
 
-    if(lang==="Spanish") newPet={name:"Fox",emoji:"🦊",language:"Spanish"};
-    if(lang==="Mandarin") newPet={name:"Panda",emoji:"🐼",language:"Mandarin"};
-    if(lang==="Japanese") newPet={name:"Cat",emoji:"🐱",language:"Japanese"};
-    if(lang==="German") newPet={name:"Wolf",emoji:"🐺",language:"German"};
+});
 
-    if(!petCollection.find(p=>p.name===newPet.name)){
+}
 
-      petCollection.push(newPet);
+renderPets();
 
-      localStorage.setItem("petCollection",JSON.stringify(petCollection));
 
-      renderPetCollection();
+window.collectPet=function(lang){
 
-      launchConfetti();
+let newPet;
 
-      alert("New pet collected: "+newPet.name);
+if(lang==="Spanish") newPet={name:"Fox",emoji:"🦊",language:"Spanish"};
 
-    }
+if(lang==="Mandarin") newPet={name:"Panda",emoji:"🐼",language:"Mandarin"};
 
-  }
+if(lang==="Japanese") newPet={name:"Cat",emoji:"🐱",language:"Japanese"};
 
-  // ================= WORLD CLOCK =================
-  let timezones=[
-    {country:"Japan",code:"Asia/Tokyo",flag:"🇯🇵"},
-    {country:"Spain",code:"Europe/Madrid",flag:"🇪🇸"},
-    {country:"China",code:"Asia/Shanghai",flag:"🇨🇳"}
-  ];
+if(lang==="German") newPet={name:"Wolf",emoji:"🐺",language:"German"};
 
-  function renderClocks(){
+if(!petCollection.find(p=>p.name===newPet.name)){
 
-    const container=document.getElementById("clock-container");
-    if(!container) return;
+petCollection.push(newPet);
 
-    container.innerHTML="";
+localStorage.setItem("petCollection",JSON.stringify(petCollection));
 
-    timezones.forEach(tz=>{
+renderPets();
 
-      const box=document.createElement("div");
-      box.className="clock-box";
+alert("New Pet Collected!");
 
-      const id=tz.code.replace("/","");
+}
 
-      box.innerHTML=`
-      <h4>${tz.flag} ${tz.country}</h4>
-      <p id="${id}">--:--</p>
-      `;
+}
 
-      container.appendChild(box);
+/* ================= FLASHCARDS ================= */
 
-    });
+let flashcards=[
+{front:"hola",back:"hello"},
+{front:"perro",back:"dog"},
+{front:"gato",back:"cat"},
+{front:"agua",back:"water"}
+];
 
-  }
+let cardIndex=0;
 
-  function updateClocks(){
+window.loadSpanish=function(){
 
-    const now=new Date();
+cardIndex=0;
 
-    timezones.forEach(tz=>{
+document.getElementById("flashcard").textContent=flashcards[0].front;
 
-      const id=tz.code.replace("/","");
+}
 
-      const el=document.getElementById(id);
+window.nextCard=function(){
 
-      if(el){
+cardIndex=(cardIndex+1)%flashcards.length;
 
-        el.textContent=now.toLocaleTimeString(
-          "en-US",
-          {timeZone:tz.code}
-        );
+document.getElementById("flashcard").textContent=flashcards[cardIndex].front;
 
-      }
+}
 
-    });
+/* ================= PRACTICE ================= */
 
-  }
+let practiceQuestions=[
+{q:"hola",a:"hello"},
+{q:"perro",a:"dog"},
+{q:"gato",a:"cat"},
+{q:"agua",a:"water"}
+];
 
-  renderClocks();
-  updateClocks();
-  setInterval(updateClocks,1000);
+let practiceIndex=0;
 
-  // ================= FLASHCARDS =================
-  let flashcards=[
-    {front:"Aunque",back:"Although"},
-    {front:"Sin embargo",back:"However"},
-    {front:"A pesar de",back:"Despite"},
-    {front:"Lograr",back:"To achieve"},
-    {front:"Desarrollar",back:"To develop"}
-  ];
+window.checkPractice=function(){
 
-  let currentCard=0;
-  let flipped=false;
+let input=document.getElementById("practiceInput").value.toLowerCase();
 
-  function showCard(){
+let correct=practiceQuestions[practiceIndex].a;
 
-    const card=document.getElementById("flashcard");
+if(input===correct){
 
-    if(!card) return;
+document.getElementById("practiceResult").textContent="Correct!";
 
-    card.textContent=flipped
-      ? flashcards[currentCard].back
-      : flashcards[currentCard].front;
+}else{
 
-  }
+document.getElementById("practiceResult").textContent="Correct: "+correct;
 
-  window.flipCard=function(){
+}
 
-    flipped=!flipped;
-    showCard();
+}
 
-  }
+window.nextPractice=function(){
 
-  window.nextCard=function(){
+practiceIndex=(practiceIndex+1)%practiceQuestions.length;
 
-    currentCard=(currentCard+1)%flashcards.length;
+document.getElementById("practiceQuestion").textContent=practiceQuestions[practiceIndex].q;
 
-    flipped=false;
+}
 
-    showCard();
+/* ================= 20 QUESTION TEST ================= */
 
-  }
+const testQuestions=[
 
-  window.loadSpanishLevel3=function(){
+{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
+{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
+{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
+{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
+{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"},
 
-    currentCard=0;
-    flipped=false;
-    showCard();
+{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
+{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
+{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
+{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
+{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"},
 
-  }
+{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
+{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
+{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
+{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
+{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"},
 
-  // ================= PRACTICE MODE =================
-  let practiceQuestions=[
-    {q:"Translate 'hola'",a:"hello"},
-    {q:"Translate 'perro'",a:"dog"},
-    {q:"Translate 'gato'",a:"cat"},
-    {q:"Translate 'agua'",a:"water"}
-  ];
+{q:"hola",options:["hello","bye","dog","cat"],a:"hello",exp:"hola means hello"},
+{q:"perro",options:["dog","cat","fish","bird"],a:"dog",exp:"perro means dog"},
+{q:"gato",options:["dog","cat","fish","bird"],a:"cat",exp:"gato means cat"},
+{q:"agua",options:["water","milk","bread","juice"],a:"water",exp:"agua means water"},
+{q:"libro",options:["book","pen","desk","chair"],a:"book",exp:"libro means book"}
 
-  let practiceIndex=0;
+];
 
-  function showPractice(){
+const testBox=document.getElementById("unitTest");
 
-    document.getElementById("practiceQuestion").textContent=
-      practiceQuestions[practiceIndex].q;
+testQuestions.forEach((q,i)=>{
 
-  }
+let div=document.createElement("div");
 
-  window.startPractice=function(){
+div.className="question-box";
 
-    practiceIndex=0;
-    showPractice();
+let html=`<p>${i+1}. ${q.q}</p>`;
 
-  }
+q.options.forEach(opt=>{
 
-  window.checkPractice=function(){
+html+=`<label><input type="radio" name="q${i}" value="${opt}"> ${opt}</label><br>`;
 
-    const input=document.getElementById("practiceInput").value.toLowerCase();
+});
 
-    const correct=practiceQuestions[practiceIndex].a;
+div.innerHTML=html;
 
-    const result=document.getElementById("practiceResult");
+testBox.appendChild(div);
 
-    if(input===correct){
+});
 
-      result.textContent="✅ Correct!";
-      document.getElementById("nextPracticeBtn").style.display="inline-block";
+let submit=document.createElement("button");
 
-    }
-    else{
+submit.textContent="Submit Test";
 
-      result.textContent="❌ Correct answer: "+correct;
+submit.onclick=function(){
 
-    }
+let score=0;
 
-  }
+let resultHTML="";
 
-  window.nextPractice=function(){
+testQuestions.forEach((q,i)=>{
 
-    practiceIndex=(practiceIndex+1)%practiceQuestions.length;
+let selected=document.querySelector(`input[name="q${i}"]:checked`);
 
-    document.getElementById("practiceInput").value="";
-    document.getElementById("practiceResult").textContent="";
-    document.getElementById("nextPracticeBtn").style.display="none";
+if(selected && selected.value===q.a){
 
-    showPractice();
+score++;
 
-  }
+}else{
 
-  // ================= UNIT TEST =================
-  const unitTestQuestions=[
+resultHTML+=`<p>Q${i+1}: Correct = ${q.a} (${q.exp})</p>`;
 
-    {question:"What does hola mean?",options:["Hello","Bye","Thanks","Please"],answer:"Hello"},
-    {question:"Translate perro",options:["Dog","Cat","Fish","Bird"],answer:"Dog"},
-    {question:"Translate gato",options:["Dog","Cat","Fish","Bird"],answer:"Cat"},
-    {question:"Translate libro",options:["Book","Pen","Desk","Chair"],answer:"Book"},
-    {question:"Translate agua",options:["Water","Milk","Bread","Juice"],answer:"Water"}
+}
 
-  ];
+});
 
-  const unitTestContainer=document.getElementById("unitTest");
+let percent=Math.round((score/testQuestions.length)*100);
 
-  if(unitTestContainer){
+testBox.innerHTML=`<h2>Your Score: ${percent}%</h2>${resultHTML}`;
 
-    unitTestQuestions.forEach((q,i)=>{
+};
 
-      const box=document.createElement("div");
-      box.className="question-box";
-
-      const title=document.createElement("p");
-      title.textContent=(i+1)+". "+q.question;
-
-      box.appendChild(title);
-
-      q.options.forEach(opt=>{
-
-        const label=document.createElement("label");
-        label.style.display="block";
-
-        const input=document.createElement("input");
-        input.type="radio";
-        input.name="q"+i;
-        input.value=opt;
-
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(" "+opt));
-
-        box.appendChild(label);
-
-      });
-
-      unitTestContainer.appendChild(box);
-
-    });
-
-    const submitBtn=document.createElement("button");
-    submitBtn.textContent="Submit Test";
-
-    submitBtn.onclick=function(){
-
-      let score=0;
-
-      unitTestQuestions.forEach((q,i)=>{
-
-        const selected=document.querySelector(
-          `input[name="q${i}"]:checked`
-        );
-
-        if(selected && selected.value===q.answer){
-
-          score++;
-
-        }
-
-      });
-
-      const percent=Math.round(
-        (score/unitTestQuestions.length)*100
-      );
-
-      alert("Your Score: "+score+"/"+unitTestQuestions.length+
-      " ("+percent+"%)");
-
-      if(percent>=80){
-
-        launchConfetti();
-
-      }
-
-    };
-
-    unitTestContainer.appendChild(submitBtn);
-
-  }
-
-  // ================= CONFETTI =================
-  const canvas=document.getElementById("confettiCanvas");
-  const ctx=canvas.getContext("2d");
-
-  canvas.width=window.innerWidth;
-  canvas.height=window.innerHeight;
-
-  let confetti=[];
-
-  function launchConfetti(){
-
-    for(let i=0;i<100;i++){
-
-      confetti.push({
-        x:Math.random()*canvas.width,
-        y:Math.random()*canvas.height-canvas.height,
-        size:Math.random()*6+4,
-        speed:Math.random()*3+2
-      });
-
-    }
-
-    animateConfetti();
-
-  }
-
-  function animateConfetti(){
-
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    confetti.forEach(p=>{
-
-      p.y+=p.speed;
-
-      ctx.fillStyle="#ff7f7f";
-      ctx.fillRect(p.x,p.y,p.size,p.size);
-
-    });
-
-    confetti=confetti.filter(p=>p.y<canvas.height);
-
-    if(confetti.length>0){
-
-      requestAnimationFrame(animateConfetti);
-
-    }
-
-  }
-
-  // ================= RESOURCE SWITCH =================
-  window.showResource=function(name){
-
-    const sections=document.querySelectorAll(".resource-content");
-
-    sections.forEach(sec=>{
-      sec.style.display="none";
-    });
-
-    const target=document.getElementById(name);
-
-    if(target) target.style.display="block";
-
-  }
-
-  showResource("video");
+testBox.appendChild(submit);
 
 });
