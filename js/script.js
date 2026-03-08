@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", function () {
 // ===============================
 // POLYPET MAIN SCRIPT
 // ===============================
@@ -523,3 +524,4 @@ function launchConfetti(){
   },500);
 
 }
+});
