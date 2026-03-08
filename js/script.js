@@ -1,255 +1,525 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // ================= SCROLL =================
-  window.scrollToSection = function(id){
-    const el = document.getElementById(id);
-    if(el) el.scrollIntoView({behavior:"smooth"});
+// ===============================
+// POLYPET MAIN SCRIPT
+// ===============================
+
+// -------------------------------
+// SCROLL NAVIGATION
+// -------------------------------
+
+function scrollToSection(id){
+  document.getElementById(id).scrollIntoView({
+    behavior:"smooth"
+  });
+}
+
+// -------------------------------
+// PET SYSTEM
+// -------------------------------
+
+let level = 1;
+let xp = 0;
+let streak = 0;
+
+const xpNeeded = 100;
+
+const petMessages = {
+  fox: "Clever like a fox, keep up the great work! 🌟",
+  wolf: "That's some howling progress! Pawsome work! 🐺",
+  panda: "Panda-tastic effort! Keep learning! 🐼",
+  cat: "Purr-fect progress! Keep going! 🐱"
+};
+
+let petCollection = [
+  {name:"Fox", emoji:"🦊", language:"Spanish"}
+];
+
+let currentPet = petCollection[0];
+
+// -------------------------------
+// PET NAME
+// -------------------------------
+
+document.getElementById("pet-name-btn").addEventListener("click",function(){
+
+  const input = document.getElementById("pet-name-input");
+
+  if(input.value.trim() !== ""){
+    document.getElementById("pet-name-display").textContent = input.value;
+    input.value = "";
   }
 
-  // ================= PET DATA =================
-  let xp = parseInt(localStorage.getItem("xp")) || 0;
-  let level = parseInt(localStorage.getItem("level")) || 1;
-  let streak = parseInt(localStorage.getItem("streak")) || 0;
+});
 
-  let petCollection = [
-    {name:"Wolf", emoji:"🐺", language:"German"},
-    {name:"Lion", emoji:"🦁", language:"Swahili"}
-  ];
-  let currentPet = petCollection[0];
-  let petName = localStorage.getItem("petName") || "Pika";
+// -------------------------------
+// GREETING BASED ON TIME
+// -------------------------------
 
-  function updatePetUI(){
-    const avatar = document.querySelector(".pet-avatar");
-    const nameDisplay = document.getElementById("pet-name-display");
-    if(avatar) avatar.textContent = currentPet.emoji;
-    if(nameDisplay) nameDisplay.textContent = petName;
-    document.getElementById("level").textContent = level;
-    document.getElementById("streak").textContent = streak;
-    document.getElementById("xp-fill").style.width = (xp % 100) + "%";
+function setGreeting(){
+
+  const greeting = document.getElementById("dynamicGreeting");
+  const hour = new Date().getHours();
+
+  let message = "Welcome Back";
+
+  if(hour < 12){
+    message = "Good Morning";
   }
-  updatePetUI();
-
-  // ================= PET RENAME =================
-  const nameBtn = document.getElementById("pet-name-btn");
-  const nameInput = document.getElementById("pet-name-input");
-  if(nameBtn){
-    nameBtn.addEventListener("click", function(){
-      const newName = nameInput.value.trim();
-      if(newName){
-        petName = newName;
-        localStorage.setItem("petName", newName);
-        updatePetUI();
-        nameInput.value = "";
-      }
-    });
+  else if(hour < 18){
+    message = "Good Afternoon";
+  }
+  else{
+    message = "Good Evening";
   }
 
-  // ================= LESSON XP =================
-  window.completeLesson = function(){
-    xp += 20;
-    streak += 1;
-    if(xp >= level*100){
-      level++;
-      launchConfetti();
+  greeting.textContent = `${message}, Emma!`;
+
+}
+
+setGreeting();
+
+// -------------------------------
+// XP / LEVEL SYSTEM
+// -------------------------------
+
+function completeLesson(){
+
+  xp += 25;
+  streak++;
+
+  if(xp >= xpNeeded){
+    level++;
+    xp = 0;
+  }
+
+  updateStats();
+  launchConfetti();
+
+}
+
+function updateStats(){
+
+  document.getElementById("level").textContent = level;
+  document.getElementById("streak").textContent = streak;
+
+  const fill = document.getElementById("xp-fill");
+
+  fill.style.width = (xp/xpNeeded)*100 + "%";
+
+}
+
+// -------------------------------
+// PET COLLECTION
+// -------------------------------
+
+function collectPet(language){
+
+  let pet;
+
+  if(language === "Spanish"){
+    pet = {name:"Fox", emoji:"🦊", language:"Spanish"};
+  }
+
+  if(language === "Mandarin"){
+    pet = {name:"Panda", emoji:"🐼", language:"Mandarin"};
+  }
+
+  if(language === "Japanese"){
+    pet = {name:"Cat", emoji:"🐱", language:"Japanese"};
+  }
+
+  petCollection.push(pet);
+
+  renderPets();
+  launchConfetti();
+
+}
+
+function renderPets(){
+
+  const container = document.getElementById("pet-collection");
+
+  container.innerHTML = "";
+
+  petCollection.forEach(pet =>{
+
+    const card = document.createElement("div");
+
+    card.className = "pet-card";
+
+    card.innerHTML = `
+      <div class="pet-emoji">${pet.emoji}</div>
+      <div class="pet-name">${pet.name}</div>
+      <div class="language-badge">${pet.language}</div>
+    `;
+
+    container.appendChild(card);
+
+  });
+
+}
+
+renderPets();
+
+// -------------------------------
+// SCHEDULE FILTER
+// -------------------------------
+
+function filterSchedule(type){
+
+  const events = document.querySelectorAll(".event");
+
+  events.forEach(event =>{
+
+    if(type === "all"){
+      event.style.display = "block";
     }
-    localStorage.setItem("xp", xp);
-    localStorage.setItem("level", level);
-    localStorage.setItem("streak", streak);
-    updatePetUI();
-  }
-
-  // ================= PET COLLECTION =================
-  function renderPetCollection(){
-    const container = document.getElementById("pet-collection");
-    if(!container) return;
-    container.innerHTML = "";
-    petCollection.forEach(pet => {
-      const card = document.createElement("div");
-      card.className = "pet-card";
-      card.innerHTML = `
-        <div class="pet-emoji">${pet.emoji}</div>
-        <div class="pet-name">${pet.name}</div>
-        <div class="language-badge">${pet.language}</div>
-      `;
-      container.appendChild(card);
-    });
-  }
-  renderPetCollection();
-
-  // ================= COLLECT PET =================
-  window.collectPet = function(lang){
-    let newPet;
-    if(lang === "Spanish") newPet = {name:"Fox", emoji:"🦊", language:"Spanish"};
-    if(lang === "Mandarin") newPet = {name:"Panda", emoji:"🐼", language:"Mandarin"};
-    if(lang === "Japanese") newPet = {name:"Cat", emoji:"🐱", language:"Japanese"};
-    if(!petCollection.find(p => p.name === newPet.name)){
-      petCollection.push(newPet);
-      renderPetCollection();
-      launchConfetti();
-      alert("New pet collected: " + newPet.name);
-    }
-  }
-
-  // ================= WORLD CLOCK =================
-  let timezones = [
-    {country:"Japan", code:"Asia/Tokyo", flag:"🇯🇵"},
-    {country:"Spain", code:"Europe/Madrid", flag:"🇪🇸"},
-    {country:"China", code:"Asia/Shanghai", flag:"🇨🇳"}
-  ];
-
-  function renderClocks(){
-    const container = document.getElementById("clock-container");
-    if(!container) return;
-    container.innerHTML = "";
-    timezones.forEach(tz => {
-      const box = document.createElement("div");
-      box.className = "clock-box";
-      const id = tz.code.replace("/", "");
-      box.innerHTML = `<h4>${tz.flag} ${tz.country}</h4><p id="${id}">--:--</p>`;
-      container.appendChild(box);
-    });
-  }
-
-  function updateClocks(){
-    const now = new Date();
-    timezones.forEach(tz => {
-      const id = tz.code.replace("/", "");
-      const el = document.getElementById(id);
-      if(el){
-        el.textContent = now.toLocaleTimeString("en-US", {timeZone: tz.code});
+    else{
+      if(event.classList.contains(type)){
+        event.style.display = "block";
       }
-    });
+      else{
+        event.style.display = "none";
+      }
+    }
+
+  });
+
+}
+
+// -------------------------------
+// LESSON SCHEDULER
+// -------------------------------
+
+function scheduleLesson(){
+
+  const dateInput = document.getElementById("lesson-date");
+  const lessonList = document.getElementById("lesson-list");
+
+  const date = dateInput.value;
+
+  if(!date){
+    alert("Please choose a date.");
+    return;
   }
+
+  const li = document.createElement("li");
+
+  li.textContent = "📚 Lesson scheduled on " + date;
+
+  lessonList.appendChild(li);
+
+  dateInput.value = "";
+
+}
+
+// -------------------------------
+// WORLD CLOCK
+// -------------------------------
+
+let timezones = [
+
+  {country:"USA (EST)", code:"America/New_York", flag:"🇺🇸"},
+  {country:"Spain", code:"Europe/Madrid", flag:"🇪🇸"},
+  {country:"Japan", code:"Asia/Tokyo", flag:"🇯🇵"}
+
+];
+
+function renderClocks(){
+
+  const container = document.getElementById("clock-container");
+
+  container.innerHTML = "";
+
+  timezones.forEach(zone =>{
+
+    const div = document.createElement("div");
+
+    div.className = "clock";
+
+    const time = new Date().toLocaleTimeString("en-US",{
+      timeZone:zone.code,
+      hour:"2-digit",
+      minute:"2-digit"
+    });
+
+    div.innerHTML = `
+      <h4>${zone.flag} ${zone.country}</h4>
+      <p>${time}</p>
+    `;
+
+    container.appendChild(div);
+
+  });
+
+}
+
+setInterval(renderClocks,1000);
+renderClocks();
+
+document.getElementById("add-clock-btn").addEventListener("click",function(){
+
+  const country = document.getElementById("new-country").value;
+  const tz = document.getElementById("new-tz").value;
+
+  if(country === "" || tz === ""){
+    alert("Enter both country and timezone");
+    return;
+  }
+
+  timezones.push({
+    country:country,
+    code:tz,
+    flag:"🌍"
+  });
 
   renderClocks();
-  updateClocks();
-  setInterval(updateClocks, 1000);
 
-  // ================= FLASHCARDS =================
-  let flashcards = [
-    {front:"Aunque", back:"Although"},
-    {front:"Sin embargo", back:"However"},
-    {front:"A pesar de", back:"Despite"},
-    {front:"Lograr", back:"To achieve"},
-    {front:"Desarrollar", back:"To develop"}
-  ];
-  let currentCard = 0;
-  let flipped = false;
+  document.getElementById("new-country").value = "";
+  document.getElementById("new-tz").value = "";
 
-  function showCard(){
-    const card = document.getElementById("flashcard");
-    if(!card) return;
-    card.textContent = flipped ? flashcards[currentCard].back : flashcards[currentCard].front;
-  }
+});
 
-  window.flipCard = function(){ flipped = !flipped; showCard(); }
-  window.nextCard = function(){ currentCard = (currentCard + 1) % flashcards.length; flipped = false; showCard(); }
-  window.loadSpanishLevel3 = function(){ currentCard = 0; flipped = false; showCard(); }
+// -------------------------------
+// RESOURCE TABS
+// -------------------------------
 
-  // ================= PRACTICE MODE =================
-  let practiceQuestions = [
-    {q:"Translate 'hola'", a:"hello"},
-    {q:"Translate 'perro'", a:"dog"},
-    {q:"Translate 'gato'", a:"cat"},
-    {q:"Translate 'agua'", a:"water"}
-  ];
-  let practiceIndex = 0;
+function showResource(id){
 
-  function showPractice(){
-    document.getElementById("practiceQuestion").textContent = practiceQuestions[practiceIndex].q;
-  }
+  const resources = document.querySelectorAll(".resource-content");
 
-  window.startPractice = function(){ practiceIndex = 0; showPractice(); }
+  resources.forEach(r=>{
+    r.style.display = "none";
+  });
 
-  window.checkPractice = function(){
-    const input = document.getElementById("practiceInput").value.toLowerCase();
-    const correct = practiceQuestions[practiceIndex].a;
-    const result = document.getElementById("practiceResult");
-    if(input === correct){
-      result.textContent = "✅ Correct!";
-      document.getElementById("nextPracticeBtn").style.display = "inline-block";
-    } else {
-      result.textContent = "❌ Correct answer: " + correct;
-    }
-  }
+  document.getElementById(id).style.display = "block";
 
-  window.nextPractice = function(){
-    practiceIndex = (practiceIndex + 1) % practiceQuestions.length;
-    document.getElementById("practiceInput").value = "";
-    document.getElementById("practiceResult").textContent = "";
-    document.getElementById("nextPracticeBtn").style.display = "none";
-    showPractice();
-  }
+}
 
-  // ================= UNIT TEST =================
-  const unitTestQuestions = [
-    {type:"mc", question:"What does hola mean?", options:["Hello","Bye","Thanks","Please"], answer:"Hello"},
-    {type:"mc", question:"Translate perro", options:["Dog","Cat","Fish","Bird"], answer:"Dog"},
-    {type:"mc", question:"Translate gato", options:["Dog","Cat","Fish","Bird"], answer:"Cat"},
-    {type:"mc", question:"Translate libro", options:["Book","Pen","Desk","Chair"], answer:"Book"},
-    {type:"mc", question:"Translate agua", options:["Water","Milk","Bread","Juice"], answer:"Water"}
+// -------------------------------
+// FLASHCARDS
+// -------------------------------
+
+let flashcards = [];
+let currentCard = 0;
+let flipped = false;
+
+function loadSpanishLevel3(){
+
+  flashcards = [
+    {front:"Hola",back:"Hello"},
+    {front:"Adiós",back:"Goodbye"},
+    {front:"Gracias",back:"Thank you"},
+    {front:"Perro",back:"Dog"},
+    {front:"Gato",back:"Cat"}
   ];
 
-  const unitTestContainer = document.getElementById("unitTest");
-  if(unitTestContainer){
-    unitTestQuestions.forEach((q,i) => {
-      const box = document.createElement("div");
-      box.className = "question-box";
-      const title = document.createElement("p");
-      title.textContent = (i+1)+". "+q.question;
-      box.appendChild(title);
-      q.options.forEach(opt => {
-        const label = document.createElement("label");
-        label.style.display = "block";
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = "q"+i;
-        input.value = opt;
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(" "+opt));
-        box.appendChild(label);
-      });
-      unitTestContainer.appendChild(box);
+  currentCard = 0;
+  flipped = false;
+
+  document.getElementById("flashcard").textContent = flashcards[0].front;
+
+}
+
+function flipCard(){
+
+  if(flashcards.length === 0) return;
+
+  const card = document.getElementById("flashcard");
+
+  if(!flipped){
+    card.textContent = flashcards[currentCard].back;
+    flipped = true;
+  }
+  else{
+    card.textContent = flashcards[currentCard].front;
+    flipped = false;
+  }
+
+}
+
+function nextCard(){
+
+  if(flashcards.length === 0) return;
+
+  currentCard++;
+
+  if(currentCard >= flashcards.length){
+    currentCard = 0;
+  }
+
+  flipped = false;
+
+  document.getElementById("flashcard").textContent = flashcards[currentCard].front;
+
+}
+
+// -------------------------------
+// PRACTICE MODE
+// -------------------------------
+
+let practiceQuestions = [
+  {q:"Translate 'Hola'",a:"hello"},
+  {q:"Translate 'Gracias'",a:"thank you"},
+  {q:"Translate 'Perro'",a:"dog"}
+];
+
+let currentPractice = 0;
+
+function startPractice(){
+
+  currentPractice = 0;
+
+  document.getElementById("practiceQuestion").textContent = practiceQuestions[0].q;
+
+}
+
+function checkPractice(){
+
+  const input = document.getElementById("practiceInput").value.toLowerCase();
+
+  const answer = practiceQuestions[currentPractice].a;
+
+  const result = document.getElementById("practiceResult");
+
+  if(input === answer){
+    result.textContent = "✅ Correct!";
+  }
+  else{
+    result.textContent = "❌ Try again";
+  }
+
+}
+
+function nextPractice(){
+
+  currentPractice++;
+
+  if(currentPractice >= practiceQuestions.length){
+    currentPractice = 0;
+  }
+
+  document.getElementById("practiceQuestion").textContent = practiceQuestions[currentPractice].q;
+
+}
+
+// -------------------------------
+// UNIT TEST (25 QUESTIONS)
+// -------------------------------
+
+const unitTestQuestions = [
+
+{q:"Hola means?",o:["Hello","Bye","Please","Food"],a:"Hello"},
+{q:"Perro means?",o:["Dog","Cat","Fish","Bird"],a:"Dog"},
+{q:"Gato means?",o:["Dog","Cat","Fish","Bird"],a:"Cat"},
+{q:"Libro means?",o:["Book","Pen","Desk","Chair"],a:"Book"},
+{q:"Agua means?",o:["Water","Milk","Bread","Juice"],a:"Water"},
+{q:"Casa means?",o:["House","Car","School","Park"],a:"House"},
+{q:"Amigo means?",o:["Friend","Enemy","Teacher","Doctor"],a:"Friend"},
+{q:"Comida means?",o:["Food","Water","Game","Music"],a:"Food"},
+{q:"Escuela means?",o:["School","House","City","Book"],a:"School"},
+{q:"Familia means?",o:["Family","Friends","Team","Group"],a:"Family"},
+{q:"Rojo means?",o:["Red","Blue","Green","Yellow"],a:"Red"},
+{q:"Azul means?",o:["Red","Blue","Green","Yellow"],a:"Blue"},
+{q:"Grande means?",o:["Big","Small","Fast","Slow"],a:"Big"},
+{q:"Pequeño means?",o:["Big","Small","Fast","Slow"],a:"Small"},
+{q:"Correr means?",o:["Run","Eat","Sleep","Read"],a:"Run"},
+{q:"Beber means?",o:["Drink","Run","Write","Play"],a:"Drink"},
+{q:"Leer means?",o:["Read","Write","Run","Eat"],a:"Read"},
+{q:"Escribir means?",o:["Write","Read","Run","Eat"],a:"Write"},
+{q:"Hablar means?",o:["Speak","Sleep","Play","Eat"],a:"Speak"},
+{q:"Escuchar means?",o:["Listen","Speak","Play","Run"],a:"Listen"},
+{q:"Rápido means?",o:["Fast","Slow","Big","Small"],a:"Fast"},
+{q:"Lento means?",o:["Fast","Slow","Big","Small"],a:"Slow"},
+{q:"Día means?",o:["Day","Night","Week","Year"],a:"Day"},
+{q:"Noche means?",o:["Day","Night","Week","Year"],a:"Night"},
+{q:"Gracias means?",o:["Thank you","Hello","Goodbye","Please"],a:"Thank you"}
+
+];
+
+function loadTest(){
+
+  const container = document.getElementById("unitTest");
+
+  container.innerHTML = "";
+
+  unitTestQuestions.forEach((q,i)=>{
+
+    const div = document.createElement("div");
+
+    div.innerHTML = `<p>${i+1}. ${q.q}</p>`;
+
+    q.o.forEach(opt=>{
+
+      div.innerHTML += `
+      <label>
+      <input type="radio" name="q${i}" value="${opt}">
+      ${opt}
+      </label><br>`;
+
     });
-  }
 
-  // ================= CONFETTI =================
+    container.appendChild(div);
+
+  });
+
+  const btn = document.createElement("button");
+
+  btn.textContent = "Submit Test";
+
+  btn.onclick = gradeTest;
+
+  container.appendChild(btn);
+
+}
+
+function gradeTest(){
+
+  let score = 0;
+
+  unitTestQuestions.forEach((q,i)=>{
+
+    const selected = document.querySelector(`input[name="q${i}"]:checked`);
+
+    if(selected && selected.value === q.a){
+      score++;
+    }
+
+  });
+
+  document.getElementById("unitTest").innerHTML =
+  `<h3>Your Score: ${score} / ${unitTestQuestions.length}</h3>`;
+
+}
+
+loadTest();
+
+// -------------------------------
+// CONFETTI
+// -------------------------------
+
+function launchConfetti(){
+
   const canvas = document.getElementById("confettiCanvas");
   const ctx = canvas.getContext("2d");
+
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  let confetti = [];
 
-  function launchConfetti(){
-    for(let i=0;i<100;i++){
-      confetti.push({
-        x: Math.random()*canvas.width,
-        y: Math.random()*canvas.height-canvas.height,
-        size: Math.random()*6+4,
-        speed: Math.random()*3+2
-      });
-    }
-    animateConfetti();
+  for(let i=0;i<100;i++){
+
+    ctx.fillStyle = `hsl(${Math.random()*360},100%,50%)`;
+
+    ctx.fillRect(
+      Math.random()*canvas.width,
+      Math.random()*canvas.height,
+      6,
+      6
+    );
+
   }
 
-  function animateConfetti(){
+  setTimeout(()=>{
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    confetti.forEach(p => {
-      p.y += p.speed;
-      ctx.fillStyle = "#ff7f7f";
-      ctx.fillRect(p.x, p.y, p.size, p.size);
-    });
-    confetti = confetti.filter(p => p.y < canvas.height);
-    if(confetti.length > 0){
-      requestAnimationFrame(animateConfetti);
-    }
-  }
+  },500);
 
-  // ================= RESOURCE SWITCH =================
-  window.showResource = function(name){
-    const sections = document.querySelectorAll(".resource-content");
-    sections.forEach(sec => { sec.style.display = "none"; });
-    const target = document.getElementById(name);
-    if(target) target.style.display = "block";
-  }
-  showResource("video");
-});
+}
